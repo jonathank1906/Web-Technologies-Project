@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+  app:
+    image: php:8.3-apache
+    container_name: laravel-app
+    ports:
+      - "8000:80"
+    volumes:
+      - ./app:/var/www/html
+    environment:
+      - APACHE_DOCUMENT_ROOT=/var/www/html/public
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_DATABASE=laravel
+      - DB_USERNAME=laravel
+      - DB_PASSWORD=secret
+    depends_on:
+      - db
+    command: >
+      bash -c "
+      chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache &&
+      apache2-foreground
+      "
+
+  db:
+    image: postgres:16
+    container_name: laravel-db
+    restart: always
+    environment:
+      POSTGRES_DB: laravel
+      POSTGRES_USER: laravel
+      POSTGRES_PASSWORD: secret
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

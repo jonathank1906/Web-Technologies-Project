@@ -1,0 +1,14 @@
+# Laravel directories we don't want in the image
+vendor
+node_modules
+storage/*.key
+.env
+
+# OS / IDE files
+.DS_Store
+Thumbs.db
+.idea
+.vscode
+
+# Logs
+*.log
