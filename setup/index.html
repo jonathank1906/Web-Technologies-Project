@@ -127,47 +127,44 @@
 <h1 id="setup-guide-for-running-locally">Setup Guide for Running Locally</h1>
 <h2 id="prerequisites">Prerequisites</h2>
 <ul>
-<li>PHP &gt;= 8.1</li>
+<li>PHP</li>
 <li>Composer</li>
 <li>Node.js &amp; npm</li>
 <li>PostgreSQL</li>
 </ul>
 <p>See the <a href="../prerequisites/">prerequisites</a> page for detailed instructions.</p>
 <h2 id="steps">Steps</h2>
-<h5 id="clone-the-repository">Clone the repository</h5>
+<h4 id="clone-the-repository">Clone the repository</h4>
 <pre><code class="language-sh">git clone https://github.com/jonathank1906/Web-Technologies-Project.git
 cd Web-Technologies-Project
 </code></pre>
-<h5 id="install-php-dependencies">Install PHP dependencies</h5>
+<h4 id="install-php-dependencies">Install PHP dependencies</h4>
 <pre><code class="language-sh">composer install
 </code></pre>
-<h5 id="copy-and-configure-environment-file">Copy and configure environment file</h5>
+<h4 id="copy-and-configure-environment-file">Copy and configure environment file</h4>
 <pre><code class="language-sh">cp .env.example .env
-# Edit .env and set your database and other settings
 </code></pre>
-<p>Generate application key</p>
-<pre><code class="language-sh">php artisan key:generate
-</code></pre>
-<h5 id="install-nodejs-dependencies">Install Node.js dependencies</h5>
+<p>Copy and paste from <a href="../env/">here</a>.</p>
+<h4 id="install-nodejs-dependencies">Install Node.js dependencies</h4>
 <pre><code class="language-sh">npm install
 </code></pre>
-<h5 id="build-frontend-assets">Build frontend assets</h5>
+<h4 id="build-frontend-assets">Build frontend assets</h4>
 <pre><code class="language-sh">npm run build
 </code></pre>
-<h5 id="create-the-postgresql-database">Create the PostgreSQL database</h5>
+<h4 id="create-the-postgresql-database">Create the PostgreSQL database</h4>
 <pre><code class="language-sh">psql -U postgres
 </code></pre>
 <p>Then, in the PostgreSQL prompt, run:</p>
 <pre><code class="language-sql">CREATE DATABASE laravel;
 </code></pre>
 <p>Type \q to exit.</p>
-<h5 id="run-database-migrations">Run database migrations</h5>
+<h4 id="run-database-migrations">Run database migrations</h4>
 <pre><code class="language-sh">php artisan migrate
 </code></pre>
-<h5 id="start-the-development-server">Start the development server</h5>
+<h4 id="start-the-development-server">Start the development server</h4>
 <pre><code class="language-sh">php artisan serve
 </code></pre>
-<h5 id="access-the-app">Access the app</h5>
+<h4 id="access-the-app">Access the app</h4>
 <ul>
 <li>Visit <a href="http://localhost:8000">http://localhost:8000</a> in your browser.</li>
 </ul></div>
