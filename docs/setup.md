@@ -59,4 +59,4 @@ php artisan serve
 ```
 
 #### Access the app
-- Visit [http://localhost:8000](http://localhost:8000) in your browser.
+Visit [http://localhost:8000](http://localhost:8000) in your browser.
