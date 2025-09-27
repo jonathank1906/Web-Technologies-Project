@@ -12,12 +12,17 @@
     </header>
 
     {{-- main --}}
-    <main class="my-4">
-        <img
-            src="https://media.istockphoto.com/id/517188688/photo/mountain-landscape.jpg?s=612x612&w=0&k=20&c=A63koPKaCyIwQWOTFBRWXj_PwCrR4cEoOw2S9Q7yVl8="
-            alt="Post image"
-            class="w-full rounded-lg object-cover" />
-    </main>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+
+    {{-- slider --}}
+    <div id="my-keen-slider" class="keen-slider">
+        <div class="keen-slider__slide number-slide1">1</div>
+        <div class="keen-slider__slide number-slide2">2</div>
+        <div class="keen-slider__slide number-slide3">3</div>
+        <div class="keen-slider__slide number-slide4">4</div>
+        <div class="keen-slider__slide number-slide5">5</div>
+        <div class="keen-slider__slide number-slide6">6</div>
+    </div>
 
     {{-- footer --}}
     <footer>
