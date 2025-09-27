@@ -49,14 +49,18 @@ CREATE DATABASE laravel;
 Type \q to exit.
 
 #### Run database migrations
+Apply migrations:
 ```sh
 php artisan migrate
 ```
 
-#### Start the development server
+#### Running the project
+Start the Vite development server (in one terminal):
+```sh
+npm run dev
+```
+Start the Laravel server (in another terminal):
 ```sh
 php artisan serve
 ```
-
-#### Access the app
-Visit [http://localhost:8000](http://localhost:8000) in your browser.
+Access the app by visiting [http://localhost:8000](http://localhost:8000) in your browser.
