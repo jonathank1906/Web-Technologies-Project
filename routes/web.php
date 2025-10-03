@@ -6,6 +6,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', Home::class)->middleware('auth');
 
+Route::get('/messages', \App\Livewire\Messages\Index::class)->middleware('auth')->name('messages');
+Route::get('/connnections', \App\Livewire\Connections\Index::class)->middleware('auth')->name('connections');
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
