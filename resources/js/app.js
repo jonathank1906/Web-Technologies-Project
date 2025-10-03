@@ -104,3 +104,70 @@ function navigation(slider) {
 }
 
 var slider = new KeenSlider("#my-keen-slider", {}, [navigation])
+
+
+class ResponsiveSidebar {
+    constructor() {
+        this.sidebar = document.getElementById('sidebar');
+        this.mainContent = document.getElementById('mainContent');
+        this.currentMode = null;
+
+        this.breakpoints = {
+            mobile: 767,
+            medium: 1300,
+            large: 1301
+        };
+
+        this.init();
+    }
+
+    init() {
+        // Set initial state
+        this.handleResize();
+
+        // Add resize listener with debouncing
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+                this.handleResize();
+            }, 50); // 50ms debounce
+        });
+    }
+
+    handleResize() {
+        const width = window.innerWidth;
+        let newMode;
+
+        if (width <= this.breakpoints.mobile) {
+            newMode = 'mobile';
+        } else if (width <= this.breakpoints.medium) {
+            newMode = 'medium';
+        } else {
+            newMode = 'large';
+        }
+
+        // Only update if mode changed
+        if (newMode !== this.currentMode) {
+            this.updateSidebar(newMode);
+            this.currentMode = newMode;
+        }
+    }
+
+    updateSidebar(mode) {
+        // Remove all existing classes
+        this.sidebar.classList.remove('sidebar-mobile', 'sidebar-medium', 'sidebar-large');
+        this.mainContent.classList.remove('content-mobile', 'content-medium', 'content-large');
+
+        // Add new classes
+        this.sidebar.classList.add(`sidebar-${mode}`);
+        this.mainContent.classList.add(`content-${mode}`);
+
+        console.log(`Sidebar updated to: ${mode} mode`);
+    }
+}
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    new ResponsiveSidebar();
+});

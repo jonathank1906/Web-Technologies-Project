@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-    <!-- Scripts -->
+    <!-- Scripts & Styles -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     @livewireStyles
@@ -20,9 +20,40 @@
 
 <body class="font-sans antialiased">
     @include('layouts.navigation')
-    <div class="drawer lg:drawer-open">
-        <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
-        <div class="drawer-content items-center justify-center">
+    
+    <div class="min-h-screen bg-gray-100">
+        <!-- Custom Sidebar -->
+        <nav class="custom-sidebar" id="sidebar">
+            <ul class="sidebar-menu">
+                <li class="sidebar-item">
+                    <a href="/" class="sidebar-link">
+                        <x-monoicon-home class="sidebar-icon" />
+                        <span class="sidebar-text">Home</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="{{ route('connections') }}" class="sidebar-link">
+                        <x-tabler-wifi class="sidebar-icon" />
+                        <span class="sidebar-text">Explore</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="{{ route('messages') }}" class="sidebar-link">
+                        <x-tabler-messages class="sidebar-icon" />
+                        <span class="sidebar-text">Messages</span>
+                    </a>
+                </li>
+                <li class="sidebar-item">
+                    <a href="{{ route('profile.edit') }}" class="sidebar-link">
+                        <x-css-profile class="sidebar-icon" />
+                        <span class="sidebar-text">Profile</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content" id="mainContent">
             <!-- Page Heading -->
             @isset($header)
             <header class="bg-white dark:bg-gray-800 shadow">
@@ -33,15 +64,10 @@
             @endisset
 
             <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
-        </div>
-        <div class="drawer-side overflow-visible z-10">
-            <label for="my-drawer-2" class="drawer-overlay"></label>
-            <livewire:components.sidebar />
-        </div>
+            {{ $slot }}
+        </main>
     </div>
+
     @livewireScripts
 </body>
 
