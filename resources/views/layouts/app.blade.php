@@ -21,7 +21,7 @@
 <body class="font-sans antialiased">
     @include('layouts.navigation')
     
-    <div class="min-h-screen bg-gray-100">
+    <div class="min-h-screen bg-gray-800">
         <!-- Custom Sidebar -->
         <nav class="custom-sidebar" id="sidebar">
             <ul class="sidebar-menu">
