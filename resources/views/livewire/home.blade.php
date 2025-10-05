@@ -11,6 +11,7 @@
             {{-- Posts --}}
             <section class="mt-5 space-y-4 p-2">
                 <livewire:post.item />
+                <livewire:swipe.item />
             </section>
         
         </aside>
