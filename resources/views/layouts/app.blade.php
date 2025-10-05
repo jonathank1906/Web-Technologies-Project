@@ -35,7 +35,7 @@
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="{{ route('connections') }}" class="sidebar-link">
+                    <a href="{{ route('connect') }}" class="sidebar-link">
                         <x-tabler-wifi class="sidebar-icon" />
                         <span class="sidebar-text">Explore</span>
                     </a>
