@@ -47,7 +47,7 @@
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="{{ route('profile.edit') }}" class="sidebar-link">
+                    <a href="{{ route('profile.show') }}" class="sidebar-link">
                         <x-css-profile class="sidebar-icon" />
                         <span class="sidebar-text">Profile</span>
                     </a>
