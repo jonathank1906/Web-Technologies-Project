@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Connect;
+namespace App\Livewire\Connections;
 
 use Livewire\Component;
 
@@ -8,6 +8,6 @@ class Index extends Component
 {
     public function render()
     {
-        return view('livewire.connect.index');
+        return view('livewire.connections.index');
     }
 }

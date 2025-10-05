@@ -23,7 +23,7 @@
 
 <body class="font-sans antialiased">
     @include('layouts.navigation')
-    
+
     <div class="min-h-screen bg-gray-800">
         <!-- Custom Sidebar -->
         <nav class="custom-sidebar" id="sidebar">
@@ -35,9 +35,9 @@
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="{{ route('connect') }}" class="sidebar-link">
+                    <a href="{{ route('connections') }}" class="sidebar-link">
                         <x-tabler-wifi class="sidebar-icon" />
-                        <span class="sidebar-text">Explore</span>
+                        <span class="sidebar-text">Connections</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
@@ -59,11 +59,11 @@
         <main class="main-content" id="mainContent">
             <!-- Page Heading -->
             @isset($header)
-            <header class="bg-white dark:bg-gray-800 shadow">
-                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                    {{ $header }}
-                </div>
-            </header>
+                <header class="bg-white dark:bg-gray-800 shadow">
+                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                        {{ $header }}
+                    </div>
+                </header>
             @endisset
 
             <!-- Page Content -->
