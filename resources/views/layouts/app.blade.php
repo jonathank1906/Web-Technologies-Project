@@ -18,45 +18,48 @@
     @livewireStyles
 </head>
 
-<body class="font-sans antialiased">
+<body class="font-sans antialiased bg-base-100 text-base-content">
     @include('layouts.navigation')
+
     
-    <div class="min-h-screen bg-gray-800">
+
+
+    <div class="min-h-screen bg-base-100">
         <!-- Custom Sidebar -->
-        <nav class="custom-sidebar" id="sidebar">
+        <nav class="custom-sidebar bg-base-200 text-base-content" id="sidebar">
             <ul class="sidebar-menu">
                 <li class="sidebar-item">
-                    <a href="/" class="sidebar-link">
+                    <a href="/" class="sidebar-link flex items-center hover:bg-base-300">
                         <x-monoicon-home class="sidebar-icon" />
                         <span class="sidebar-text">Home</span>
                     </a>
                 </li>
-                <li class="sidebar-item">
+                <li class="sidebar-item hover:bg-base-300">
                     <a href="{{ route('connections') }}" class="sidebar-link">
                         <x-tabler-wifi class="sidebar-icon" />
                         <span class="sidebar-text">Explore</span>
                     </a>
                 </li>
-                <li class="sidebar-item">
+                <li class="sidebar-item hover:bg-base-300">
                     <a href="{{ route('messages') }}" class="sidebar-link">
                         <x-tabler-messages class="sidebar-icon" />
                         <span class="sidebar-text">Messages</span>
                     </a>
                 </li>
-                <li class="sidebar-item">
+                <li class="sidebar-item hover:bg-base-300">
                     <a href="{{ route('profile.edit') }}" class="sidebar-link">
                         <x-css-profile class="sidebar-icon" />
-                        <span class="sidebar-text">Profile</span>
+                        <span class="sidebar-text">Settings</span>
                     </a>
                 </li>
             </ul>
         </nav>
 
         <!-- Main Content -->
-        <main class="main-content" id="mainContent">
+        <main class="main-content bg-base-100" id="mainContent">
             <!-- Page Heading -->
             @isset($header)
-            <header class="bg-white dark:bg-gray-800 shadow">
+            <header class="bg-base-200 shadow">
                 <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                     {{ $header }}
                 </div>
@@ -67,8 +70,53 @@
             {{ $slot }}
         </main>
     </div>
-
+    
+    <script>
+    (function() {
+        const root = document.documentElement;
+        const saved = localStorage.getItem('theme');            // 'light' | 'dark'
+        const theme = saved ?? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        root.setAttribute('data-theme', theme);
+        // Sync labels early
+        document.querySelectorAll('.theme-toggle').forEach(btn => {
+            const isDark = theme === 'dark';
+            btn.querySelector('.light-label')?.classList.toggle('hidden', isDark);
+            btn.querySelector('.dark-label')?.classList.toggle('hidden', !isDark);
+        });
+    })();
+    document.addEventListener('DOMContentLoaded', function () {
+        const root = document.documentElement;
+        const buttons = document.querySelectorAll('.theme-toggle');
+        const updateLabels = () => {
+            const isDark = (root.getAttribute('data-theme') === 'dark');
+            buttons.forEach(btn => {
+                btn.querySelector('.light-label')?.classList.toggle('hidden', isDark);
+                btn.querySelector('.dark-label')?.classList.toggle('hidden', !isDark);
+            });
+        };
+        buttons.forEach(btn => btn.addEventListener('click', () => {
+            const current = root.getAttribute('data-theme') || 'light';
+            const next = current === 'dark' ? 'light' : 'dark';
+            root.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+            updateLabels();
+        }));
+        updateLabels();
+    });
+    </script>
     @livewireScripts
 </body>
+
+<nav class="custom-sidebar bg-base-200 text-base-content" id="sidebar">
+    <ul class="sidebar-menu">
+        <li class="sidebar-item">
+            <a href="/" class="sidebar-link flex items-center hover:bg-base-300 rounded-md px-3 py-2">
+                <x-monoicon-home class="sidebar-icon" />
+                <span class="sidebar-text">Home</span>
+            </a>
+        </li>
+        <!-- repeat for other links -->
+    </ul>
+</nav>
 
 </html>
