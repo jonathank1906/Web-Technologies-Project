@@ -22,12 +22,10 @@
 </head>
 
 <body class="font-sans antialiased">
-    @include('layouts.navigation')
-
     <div class="min-h-screen bg-gray-800">
         <!-- Custom Sidebar -->
         <nav class="custom-sidebar" id="sidebar">
-            <ul class="sidebar-menu">
+            <ul class="sidebar-menu flex flex-col h-full">
                 <li class="sidebar-item">
                     <a href="/" class="sidebar-link">
                         <x-monoicon-home class="sidebar-icon" />
@@ -52,6 +50,7 @@
                         <span class="sidebar-text">Profile</span>
                     </a>
                 </li>
+                <x-more-nav />
             </ul>
         </nav>
 
