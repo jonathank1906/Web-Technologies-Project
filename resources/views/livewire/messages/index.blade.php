@@ -4,33 +4,29 @@
         <!-- Search Bar -->
         <div class="p-4 border-b border-gray-300 relative">
             <input type="text"
-                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:border-blue-300"
-                placeholder="Search friends..." />
+                   wire:model.debounce.300ms="search"
+                   class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+                   placeholder="Search friends..." />
+            <x-tabler-plus class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5"/>
         </div>
 
         <!-- Friends List -->
         <div class="flex-1 overflow-y-auto px-4 pt-2 space-y-4">
-            @foreach ([ 
-                ['name' => 'Jonathan', 'flag' => 'us', 'img' => '🧔', 'lang' => 'EN <-> ES', 'last' => 'Hey! You ready to chat?'],
-                ['name' => 'Lukas', 'flag' => 'de', 'img' => '👨‍🦱', 'lang' => 'DE <-> FR', 'last' => 'I sent you a message yesterday'],
-                ['name' => 'Deivid', 'flag' => 'br', 'img' => '🧒', 'lang' => 'PT <-> EN', 'last' => 'Let’s learn together!'],
-                ['name' => 'Benjamin', 'flag' => 'fr', 'img' => '👨‍🦰', 'lang' => 'FR <-> DE', 'last' => 'Bonjour! Ça va?'],
-                ['name' => 'Daniils', 'flag' => 'lv', 'img' => '🧑', 'lang' => 'LV <-> EN', 'last' => 'Don’t forget our session!'],
-            ] as $friend)
-                <div
-                    class="flex items-start gap-3 p-3 bg-white rounded-lg hover:bg-yellow-100 cursor-pointer transition shadow-sm">
-                    <!-- Avatar -->
+            @foreach ($this->filteredFriends as $friend)
+                <div wire:click="selectFriend({{ $friend['id'] }})"
+                     class="flex items-start gap-3 p-3 bg-white rounded-lg hover:bg-yellow-100 cursor-pointer transition shadow-sm">
                     <div class="relative w-12 h-12 flex items-center justify-center text-2xl bg-white rounded-full shadow">
                         <span>{{ $friend['img'] }}</span>
                         <img src="/flags/{{ $friend['flag'] }}.png" alt="{{ strtoupper($friend['flag']) }}"
                              class="absolute bottom-0 right-0 w-4 h-4 rounded-full border border-white" />
                     </div>
 
-                    <!-- Text Info -->
                     <div class="flex flex-col text-sm">
                         <span class="font-semibold text-gray-900 text-base">{{ $friend['name'] }}</span>
                         <span class="text-xs text-gray-600 italic">{{ $friend['lang'] }}</span>
-                        <span class="text-xs text-gray-500 mt-1 truncate">{{ $friend['last'] }}</span>
+                        <span class="text-xs text-gray-500 mt-1 truncate">
+                            {{ \Illuminate\Support\Str::limit(last($friend['messages']), 13, '...') }}
+                        </span>
                     </div>
                 </div>
             @endforeach
@@ -38,55 +34,59 @@
     </div>
 
     <!-- Right Column: Chat Window -->
+   <div wire:loading.class="opacity-25" class="transition-opacity duration-300">
     <div class="w-2/3 flex flex-col">
-        <!-- Chat Header -->
-        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white shadow-sm">
-            <div class="flex items-center gap-3">
-                <div class="relative w-10 h-10 flex items-center justify-center text-xl bg-white rounded-full shadow">
-                    <span>🧑</span>
-                    <img src="/flags/lv.png" alt="LV"
-                         class="absolute bottom-0 right-0 w-4 h-4 rounded-full border border-white" />
+        @if ($activeFriend)
+            <!-- Chat Header -->
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white shadow-sm">
+                <div class="flex items-center gap-3">
+                    <div class="relative w-10 h-10 flex items-center justify-center text-xl bg-white rounded-full shadow">
+                        <span>{{ $activeFriend['img'] }}</span>
+                        <img src="/flags/{{ $activeFriend['flag'] }}.png" alt="{{ strtoupper($activeFriend['flag']) }}"
+                             class="absolute bottom-0 right-0 w-4 h-4 rounded-full border border-white" />
+                    </div>
+                    <div>
+                        <h2 class="text-sm font-bold text-gray-800">{{ $activeFriend['name'] }}</h2>
+                        <p class="text-xs text-gray-500">{{ $activeFriend['lang'] }}</p>
+                    </div>
                 </div>
-                <div>
-                    <h2 class="text-sm font-bold text-gray-800">Daniils</h2>
-                    <p class="text-xs text-gray-500">LV <-> EN</p>
+
+                <!-- Header Icons -->
+                <div class="flex items-center gap-4 text-gray-600">
+                    <x-tabler-phone class="w-5 h-5 hover:text-green-600 transition" />
+                    <x-tabler-dots-vertical class="w-5 h-5 hover:text-gray-800 transition" />
                 </div>
             </div>
 
-            <!-- Header Icons -->
-            <div class="flex items-center gap-4 text-gray-600">
-                <button title="Voice Call">
-                    <i class="fas fa-phone-alt hover:text-green-600 transition"></i>
-                </button>
-                <button title="More Options">
-                    <i class="fas fa-ellipsis-v hover:text-gray-800 transition"></i>
-                </button>
+            <!-- Chat Messages -->
+            <div class="flex-1 overflow-y-auto px-6 py-4 space-y-3 bg-[#f5f6f8]">
+                @foreach ($activeFriend['messages'] as $i => $message)
+                    <div class="{{ $i % 2 == 0 ? 'bg-gray-200' : 'bg-blue-500 text-white self-end ml-auto' }} p-3 rounded max-w-sm">
+                        {{ $message }}
+                    </div>
+                @endforeach
             </div>
-        </div>
 
-        <!-- Chat Messages -->
-        <div class="flex-1 overflow-y-auto px-6 py-4 space-y-3 bg-[#f5f6f8]">
-            <div class="bg-gray-200 p-3 rounded max-w-sm">Hey, are you free to chat?</div>
-            <div class="bg-blue-500 text-white p-3 rounded max-w-sm self-end ml-auto">Hi! Yes, just finished work.</div>
-            <div class="bg-gray-200 p-3 rounded max-w-sm">Awesome! Let’s practice Lithuanian 😄</div>
-            <div class="bg-blue-500 text-white p-3 rounded max-w-sm self-end ml-auto">Sure! Let's do it!</div>
-        </div>
+            <!-- Message Input -->
+            <div class="px-6 py-4 border-t bg-white flex items-center gap-3">
+                <x-tabler-mood-smile class="w-5 h-5 text-gray-500 hover:text-yellow-500" />
+                <x-tabler-microphone class="w-5 h-5 text-gray-500 hover:text-red-500" />
+                <x-tabler-paperclip class="w-5 h-5 text-gray-500 hover:text-blue-500" />
+                <input type="text"
+                       class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:border-blue-300"
+                       placeholder="Type a message..." />
+                <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Send</button>
+            </div>
+        @else
+            <div class="flex-1 flex items-center justify-center text-gray-400">
+                <p>Select a friend to start chatting.</p>
+            </div>
+        @endif
+    </div>
+</div>
 
-        <!-- Message Input -->
-        <div class="px-6 py-4 border-t bg-white flex items-center gap-3">
-            <button title="Emoji">
-                <i class="far fa-smile text-gray-500 text-lg hover:text-yellow-500"></i>
-            </button>
-            <button title="Microphone">
-                <i class="fas fa-microphone text-gray-500 text-lg hover:text-red-500"></i>
-            </button>
-            <button title="Attach File">
-                <i class="fas fa-paperclip text-gray-500 text-lg hover:text-blue-500"></i>
-            </button>
-            <input type="text"
-                class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:border-blue-300"
-                placeholder="Type a message..." />
-            <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Send</button>
-        </div>
+<!-- Spinner -->
+    <div wire:loading class="flex-1 flex items-center justify-center text-gray-500">
+        <x-tabler-loader-2 class="animate-spin w-6 h-6" />
     </div>
 </div>
