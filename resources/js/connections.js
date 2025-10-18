@@ -1,12 +1,14 @@
 const filtersBtn = document.getElementById("filtersBtn");
-const filtersDropdown = document.getElementById("filtersList");
+const filtersList = document.getElementById("filtersList");
 
+
+filtersList.style.display = "flex"
 filtersBtn.addEventListener("click", () => {
-    filtersDropdown.style.display =
-        filtersDropdown.style.display === "flex" ? "none" : "flex";
+    filtersList.style.display =
+        filtersList.style.display === "flex" ? "none" : "flex";
 });
 
-Array.from(document.getElementById("filtersList").children).forEach((btn) => {
+Array.from(filtersList.children).forEach((btn) => {
     btn.addEventListener("click", () => {
         const pressed = btn.getAttribute("aria-pressed") === "true";
         btn.setAttribute("aria-pressed", !pressed);
