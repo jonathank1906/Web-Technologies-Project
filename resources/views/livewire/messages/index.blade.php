@@ -33,12 +33,13 @@
         </div>
     </div>
 
-    <!-- Right Column: Chat Window -->
-   <div wire:loading.class="opacity-25" class="transition-opacity duration-300">
-    <div class="w-2/3 flex flex-col">
+   <!-- Right Column: Chat Window -->
+<div class="w-2/3 flex flex-col">
+    <div wire:loading.class="opacity-25" class="transition-opacity duration-300 flex-1 flex flex-col">
         @if ($activeFriend)
             <!-- Chat Header -->
             <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white shadow-sm">
+                <!-- Avatar + Name -->
                 <div class="flex items-center gap-3">
                     <div class="relative w-10 h-10 flex items-center justify-center text-xl bg-white rounded-full shadow">
                         <span>{{ $activeFriend['img'] }}</span>
@@ -51,7 +52,7 @@
                     </div>
                 </div>
 
-                <!-- Header Icons -->
+                <!-- Icons -->
                 <div class="flex items-center gap-4 text-gray-600">
                     <x-tabler-phone class="w-5 h-5 hover:text-green-600 transition" />
                     <x-tabler-dots-vertical class="w-5 h-5 hover:text-gray-800 transition" />
@@ -83,10 +84,10 @@
             </div>
         @endif
     </div>
-</div>
 
-<!-- Spinner -->
-    <div wire:loading class="flex-1 flex items-center justify-center text-gray-500">
+    <!-- Spinner (overlay style optional) -->
+    <div wire:loading class="absolute inset-0 flex items-center justify-center text-gray-500 bg-white bg-opacity-50">
         <x-tabler-loader-2 class="animate-spin w-6 h-6" />
     </div>
 </div>
+
