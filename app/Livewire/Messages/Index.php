@@ -68,16 +68,41 @@ class Index extends Component
                 ['text' => 'Sure let’s do it!', 'from_me' => true],
             ],
         ],
+        [
+            'id' => 6,
+            'name' => 'Azzam',
+            'flag' => 'id',
+            'img' => '👳',
+            'lang' => 'ID <-> EN',
+            'messages' => [
+                ['text' => 'Apakah kamu bisa bantu saya?', 'from_me' => false],
+                ['text' => 'Tentu saja, ayo mulai.', 'from_me' => true],
+            ],
+        ],
+        [
+            'id' => 7,
+            'name' => 'Kryszhtof',
+            'flag' => 'pl',
+            'img' => '👨‍🔧',
+            'lang' => 'PL <-> EN',
+            'messages' => [
+                ['text' => 'Do you want to meet tomorrow?', 'from_me' => false],
+                ['text' => 'Yes, I’ll be ready.', 'from_me' => true],
+            ],
+        ],
     ];
 
-    // select a friend
+    // Select friend
     public function selectFriend($id)
     {
         $this->activeFriend = collect($this->friends)->firstWhere('id', $id);
         $this->reset('newMessage', 'editingText', 'editingMessageIndex', 'selectedMessageIndex', 'showDeleteModal');
+
+        // ✅ Fixed Livewire v3 scroll event
+        $this->js("window.dispatchEvent(new CustomEvent('scroll-to-bottom'))");
     }
 
-    // ✅ update main friends array with modified activeFriend
+    // Keep active friend updated
     private function updateActiveFriend()
     {
         if (!$this->activeFriend) return;
@@ -90,7 +115,7 @@ class Index extends Component
         }
     }
 
-    // ✅ send new message
+    // Send message
     public function sendMessage()
     {
         if (!$this->activeFriend || trim($this->newMessage) === '') return;
@@ -102,15 +127,18 @@ class Index extends Component
 
         $this->newMessage = '';
         $this->updateActiveFriend();
+
+        // ✅ scroll to bottom
+        $this->js("window.dispatchEvent(new CustomEvent('scroll-to-bottom'))");
     }
 
-    // select message (to highlight/edit/delete)
+    // Select message (highlight)
     public function selectMessage($index)
     {
         $this->selectedMessageIndex = $index;
     }
 
-    // start editing (only your message)
+    // Edit message
     public function startEdit($index)
     {
         $msg = $this->activeFriend['messages'][$index];
@@ -120,15 +148,17 @@ class Index extends Component
         $this->editingText = $msg['text'];
     }
 
-    // ✅ save edited message
     public function saveEdit()
-    {
-        if (is_null($this->editingMessageIndex)) return;
+{
+    if (is_null($this->editingMessageIndex)) return;
 
-        $this->activeFriend['messages'][$this->editingMessageIndex]['text'] = $this->editingText;
-        $this->cancelEdit();
-        $this->updateActiveFriend();
-    }
+    $this->activeFriend['messages'][$this->editingMessageIndex]['text'] = $this->editingText;
+    $this->cancelEdit();
+    $this->updateActiveFriend();
+    $this->selectFriend($this->activeFriend['id']); // this keeps the chat open
+    $this->js("window.dispatchEvent(new CustomEvent('scroll-to-bottom'))");
+}
+
 
     public function cancelEdit()
     {
@@ -136,7 +166,7 @@ class Index extends Component
         $this->editingText = '';
     }
 
-    // confirm delete (only for your messages)
+    // Confirm delete
     public function confirmDelete($index)
     {
         $msg = $this->activeFriend['messages'][$index];
@@ -146,7 +176,7 @@ class Index extends Component
         $this->showDeleteModal = true;
     }
 
-    // ✅ delete message
+    // Delete message
     public function deleteMessage()
     {
         if (is_null($this->deleteMessageIndex)) return;
@@ -155,6 +185,9 @@ class Index extends Component
         $this->activeFriend['messages'] = array_values($this->activeFriend['messages']);
         $this->cancelDelete();
         $this->updateActiveFriend();
+
+        // ✅ scroll to bottom
+        $this->js("window.dispatchEvent(new CustomEvent('scroll-to-bottom'))");
     }
 
     public function cancelDelete()
@@ -163,7 +196,7 @@ class Index extends Component
         $this->showDeleteModal = false;
     }
 
-    // filter friends (live)
+    // Live search
     public function getFilteredFriendsProperty()
     {
         $search = strtolower($this->search);

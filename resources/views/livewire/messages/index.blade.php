@@ -1,5 +1,4 @@
 <div class="flex h-screen bg-[#f0f2f5] text-gray-800 font-sans relative">
-
     <!-- Friend List -->
     <div class="w-1/3 bg-[#ffeaea] border-r border-gray-300 flex flex-col">
         <!-- Search Bar -->
@@ -15,6 +14,7 @@
             @forelse ($this->filteredFriends as $friend)
                 <div wire:click="selectFriend({{ $friend['id'] }})"
                      wire:loading.class="opacity-50"
+                     wire:key="friend-{{ $friend['id'] }}"
                      class="flex items-start gap-3 p-3 bg-white rounded-lg hover:bg-yellow-100 cursor-pointer transition shadow-sm">
                     <div class="relative w-12 h-12 flex items-center justify-center text-2xl bg-white rounded-full shadow">
                         <span>{{ $friend['img'] }}</span>
@@ -65,7 +65,7 @@
             </div>
 
             <!-- Messages -->
-            <div class="flex-1 overflow-y-auto px-6 py-4 space-y-3 bg-[#f5f6f8]">
+            <div x-chat-scroll class="flex-1 overflow-y-auto px-6 py-4 space-y-3 bg-[#f5f6f8]">
                 @foreach ($activeFriend['messages'] as $i => $msg)
                     <div wire:click="selectMessage({{ $i }})"
                          class="{{ $msg['from_me'] ? 'bg-blue-500 text-white self-end ml-auto' : 'bg-gray-200' }}
@@ -122,3 +122,16 @@
         @endif
     </div>
 </div>
+
+@push('scripts')
+<script>
+    window.addEventListener('scroll-to-bottom', () => {
+        setTimeout(() => {
+            const chatWindow = document.querySelector('[x-chat-scroll]');
+            if (chatWindow) {
+                chatWindow.scrollTop = chatWindow.scrollHeight;
+            }
+        }, 50);
+    });
+</script>
+@endpush
