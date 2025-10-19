@@ -12,9 +12,9 @@
         <!-- Friend List -->
         <div class="flex-1 overflow-y-auto px-4 pt-2 space-y-4">
             @forelse ($this->filteredFriends as $friend)
-                <div wire:click="selectFriend({{ $friend['id'] }})"
+                <div wire:key="friend-{{ $friend['id'] }}"
+                     wire:click="selectFriend({{ $friend['id'] }})"
                      wire:loading.class="opacity-50"
-                     wire:key="friend-{{ $friend['id'] }}"
                      class="flex items-start gap-3 p-3 bg-white rounded-lg hover:bg-yellow-100 cursor-pointer transition shadow-sm">
                     <div class="relative w-12 h-12 flex items-center justify-center text-2xl bg-white rounded-full shadow">
                         <span>{{ $friend['img'] }}</span>
@@ -67,7 +67,8 @@
             <!-- Messages -->
             <div x-chat-scroll class="flex-1 overflow-y-auto px-6 py-4 space-y-3 bg-[#f5f6f8]">
                 @foreach ($activeFriend['messages'] as $i => $msg)
-                    <div wire:click="selectMessage({{ $i }})"
+                    <div wire:key="msg-{{ $activeFriend['id'] }}-{{ $i }}"
+                         wire:click="selectMessage({{ $i }})"
                          class="{{ $msg['from_me'] ? 'bg-blue-500 text-white self-end ml-auto' : 'bg-gray-200' }}
                                 {{ $selectedMessageIndex === $i ? 'scale-105 ring-2 ring-yellow-400' : '' }}
                                 p-3 rounded max-w-sm transition transform cursor-pointer relative">
