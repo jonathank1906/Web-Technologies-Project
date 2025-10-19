@@ -1,11 +1,13 @@
 <?php
 
-namespace App\View\Components;
+namespace App\Livewire\Connections;
 
-use Illuminate\View\Component;
+use Livewire\Component;
 
 class UserItem extends Component
 {
+    protected $listeners = ['openMessages'];
+
     public $name;
 
     public $description;
@@ -13,6 +15,10 @@ class UserItem extends Component
     public $l1;
 
     public $l2;
+
+    private $_tempAvailableStatuses = ['Online', 'Offline', 'Idle'];
+
+    public $status;
 
     private $_tempAvailableEmojis = [
         '👶', '🧒', '👦', '👧', '🧑', '👨', '👩', '🧓', '👴', '👵',
@@ -24,7 +30,7 @@ class UserItem extends Component
 
     public $_tempEmoji;
 
-    private $_availableCountries = ['lv', 'us', 'de', 'br', 'fr'];
+    private $_tempAvailableCountries = ['lv', 'us', 'de', 'br', 'fr'];
 
     public $country;
 
@@ -35,12 +41,17 @@ class UserItem extends Component
         $this->l1 = $l1 ?? strtoupper(fake()->languageCode());
         $this->l2 = $l2 ?? strtoupper(fake()->languageCode());
         $this->_tempEmoji = $this->_tempAvailableEmojis[array_rand($this->_tempAvailableEmojis)];
-        $this->country = $this->_availableCountries[array_rand($this->_availableCountries)];
+        $this->country = $this->_tempAvailableCountries[array_rand($this->_tempAvailableCountries)];
+        $this->status = $this->_tempAvailableStatuses[array_rand($this->_tempAvailableStatuses)];
+    }
 
+    public function openMessages()
+    {
+        // return redirect()->route('messages');
     }
 
     public function render()
     {
-        return view('components.user-item');
+        return view('livewire.connections.user-item');
     }
 }
