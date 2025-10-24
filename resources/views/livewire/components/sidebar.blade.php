@@ -7,9 +7,9 @@
             </a>
         </li>
         <li>
-            <a href="{{ route('connections') }}" class="sidebar-link">
+            <a href="{{ route('connect') }}" class="sidebar-link">
                 <x-tabler-wifi class="sidebar-icon" />
-                <span class="sidebar-text">Explore</span>
+                <span class="sidebar-text">Connect</span>
             </a>
         </li>
         <li>

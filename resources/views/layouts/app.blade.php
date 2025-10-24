@@ -2,6 +2,9 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" ... />
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -18,16 +21,11 @@
     @livewireStyles
 </head>
 
-<body class="font-sans antialiased bg-base-100 text-base-content">
-    @include('layouts.navigation')
-
-    
-
-
-    <div class="min-h-screen bg-base-100">
+<body class="font-sans antialiased">
+    <div class="min-h-screen bg-gray-800">
         <!-- Custom Sidebar -->
-        <nav class="custom-sidebar bg-base-200 text-base-content" id="sidebar">
-            <ul class="sidebar-menu">
+        <nav class="custom-sidebar" id="sidebar">
+            <ul class="sidebar-menu flex flex-col h-full">
                 <li class="sidebar-item">
                     <a href="/" class="sidebar-link flex items-center hover:bg-base-300">
                         <x-monoicon-home class="sidebar-icon" />
@@ -37,7 +35,7 @@
                 <li class="sidebar-item hover:bg-base-300">
                     <a href="{{ route('connections') }}" class="sidebar-link">
                         <x-tabler-wifi class="sidebar-icon" />
-                        <span class="sidebar-text">Explore</span>
+                        <span class="sidebar-text">Connections</span>
                     </a>
                 </li>
                 <li class="sidebar-item hover:bg-base-300">
@@ -52,6 +50,7 @@
                         <span class="sidebar-text">Settings</span>
                     </a>
                 </li>
+                <x-more-nav />
             </ul>
         </nav>
 

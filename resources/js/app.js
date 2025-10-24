@@ -8,6 +8,7 @@ Alpine.start();
 
 import 'keen-slider/keen-slider.min.css'
 import KeenSlider from 'keen-slider'
+import 'hammerjs';
 
 function navigation(slider) {
     let wrapper, dots, arrowLeft, arrowRight
