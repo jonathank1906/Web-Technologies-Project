@@ -2,18 +2,14 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
-    <!-- Font Awesome CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" ... />
-
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <!-- Fonts & Other Imports -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" ... />
 
     <!-- Scripts & Styles -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -22,31 +18,31 @@
 </head>
 
 <body class="font-sans antialiased">
-    <div class="min-h-screen bg-gray-800">
+    <div class="min-h-screen">
         <!-- Custom Sidebar -->
-        <nav class="custom-sidebar" id="sidebar">
+        <nav class="bg-base-200 border-t sm:border-t-0 sm:border-r border-base-300  z-50" id="sidebar">
             <ul class="sidebar-menu flex flex-col h-full">
                 <li class="sidebar-item">
-                    <a href="/" class="sidebar-link">
-                        <x-monoicon-home class="sidebar-icon" />
+                    <a href="/" class="sidebar-link flex items-center hover:bg-base-300">
+                        <x-monoicon-home class="sidebar-icon text-base-content" />
                         <span class="sidebar-text">Home</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="{{ route('connections') }}" class="sidebar-link">
-                        <x-tabler-wifi class="sidebar-icon" />
+                    <a href="{{ route('connections') }}" class="sidebar-link hover:bg-base-300">
+                        <x-tabler-wifi class="sidebar-icon text-base-content" />
                         <span class="sidebar-text">Connections</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="{{ route('messages') }}" class="sidebar-link">
-                        <x-tabler-messages class="sidebar-icon" />
+                    <a href="{{ route('messages') }}" class="sidebar-link hover:bg-base-300">
+                        <x-tabler-messages class="sidebar-icon text-base-content" />
                         <span class="sidebar-text">Messages</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="{{ route('profile.show') }}" class="sidebar-link">
-                        <x-css-profile class="sidebar-icon" />
+                    <a href="{{ route('profile.show') }}" class="sidebar-link hover:bg-base-300">
+                        <x-css-profile class="sidebar-icon text-base-content" />
                         <span class="sidebar-text">Profile</span>
                     </a>
                 </li>
@@ -55,21 +51,10 @@
         </nav>
 
         <!-- Main Content -->
-        <main class="main-content" id="mainContent">
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white dark:bg-gray-800 shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endisset
-
-            <!-- Page Content -->
+        <main class="bg-base-100" id="mainContent">
             {{ $slot }}
         </main>
     </div>
-`
     @livewireScripts
 </body>
 
