@@ -4,7 +4,7 @@
                 sm:ltr:origin-bottom-left sm:rtl:origin-bottom-right',
     'width' => 'w-48',
     'contentClasses' => 'rounded-md ring-1 ring-black ring-opacity-5 
-                    bg-white dark:bg-gray-700 py-1'
+                    bg-base-300 py-1'
 ])
 <div class="relative" x-data="{ open: false }" @click.outside="open = false" @close.stop="open = false">
     <div @click="open = ! open">

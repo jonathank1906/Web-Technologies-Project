@@ -9,10 +9,7 @@
 		</p>
 	</header>
 
-	<div class="mt-6 inline-flex items-center px-3 py-2 rounded-md border text-sm text-base-content">
-		<button class="theme-toggle">
-			<span class="light-label">Light mode</span>
-			<span class="dark-label hidden">Dark mode</span>
-		</button>
-	</div>
+	<x-primary-button class="theme-toggle mt-6 inline-flex items-center px-3 py-2 rounded-md border text-sm text-base-content">
+		<span class="theme-label">Toggle Light mode</span>
+	 </x-primary-button>
 </section>
