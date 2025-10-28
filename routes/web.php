@@ -4,10 +4,11 @@ use App\Http\Controllers\ProfileController;
 use App\Livewire\Home;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', Home::class)->middleware('auth');
+Route::get('/', Home::class)->middleware('auth')->name('home');
 
 Route::get('/messages', \App\Livewire\Messages\Index::class)->middleware('auth')->name('messages');
 Route::get('/connections', \App\Livewire\Connections\Index::class)->middleware('auth')->name('connections');
+Route::get('/post/create', \App\Livewire\Post\Create::class)->middleware('auth')->name('post.create');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

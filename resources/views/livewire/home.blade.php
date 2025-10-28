@@ -1,8 +1,13 @@
 <div class="w-full">
-    {{-- Header -- }}
-    <header>
-
-
+    {{-- Header --}}
+    <header class="mb-6">
+        <div class="flex justify-between items-center">
+            <a href="{{ route('post.create') }}" 
+               class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow transition">
+                <x-tabler-plus class="w-5 h-5 mr-2" />
+                Create Post
+            </a>
+        </div>
     </header>
 
     {{-- main --}}
