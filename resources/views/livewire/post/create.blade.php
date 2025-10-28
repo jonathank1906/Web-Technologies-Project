@@ -1,8 +1,24 @@
-  <main class="grid grid-cols-12 gap-3 h-full w-full overflow-hidden">
+<main class="grid grid-cols-12 gap-3 h-full w-full overflow-hidden">
 
 
       {{-- Media --}}
       <aside class=" lg:col-span-7  m-auto items-center w-full overflow-scroll">
+
+          {{-- Description Textarea --}}
+          <div class="mb-4 px-2">
+              <label for="description" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  What's on your mind?
+              </label>
+              <textarea
+                  wire:model="description"
+                  id="description"
+                  rows="6"
+                  class="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+                  placeholder="Share your thoughts..."></textarea>
+              @error('description')
+              <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span>
+              @enderror
+          </div>
 
           @if (count($media)==0)
           {{-- trigger button --}}
@@ -37,7 +53,22 @@
 
           @endif
 
-
+          {{-- Post and Cancel Buttons --}}
+          <div class="flex gap-4 justify-end mt-6 px-2">
+              <a href="{{ route('home') }}"
+                  class="px-4 py-2 bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-500 transition">
+                  Cancel
+              </a>
+              <button
+                  @disabled(count($media) == 0 && empty($description))
+                  wire.loading.attr='disabled'
+                  wire:click="save"
+                  type="button"
+                  class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                  Post
+              </button>
+          </div>
 
 
       </aside>
+</main>

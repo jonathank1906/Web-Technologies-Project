@@ -10,8 +10,9 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 class Post extends Model
 {
     use HasFactory;
-  
+    
     protected $guarded=[];
+
 
 
 
