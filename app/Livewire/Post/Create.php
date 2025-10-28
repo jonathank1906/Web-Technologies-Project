@@ -49,6 +49,7 @@ class Create extends Component
                 'mediable_type' => Post::class,
             ]);
             $this->reset();
+            $this->dispatch('post-created', $post->id);
         }
 
         // TODO: Save the post to database using the Post model

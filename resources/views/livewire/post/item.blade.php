@@ -4,25 +4,35 @@
         <x-avatar class="h-12 w-12" />
 
         <div class="flex justify-between items-center w-full">
-            <h5 class="font-semibold text-sm">{{ fake()->name }}</h5>
+            <h5 class="font-semibold text-sm">{{ $post->user->name }}</h5>
             <button>
                 <x-tabler-dots />
             </button>
         </div>
     </header>
 
-    {{-- main --}}
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+    {{-- Description --}}
+    @if($post->description)
+        <p class="mb-4 text-gray-700 dark:text-gray-300">{{ $post->description }}</p>
+    @endif
 
-    {{-- slider --}}
-    <div id="my-keen-slider" class="keen-slider">
-        <div class="keen-slider__slide number-slide1">1</div>
-        <div class="keen-slider__slide number-slide2">2</div>
-        <div class="keen-slider__slide number-slide3">3</div>
-        <div class="keen-slider__slide number-slide4">4</div>
-        <div class="keen-slider__slide number-slide5">5</div>
-        <div class="keen-slider__slide number-slide6">6</div>
-    </div>
+    {{-- Media Slider --}}
+    @if($post->media->count() > 0)
+        <div class="keen-slider mb-4">
+            @foreach($post->media as $media)
+                <div class="keen-slider__slide">
+                    @if($media->mime === 'image')
+                        <img src="{{ $media->url }}" alt="Post media" class="w-full h-full object-cover">
+                    @elseif($media->mime === 'video')
+                        <video controls class="w-full h-full">
+                            <source src="{{ $media->url }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    @endif
+                </div>
+            @endforeach
+        </div>
+    @endif
 
     {{-- footer --}}
     <footer>

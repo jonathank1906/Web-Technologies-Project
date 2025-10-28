@@ -60,7 +60,6 @@
                   Cancel
               </a>
               <button
-                  @disabled(count($media) == 0 && empty($description))
                   wire.loading.attr='disabled'
                   wire:click="save"
                   type="button"
