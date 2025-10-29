@@ -4,13 +4,11 @@ namespace App\Livewire\Connections;
 
 use Livewire\Component;
 
-class UserItem extends Component
+class RequestItem extends Component
 {
     protected $listeners = ['openProfile'];
 
     public $name;
-
-    public $description;
 
     public $l1;
 
@@ -34,10 +32,9 @@ class UserItem extends Component
 
     public $country;
 
-    public function __construct($name = null, $description = null, $l1 = null, $l2 = null)
+    public function __construct()
     {
         $this->name = $name ?? fake()->name();
-        $this->description = $description ?? fake()->sentence();
         $this->l1 = $l1 ?? strtoupper(fake()->languageCode());
         $this->l2 = $l2 ?? strtoupper(fake()->languageCode());
         $this->_tempEmoji = $this->_tempAvailableEmojis[array_rand($this->_tempAvailableEmojis)];
@@ -52,6 +49,6 @@ class UserItem extends Component
 
     public function render()
     {
-        return view('livewire.connections.user-item');
+        return view('livewire.connections.request-item');
     }
 }

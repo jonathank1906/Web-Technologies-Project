@@ -4,10 +4,10 @@
         <div class="flex">
             <div>
                 <div
-                    class="relative w-16 h-16 m-4 flex flex-shrink-0 items-center justify-center text-2xl bg-white rounded-full shadow">
-                    <span class="text-4xl"> {{ $_tempEmoji }} </span>
+                    class="relative w-12 h-12 m-4 flex flex-shrink-0 items-center justify-center text-2xl bg-white rounded-full shadow">
+                    <span class="text-3xl"> {{ $_tempEmoji }} </span>
                     <img src="/flags/{{ $country }}.png" alt="us"
-                        class="absolute bottom-0 right-0 w-5 h-5 rounded-full border border-white" />
+                        class="absolute bottom-0 right-0 w-4 h-4 rounded-full border border-white" />
                 </div>
 
                 <div class="flex items-center justify-center gap-1 my-1 -mt-3">
@@ -23,13 +23,6 @@
                     <h5 class="font-bold">
                         {{ $name }}
                     </h5>
-
-                    <div class="hidden {{-- flex --}} items-center justify-center gap-1 mx-2">
-                        <div
-                            class="h-1.5 w-1.5 rounded-full {{ $status == 'Offline' ? 'bg-gray-500' : ($status == 'Idle' ? 'bg-yellow-500' : 'bg-green-600') }}">
-                        </div>
-                        <p class="font-normal text-xs text-gray-200/90">{{ $status }}</p>
-                    </div>
                 </div>
 
                 <div class="flex gap-1 text-sm font-bold items-center mb-2">
@@ -37,10 +30,6 @@
                     <span> <x-tabler-transfer class="w-4 h-4 text-gray-500 dark:text-gray-200/40" /> </span>
                     <span> {{ $l2 }} </span>
                 </div>
-
-                <p class="text-gray-700 dark:text-gray-100/60 font-light">
-                    {{ $description }}
-                </p>
             </div>
         </div>
         <button wire:click="openProfile"

@@ -1,15 +1,32 @@
-const filtersBtn = document.getElementById("filtersBtn");
-const filtersList = document.getElementById("filtersList");
+document.addEventListener("DOMContentLoaded", () => {
+    const toggleViewBtn = document.getElementById("toggleViewBtn");
+    const backBtn = document.getElementById("backToConnectionsBtn");
+    const connectionsView = document.getElementById("connectionsView");
+    const requestsView = document.getElementById("requestsView");
 
-filtersList.style.display = "flex"
-filtersBtn.addEventListener("click", () => {
-    filtersList.style.display =
-        filtersList.style.display === "flex" ? "none" : "flex";
-});
+    let currentView = "connections";
 
-filtersList.addEventListener("click", (e) => {
-    const btn = e.target.closest("button");
-    if (!btn) return;
-    const pressed = btn.getAttribute("aria-pressed") === "true";
-    btn.setAttribute("aria-pressed", !pressed);
+    function showConnections() {
+        if (currentView === "connections") return;
+        requestsView.classList.add("hidden");
+        connectionsView.classList.remove("hidden");
+        currentView = "connections";
+    }
+
+    function showRequests() {
+        if (currentView === "requests") return;
+        connectionsView.classList.add("hidden");
+        requestsView.classList.remove("hidden");
+        currentView = "requests";
+    }
+
+    toggleViewBtn?.addEventListener("click", showRequests);
+    backBtn?.addEventListener("click", showConnections);
+
+    window.addEventListener("resize", () => {
+        const isDesktop = window.innerWidth >= 1024;
+        if (isDesktop && currentView === "requests") {
+            showConnections();
+        }
+    });
 });
