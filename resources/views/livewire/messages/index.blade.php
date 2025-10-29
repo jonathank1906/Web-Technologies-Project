@@ -10,29 +10,24 @@
 
         <!-- Friends List -->
         <div class="flex-1 overflow-y-auto px-4 pt-2 space-y-4">
-            @foreach ([ 
-                ['name' => 'Jonathan', 'flag' => 'us', 'img' => '🧔', 'lang' => 'EN <-> ES', 'last' => 'Hey! You ready to chat?'],
-                ['name' => 'Lukas', 'flag' => 'de', 'img' => '👨‍🦱', 'lang' => 'DE <-> FR', 'last' => 'I sent you a message yesterday'],
-                ['name' => 'Deivid', 'flag' => 'br', 'img' => '🧒', 'lang' => 'PT <-> EN', 'last' => 'Let’s learn together!'],
-                ['name' => 'Benjamin', 'flag' => 'fr', 'img' => '👨‍🦰', 'lang' => 'FR <-> DE', 'last' => 'Bonjour! Ça va?'],
-                ['name' => 'Daniils', 'flag' => 'lv', 'img' => '🧑', 'lang' => 'LV <-> EN', 'last' => 'Don’t forget our session!'],
-            ] as $friend)
-                <div
-                    class="flex items-start gap-3 p-3 bg-white rounded-lg hover:bg-yellow-100 cursor-pointer transition shadow-sm">
-                    <!-- Avatar -->
+            @foreach ($this->friends as $friend)
+                <a href="{{ route('messages', ['userId' => $friend->id]) }}"
+                   class="flex items-start gap-3 p-3 bg-white rounded-lg hover:bg-yellow-100 cursor-pointer transition shadow-sm">
                     <div class="relative w-12 h-12 flex items-center justify-center text-2xl bg-white rounded-full shadow">
-                        <span>{{ $friend['img'] }}</span>
-                        <img src="/flags/{{ $friend['flag'] }}.png" alt="{{ strtoupper($friend['flag']) }}"
-                             class="absolute bottom-0 right-0 w-4 h-4 rounded-full border border-white" />
+                        <span>{{ strtoupper(substr($friend->name, 0, 1)) }}</span>
                     </div>
-
-                    <!-- Text Info -->
                     <div class="flex flex-col text-sm">
-                        <span class="font-semibold text-gray-900 text-base">{{ $friend['name'] }}</span>
-                        <span class="text-xs text-gray-600 italic">{{ $friend['lang'] }}</span>
-                        <span class="text-xs text-gray-500 mt-1 truncate">{{ $friend['last'] }}</span>
+                        <div class="flex items-center gap-2">
+                            <span class="font-semibold text-gray-900 text-base">{{ $friend->name }}</span>
+                            @php($unread = $this->unreadCount($friend->id))
+                            @if($unread > 0)
+                                <span class="text-xs bg-red-500 text-white px-2 py-0.5 rounded">{{ $unread }}</span>
+                            @endif
+                        </div>
+                        <span class="text-xs text-gray-600 italic">&nbsp;</span>
+                        <span class="text-xs text-gray-500 mt-1 truncate">&nbsp;</span>
                     </div>
-                </div>
+                </a>
             @endforeach
         </div>
     </div>
@@ -43,13 +38,15 @@
         <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white shadow-sm">
             <div class="flex items-center gap-3">
                 <div class="relative w-10 h-10 flex items-center justify-center text-xl bg-white rounded-full shadow">
-                    <span>🧑</span>
-                    <img src="/flags/lv.png" alt="LV"
-                         class="absolute bottom-0 right-0 w-4 h-4 rounded-full border border-white" />
+                    <span>
+                        {{ $this->chatPartner ? strtoupper(substr($this->chatPartner->name, 0, 1)) : '👤' }}
+                    </span>
                 </div>
                 <div>
-                    <h2 class="text-sm font-bold text-gray-800">Daniils</h2>
-                    <p class="text-xs text-gray-500">LV <-> EN</p>
+                    <h2 class="text-sm font-bold text-gray-800">
+                        {{ $this->chatPartner?->name ?? 'Select a user' }}
+                    </h2>
+                    <p class="text-xs text-gray-500">&nbsp;</p>
                 </div>
             </div>
 
@@ -61,19 +58,46 @@
                 <button title="More Options">
                     <i class="fas fa-ellipsis-v hover:text-gray-800 transition"></i>
                 </button>
+                @if($this->chatPartner)
+                <button title="Clear Chat" wire:click="clearChat" class="ml-2 px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-xs">Clear Chat</button>
+                @endif
             </div>
         </div>
 
-        <!-- Chat Messages -->
-        <div class="flex-1 overflow-y-auto px-6 py-4 space-y-3 bg-[#f5f6f8]">
-            <div class="bg-gray-200 p-3 rounded max-w-sm">Hey, are you free to chat?</div>
-            <div class="bg-blue-500 text-white p-3 rounded max-w-sm self-end ml-auto">Hi! Yes, just finished work.</div>
-            <div class="bg-gray-200 p-3 rounded max-w-sm">Awesome! Let’s practice Lithuanian 😄</div>
-            <div class="bg-blue-500 text-white p-3 rounded max-w-sm self-end ml-auto">Sure! Let's do it!</div>
+    <!-- Chat Messages (polled) -->
+    <div wire:poll.visible.1500ms class="flex-1 overflow-y-auto px-6 py-4 space-y-3 bg-[#f5f6f8]">
+            @php($me = auth()->user())
+            @foreach ($this->messages as $message)
+                @if ($message->sender_id === $me->id)
+                    <div class="bg-blue-500 text-white p-3 rounded max-w-sm self-end ml-auto">
+                        @if($message->attachment_path && $message->attachment_type === 'image')
+                            <img src="{{ asset('storage/' . $message->attachment_path) }}" class="max-w-xs rounded mb-2" alt="image" />
+                        @elseif($message->attachment_path && $message->attachment_type === 'audio')
+                            <audio controls class="w-full mb-2">
+                                <source src="{{ asset('storage/' . $message->attachment_path) }}" type="{{ $message->attachment_meta['mime'] ?? 'audio/mpeg' }}">
+                                Your browser does not support the audio element.
+                            </audio>
+                        @endif
+                        {{ $message->body }}
+                    </div>
+                @else
+                    <div class="bg-gray-200 p-3 rounded max-w-sm">
+                        @if($message->attachment_path && $message->attachment_type === 'image')
+                            <img src="{{ asset('storage/' . $message->attachment_path) }}" class="max-w-xs rounded mb-2" alt="image" />
+                        @elseif($message->attachment_path && $message->attachment_type === 'audio')
+                            <audio controls class="w-full mb-2">
+                                <source src="{{ asset('storage/' . $message->attachment_path) }}" type="{{ $message->attachment_meta['mime'] ?? 'audio/mpeg' }}">
+                                Your browser does not support the audio element.
+                            </audio>
+                        @endif
+                        {{ $message->body }}
+                    </div>
+                @endif
+            @endforeach
         </div>
 
         <!-- Message Input -->
-        <div class="px-6 py-4 border-t bg-white flex items-center gap-3">
+        <form wire:submit.prevent="send" class="px-6 py-4 border-t bg-white flex items-center gap-3">
             <button title="Emoji">
                 <i class="far fa-smile text-gray-500 text-lg hover:text-yellow-500"></i>
             </button>
@@ -85,8 +109,9 @@
             </button>
             <input type="text"
                 class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:border-blue-300"
-                placeholder="Type a message..." />
-            <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Send</button>
-        </div>
+                placeholder="Type a message..." wire:model.defer="body" />
+            <input type="file" wire:model="attachment" accept="image/*,audio/*" class="ml-2" />
+            <button type="submit" wire:click="send" class="shrink-0 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Send</button>
+        </form>
     </div>
 </div>
