@@ -16,9 +16,9 @@
         <p class="mb-4 text-gray-700 dark:text-gray-300">{{ $post->description }}</p>
     @endif
 
-    {{-- Media Slider --}}
-    @if($post->media->count() > 0)
-        <div class="keen-slider mb-4">
+    {{-- Media Slider (only if more than 1 media) --}}
+    @if($post->media->count() > 1)
+        <div id="post-slider-{{ $post->id }}" class="keen-slider mb-4">
             @foreach($post->media as $media)
                 <div class="keen-slider__slide">
                     @if($media->mime === 'image')
@@ -31,6 +31,19 @@
                     @endif
                 </div>
             @endforeach
+        </div>
+    @elseif($post->media->count() === 1)
+        {{-- Single media without slider --}}
+        <div class="mb-4">
+            @php $media = $post->media->first(); @endphp
+            @if($media->mime === 'image')
+                <img src="{{ $media->url }}" alt="Post media" class="w-full h-auto object-cover rounded-lg">
+            @elseif($media->mime === 'video')
+                <video controls class="w-full h-auto rounded-lg">
+                    <source src="{{ $media->url }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            @endif
         </div>
     @endif
 

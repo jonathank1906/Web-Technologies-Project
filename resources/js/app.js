@@ -104,7 +104,21 @@ function navigation(slider) {
     });
 }
 
-var slider = new KeenSlider("#my-keen-slider", {}, [navigation]);
+// Initialize all post sliders
+function initializePostSliders() {
+    document.querySelectorAll('[id^="post-slider-"]').forEach((sliderElement) => {
+        if (!sliderElement.classList.contains('keen-slider-initialized')) {
+            new KeenSlider('#' + sliderElement.id, {
+                loop: false,
+                slides: {
+                    perView: 1,
+                    spacing: 10,
+                }
+            }, [navigation]);
+            sliderElement.classList.add('keen-slider-initialized');
+        }
+    });
+}
 
 class ResponsiveSidebar {
     constructor() {
@@ -218,4 +232,8 @@ function initThemeToggle() {
 document.addEventListener("DOMContentLoaded", () => {
     new ResponsiveSidebar();
     initThemeToggle();
+    initializePostSliders();
 });
+
+// Re-initialize after Livewire updates
+document.addEventListener('livewire:navigated', initializePostSliders);
