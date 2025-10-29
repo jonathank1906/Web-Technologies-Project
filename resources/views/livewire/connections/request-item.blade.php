@@ -1,10 +1,10 @@
 <section class="flex flex-col items-start transition duration-150 ease-out hover:bg-gray-500/10">
-    <div class="border-t border-gray-700 w-full"></div>
+    <div class="border-t border-base-300 w-full"></div>
     <div class="flex justify-between w-full">
         <div class="flex">
             <div>
                 <div
-                    class="relative w-12 h-12 m-4 flex flex-shrink-0 items-center justify-center text-2xl bg-white rounded-full shadow-md shadow-black">
+                    class="relative w-12 h-12 m-4 flex flex-shrink-0 items-center justify-center text-2xl bg-white rounded-full shadow">
                     <span class="text-3xl"> {{ $_tempEmoji }} </span>
                     <img src="/flags/{{ $country }}.png" alt="us"
                         class="absolute bottom-0 right-0 w-4 h-4 rounded-full border border-white" />
@@ -14,7 +14,7 @@
                     <div
                         class="h-1.5 w-1.5 rounded-full {{ $status == 'Offline' ? 'bg-gray-500' : ($status == 'Idle' ? 'bg-yellow-500' : 'bg-green-600') }}">
                     </div>
-                    <p class="font-normal text-xs text-gray-200/90">{{ $status }}</p>
+                    <p class="font-normal text-xs text-gray-500 dark:text-gray-200/90">{{ $status }}</p>
                 </div>
             </div>
 
@@ -27,7 +27,7 @@
 
                 <div class="flex gap-1 text-sm font-bold items-center mb-2">
                     <span> {{ $l1 }} </span>
-                    <span> <x-tabler-transfer class="w-4 h-4 text-gray-200/40" /> </span>
+                    <span> <x-tabler-transfer class="w-4 h-4 text-gray-500 dark:text-gray-200/40" /> </span>
                     <span> {{ $l2 }} </span>
                 </div>
             </div>
