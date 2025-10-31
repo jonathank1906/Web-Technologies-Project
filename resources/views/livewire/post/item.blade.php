@@ -13,52 +13,54 @@
 
     {{-- Description --}}
     @if($post->description)
-        <p class="mb-4 text-gray-700 dark:text-gray-300">{{ $post->description }}</p>
+    <p class="mb-4 text-gray-700 dark:text-gray-300">{{ $post->description }}</p>
     @endif
 
     {{-- Media Slider (only if more than 1 media) --}}
     @if($post->media->count() > 1)
-        <div id="post-slider-{{ $post->id }}" class="keen-slider mb-4">
-            @foreach($post->media as $media)
-                <div class="keen-slider__slide">
-                    @if($media->mime === 'image')
-                        <img src="{{ $media->url }}" alt="Post media" class="w-full h-full object-cover">
-                    @elseif($media->mime === 'video')
-                        <video controls class="w-full h-full">
-                            <source src="{{ $media->url }}" type="video/mp4">
-                            Your browser does not support the video tag.
-                        </video>
-                    @endif
-                </div>
-            @endforeach
-        </div>
-    @elseif($post->media->count() === 1)
-        {{-- Single media without slider --}}
-        <div class="mb-4">
-            @php $media = $post->media->first(); @endphp
+    <div id="post-slider-{{ $post->id }}" class="keen-slider mb-4">
+        @foreach($post->media as $media)
+        <div class="keen-slider__slide">
             @if($media->mime === 'image')
-                <img src="{{ $media->url }}" alt="Post media" class="w-full h-auto object-cover rounded-lg">
+            <img src="{{ $media->url }}" alt="Post media" class="w-full h-full object-cover">
             @elseif($media->mime === 'video')
-                <video controls class="w-full h-auto rounded-lg">
-                    <source src="{{ $media->url }}" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
+            <video controls class="w-full h-full">
+                <source src="{{ $media->url }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
             @endif
         </div>
+        @endforeach
+    </div>
+    @elseif($post->media->count() === 1)
+    {{-- Single media without slider --}}
+    <div class="mb-4">
+        @php $media = $post->media->first(); @endphp
+        @if($media->mime === 'image')
+        <img src="{{ $media->url }}" alt="Post media" class="w-full h-auto object-cover rounded-lg">
+        @elseif($media->mime === 'video')
+        <video controls class="w-full h-auto rounded-lg">
+            <source src="{{ $media->url }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+        @endif
+    </div>
     @endif
 
-    {{-- footer --}}
+    {{-- Footer --}}
     <footer>
         <div class="flex gap-4 items-center my-2">
-            <span>
-                <x-tabler-thumb-up />
-            </span>
-            <span>
-                <x-tabler-message-circle-2 />
-            </span>
-            <span class="ml-auto">
-                <x-tabler-share-3 />
-            </span>
+            <button
+                class="like-btn"
+                data-post-id="{{ $post->id }}"
+                data-liked="{{ $post->isLikedBy(auth()->user()) ? 'true' : 'false' }}">
+                @if($post->isLikedBy(auth()->user()))
+                <x-tabler-thumb-up-filled class="inline-block mr-1" />
+                @else
+                <x-tabler-thumb-up class="inline-block mr-1" />
+                @endif
+            </button>
+            <span id="like-count-{{ $post->id }}">{{ $post->likes_count ?? 0 }}</span>
         </div>
     </footer>
 </div>
