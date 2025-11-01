@@ -28,6 +28,11 @@ class Item extends Component
 
     public function destroy()
     {
+        // Force delete comments first (bypass soft delete)
+        \App\Models\Comment::where('commentable_id', $this->post->id)
+            ->where('commentable_type', Post::class)
+            ->forceDelete();
+
         $postId = $this->post->id;
         $this->post->delete();
         $this->dispatch('post-deleted', $postId);
