@@ -13,6 +13,7 @@ Route::get('/swipe', \App\Livewire\Swipe\Item::class)->middleware('auth')->name(
 Route::get('/connections', \App\Livewire\Connections\Index::class)->middleware('auth')->name('connections');
 Route::get('/post/create', \App\Livewire\Post\Create::class)->middleware('auth')->name('post.create');
 Route::post('/posts/{post}/toggle-like', [PostController::class, 'toggleLike'])->middleware('auth');
+Route::get('/posts/{post}', \App\Livewire\Post\Show::class)->middleware('auth')->name('post.show');
 
 Route::get('/dashboard', function () {
     return view('dashboard');

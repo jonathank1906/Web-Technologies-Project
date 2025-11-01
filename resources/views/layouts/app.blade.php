@@ -17,7 +17,7 @@
     @livewireStyles
 </head>
 
-<body class="font-sans antialiased">
+<body class="font-sans antialiased overflow-hidden">
     <div class="min-h-screen">
         <!-- Custom Sidebar -->
         <nav class="bg-base-200 border-t sm:border-t-0 sm:border-r border-base-300  z-50" id="sidebar">

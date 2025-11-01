@@ -68,6 +68,9 @@
                 @endif
             </button>
             <span id="like-count-{{ $post->id }}">{{ $post->likes_count ?? 0 }}</span>
+            <button onclick="window.location='{{ route('post.show', $post) }}'">
+                <x-tabler-message-circle-2 />
+            </button>
         </div>
     </footer>
 </div>
