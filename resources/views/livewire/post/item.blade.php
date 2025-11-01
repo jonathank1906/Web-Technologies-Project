@@ -71,6 +71,7 @@
             <button onclick="window.location='{{ route('post.show', $post) }}'">
                 <x-tabler-message-circle-2 />
             </button>
+            <span id="comment-count-{{ $post->id }}">{{ $post->comments_count ?? 0 }}</span>
         </div>
     </footer>
 </div>

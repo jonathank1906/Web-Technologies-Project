@@ -18,7 +18,7 @@ class Item extends Component
 
     public function mount(Post $post)
     {
-        $this->post = $post->loadCount('likes');
+        $this->post = $post->loadCount('likes', 'comments');
     }
 
     public function render()

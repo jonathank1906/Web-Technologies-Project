@@ -17,7 +17,7 @@
     @livewireStyles
 </head>
 
-<body class="font-sans antialiased overflow-hidden">
+<body class="font-sans antialiased">
     <div class="min-h-screen">
         <!-- Custom Sidebar -->
         <nav class="bg-base-200 border-t sm:border-t-0 sm:border-r border-base-300  z-50" id="sidebar">
@@ -50,6 +50,12 @@
                     <a href="{{ route('profile.show') }}" class="sidebar-link">
                         <x-css-profile class="sidebar-icon" />
                         <span class="sidebar-text">Profile</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ route('post.create') }}" class="sidebar-link">
+                        <x-tabler-plus class="sidebar-icon" />
+                        <span class="sidebar-text">Create Post</span>
                     </a>
                 </li>
                 <x-more-nav />
