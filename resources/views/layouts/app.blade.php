@@ -41,13 +41,13 @@
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="{{ route('swipe') }}" class="sidebar-link">
+                    <a href="{{ route('swipe') }}" class="sidebar-link hover:bg-base-300">
                         <x-tabler-heart class="sidebar-icon" />
                         <span class="sidebar-text">Swiper</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="{{ route('profile.show') }}" class="sidebar-link">
+                    <a href="{{ route('profile.show') }}" class="sidebar-link hover:bg-base-300">
                         <x-css-profile class="sidebar-icon" />
                         <span class="sidebar-text">Profile</span>
                     </a>
