@@ -17,7 +17,7 @@
     @livewireStyles
 </head>
 
-<body class="font-sans antialiased overflow-hidden">
+<body class="font-sans antialiased">
     <div class="min-h-screen">
         <!-- Custom Sidebar -->
         <nav class="bg-base-200 border-t sm:border-t-0 sm:border-r border-base-300  z-50" id="sidebar">
@@ -41,13 +41,13 @@
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="{{ route('swipe') }}" class="sidebar-link">
+                    <a href="{{ route('swipe') }}" class="sidebar-link hover:bg-base-300">
                         <x-tabler-heart class="sidebar-icon" />
                         <span class="sidebar-text">Swiper</span>
                     </a>
                 </li>
                 <li class="sidebar-item">
-                    <a href="{{ route('profile.show') }}" class="sidebar-link">
+                    <a href="{{ route('profile.show') }}" class="sidebar-link hover:bg-base-300">
                         <x-css-profile class="sidebar-icon" />
                         <span class="sidebar-text">Profile</span>
                     </a>

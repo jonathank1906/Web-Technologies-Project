@@ -15,10 +15,6 @@ Route::get('/post/create', \App\Livewire\Post\Create::class)->middleware('auth')
 Route::post('/posts/{post}/toggle-like', [PostController::class, 'toggleLike'])->middleware('auth');
 Route::get('/posts/{post}', \App\Livewire\Post\Show::class)->middleware('auth')->name('post.show');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
