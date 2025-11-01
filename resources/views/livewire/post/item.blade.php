@@ -3,13 +3,36 @@
     <header class="flex items-center gap-3 mb-2">
         <x-avatar class="h-12 w-12" />
 
-        <div class="flex justify-between items-center w-full">
+        <div class="flex justify-between items-center w-full relative">
             <h5 class="font-semibold text-sm">{{ $post->user->name }}</h5>
-            <button>
-                <x-tabler-dots />
-            </button>
+            <div class="relative">
+                <button onclick="toggleMenu({{ $post->id }})" id="dots-btn-{{ $post->id }}">
+                    <x-tabler-dots />
+                </button>
+                @if(auth()->id() === $post->user_id)
+                <div id="menu-{{ $post->id }}" class="absolute right-0 mt-2 w-32 bg-white border rounded shadow-lg hidden z-10">
+                    <form wire:submit.prevent="destroy" onsubmit="return confirm('Are you sure you want to delete this post?');">
+                        <button type="submit" class="w-full text-left px-4 py-2 hover:bg-red-100 text-red-600">
+                            Delete
+                        </button>
+                    </form>
+                </div>
+                @endif
+            </div>
         </div>
     </header>
+    <script>
+        function toggleMenu(postId) {
+            const menu = document.getElementById('menu-' + postId);
+            menu.classList.toggle('hidden');
+            document.addEventListener('click', function handler(e) {
+                if (!e.target.closest('#dots-btn-' + postId) && !e.target.closest('#menu-' + postId)) {
+                    menu.classList.add('hidden');
+                    document.removeEventListener('click', handler);
+                }
+            });
+        }
+    </script>
 
     {{-- Description --}}
     @if($post->description)

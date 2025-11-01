@@ -25,4 +25,12 @@ class Item extends Component
     {
         return view('livewire.post.item');
     }
+
+    public function destroy()
+    {
+        $postId = $this->post->id;
+        $this->post->delete();
+        $this->dispatch('post-deleted', $postId);
+        session()->flash('status', 'Post deleted!');
+    }
 }

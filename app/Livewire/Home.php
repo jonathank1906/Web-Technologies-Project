@@ -30,4 +30,10 @@ class Home extends Component
 
         return view('livewire.home');
     }
+
+    #[On('post-deleted')]
+    function postDeleted($id)
+    {
+        $this->posts = $this->posts->filter(fn($post) => $post->id !== $id);
+    }
 }

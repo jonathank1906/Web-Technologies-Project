@@ -14,6 +14,7 @@ Route::get('/connections', \App\Livewire\Connections\Index::class)->middleware('
 Route::get('/post/create', \App\Livewire\Post\Create::class)->middleware('auth')->name('post.create');
 Route::post('/posts/{post}/toggle-like', [PostController::class, 'toggleLike'])->middleware('auth');
 Route::get('/posts/{post}', \App\Livewire\Post\Show::class)->middleware('auth')->name('post.show');
+Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('post.destroy');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
