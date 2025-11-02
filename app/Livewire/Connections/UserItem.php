@@ -8,6 +8,8 @@ class UserItem extends Component
 {
     protected $listeners = ['openProfile'];
 
+    public $user;
+
     public $name;
 
     public $description;
@@ -16,33 +18,22 @@ class UserItem extends Component
 
     public $l2;
 
-    private $_tempAvailableStatuses = ['Online', 'Offline', 'Idle'];
+    public $country;
+
+    public $avatar_url;
 
     public $status;
 
-    private $_tempAvailableEmojis = [
-        '👶', '🧒', '👦', '👧', '🧑', '👨', '👩', '🧓', '👴', '👵',
-        '👱', '👱‍♂️', '👱‍♀️', '🧑‍🦰', '🧑‍🦱', '🧑‍🦳', '🧑‍🦲',
-        '👨‍🦰', '👩‍🦰', '👨‍🦱', '👩‍🦱', '👨‍🦳', '👩‍🦳', '👨‍🦲', '👩‍🦲',
-        '🧔', '🧔‍♂️', '🧔‍♀️', '🧕', '👳', '👳‍♂️', '👳‍♀️', '👲',
-        '👮', '👮‍♂️', '👮‍♀️', '👷', '👷‍♂️', '👷‍♀️', '💂', '💂‍♂️', '💂‍♀️',
-    ];
-
-    public $_tempEmoji;
-
-    private $_tempAvailableCountries = ['lv', 'us', 'de', 'br', 'fr'];
-
-    public $country;
-
-    public function __construct($name = null, $description = null, $l1 = null, $l2 = null)
+    public function mount($user)
     {
-        $this->name = $name ?? fake()->name();
-        $this->description = $description ?? fake()->sentence();
-        $this->l1 = $l1 ?? strtoupper(fake()->languageCode());
-        $this->l2 = $l2 ?? strtoupper(fake()->languageCode());
-        $this->_tempEmoji = $this->_tempAvailableEmojis[array_rand($this->_tempAvailableEmojis)];
-        $this->country = $this->_tempAvailableCountries[array_rand($this->_tempAvailableCountries)];
-        $this->status = $this->_tempAvailableStatuses[array_rand($this->_tempAvailableStatuses)];
+        $this->user = $user ?? '??';
+        $this->name = $this->user->name ?? '??';
+        $this->description = $this->user->description ?? '??';
+        $this->l1 = $this->user->l1 ?? '??';
+        $this->l2 = $this->user->l2 ?? '??';
+        $this->country = $this->user->country ?? null;
+        $this->avatar_url = $this->user->avatar_url ?? null;
+        $this->status = $this->user->status ?? '??';
     }
 
     public function openProfile()

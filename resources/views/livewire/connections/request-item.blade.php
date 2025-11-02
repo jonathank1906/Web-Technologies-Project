@@ -4,15 +4,22 @@
         <div class="flex">
             <div>
                 <div
-                    class="relative w-12 h-12 m-4 flex flex-shrink-0 items-center justify-center text-2xl bg-white rounded-full shadow">
-                    <span class="text-3xl"> {{ $_tempEmoji }} </span>
-                    <img src="/flags/{{ $country }}.png" alt="us"
-                        class="absolute bottom-0 right-0 w-4 h-4 rounded-full border border-white" />
+                    class="relative w-12 h-12 m-4 flex flex-shrink-0 items-center justify-center text-2xl bg-gray-300 rounded-full shadow">
+                    @if ($avatar_url)
+                        <img src="{{ $avatar_url }}" alt="pfp" />
+                    @else
+                        <span class="text-2xl font-bold text-black" alt="pfp">
+                            {{ strtoupper(substr($name, 0, 1)) }}
+                        </span>
+                    @endif
+                    <img src="{{ $country ? "https://cdn.jsdelivr.net/gh/lipis/flag-icons/flags/4x3/{$country}.svg" : 'https://placehold.co/120x120?text=??' }}"
+                        alt="flag"
+                        class="absolute bottom-0 right-0 w-4 h-4 object-cover rounded-full border border-white" />
                 </div>
 
                 <div class="flex items-center justify-center gap-1 my-1 -mt-3">
                     <div
-                        class="h-1.5 w-1.5 rounded-full {{ $status == 'Offline' ? 'bg-gray-500' : ($status == 'Idle' ? 'bg-yellow-500' : 'bg-green-600') }}">
+                        class="h-1.5 w-1.5 rounded-full {{ $status == 'Online' ? 'bg-green-600' : ($status == 'Idle' ? 'bg-yellow-500' : 'bg-gray-500') }}">
                     </div>
                     <p class="font-normal text-xs text-gray-500 dark:text-gray-200/90">{{ $status }}</p>
                 </div>
