@@ -27,11 +27,36 @@
                 </ul>
             </div>
         </section>
-        <section class="space-y-4">
-            <h3 class="font-medium text-base-content mb-3">Personal Description</h3>
-            <p class="text-base-content/70 text-sm italic">
-                I'm passionate about languages. I speak a few, teach a few, and want to learn a few.
-            </p>
+        <section class="space-y-6">
+            <div>
+                <h3 class="font-medium text-base-content mb-3">Personal Description</h3>
+                @if($user->description)
+                    <p class="text-base-content/70 text-sm">
+                        {{ $user->description }}
+                    </p>
+                @else
+                    <p class="text-base-content/50 text-sm italic">
+                        No description provided yet.
+                    </p>
+                @endif
+            </div>
+
+            <div>
+                <h3 class="font-medium text-base-content mb-3">Hobbies & Interests</h3>
+                @if($user->hobbies && count($user->hobbies) > 0)
+                    <div class="flex flex-wrap gap-2">
+                        @foreach($user->hobbies as $hobby)
+                            <span class="px-3 py-1 bg-primary/20 text-primary text-sm font-medium rounded-full">
+                                {{ $hobby }}
+                            </span>
+                        @endforeach
+                    </div>
+                @else
+                    <p class="text-base-content/50 text-sm italic">
+                        No hobbies listed yet.
+                    </p>
+                @endif
+            </div>
         </section>
     </div>
 

@@ -45,6 +45,39 @@
             @endif
         </div>
 
+        <div>
+            <x-input-label for="description" :value="__('Description')" />
+            <textarea 
+                id="description" 
+                name="description" 
+                class="textarea textarea-bordered w-full mt-1" 
+                rows="4" 
+                maxlength="1000"
+                placeholder="{{ __('Tell us about yourself...') }}"
+            >{{ old('description', $user->description) }}</textarea>
+            <x-input-error class="mt-2" :messages="$errors->get('description')" />
+            <p class="mt-1 text-sm text-base-content/60">
+                {{ __('Maximum 1000 characters') }}
+            </p>
+        </div>
+
+        <div>
+            <x-input-label for="hobbies" :value="__('Hobbies & Interests')" />
+            <x-text-input 
+                id="hobbies" 
+                name="hobbies" 
+                type="text" 
+                class="input input-bordered w-full mt-1" 
+                :value="old('hobbies', $user->hobbies ? implode(', ', $user->hobbies) : '')" 
+                maxlength="500"
+                placeholder="{{ __('e.g. Reading, Gaming, Cooking, Travel') }}"
+            />
+            <x-input-error class="mt-2" :messages="$errors->get('hobbies')" />
+            <p class="mt-1 text-sm text-base-content/60">
+                {{ __('Separate multiple hobbies with commas. Maximum 500 characters total.') }}
+            </p>
+        </div>
+
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Save') }}</x-primary-button>
 
