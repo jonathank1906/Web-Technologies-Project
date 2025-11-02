@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,6 +19,16 @@ class ProfileController extends Controller
     {
         return view('profile.show', [
             'user' => $request->user(),
+        ]);
+    }
+
+    /**
+     * Display any user's profile (public view).
+     */
+    public function showUser(User $user): View
+    {
+        return view('profile.show', [
+            'user' => $user,
         ]);
     }
 

@@ -56,4 +56,9 @@ class User extends Authenticatable
     function comments() : HasMany{
         return $this->hasMany( related: Comment::class);
     }
+
+    public function getRouteKeyName(): string
+    {
+        return 'id';
+    }
 }

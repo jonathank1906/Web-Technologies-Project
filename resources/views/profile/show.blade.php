@@ -1,14 +1,22 @@
 <x-app-layout>
+    <header class="sticky top-0 backdrop-blur-md bg-base-200/10 shadow">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 py-6">
+            <h2 class="font-semibold text-xl text-base-content leading-tight">
+                {{ __('Profile') }}
+            </h2>
+        </div>
+    </header>
+
     <main class="py-12">
-        <div class="max-w-7xl mx-auto px-6 space-y-6">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             
             @include('profile.partials.user-info-header')
 
-            <section x-data="{ activeTab: 'about' }" class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 shadow rounded">
-                <header class="border-b border-gray-200 dark:border-gray-600">
+            <section x-data="{ activeTab: 'about' }" class="p-4 sm:p-8 bg-base-200 shadow sm:rounded-lg">
+                <header class="border-b border-base-300">
                     <nav class="flex space-x-8 px-6" aria-label="Profile navigation" role="tablist">
                         <button @click="activeTab = 'about'" 
-                                :class="activeTab === 'about' ? 'border-blue-500 text-blue-600 dark:text-blue-400' : 'border-transparent text-gray-500 dark:text-gray-400'"
+                                :class="activeTab === 'about' ? 'border-primary text-primary' : 'border-transparent text-base-content/60'"
                                 class="py-4 px-1 border-b-2 font-medium text-sm"
                                 role="tab"
                                 :aria-selected="activeTab === 'about'"
@@ -16,7 +24,7 @@
                             About
                         </button>
                         <button @click="activeTab = 'followers'" 
-                                :class="activeTab === 'followers' ? 'border-blue-500 text-blue-600 dark:text-blue-400' : 'border-transparent text-gray-500 dark:text-gray-400'"
+                                :class="activeTab === 'followers' ? 'border-primary text-primary' : 'border-transparent text-base-content/60'"
                                 class="py-4 px-1 border-b-2 font-medium text-sm"
                                 role="tab"
                                 :aria-selected="activeTab === 'followers'"
