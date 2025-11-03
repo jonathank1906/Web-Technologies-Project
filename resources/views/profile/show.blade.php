@@ -89,6 +89,7 @@
 
                 <!-- Privacy Tab Content -->
                 <div x-show="tab === 'privacy'" x-cloak role="tabpanel" class="space-y-10">
+                    @include('profile.partials.privacy-block-list')
                     @include('profile.partials.update-password-form')
                     @include('profile.partials.delete-user-form')
                 </div>
