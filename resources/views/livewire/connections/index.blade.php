@@ -5,7 +5,7 @@
         <!-- Connections Section -->
         <section id="connectionsView">
             <header class="px-4 py-2 flex justify-between items-center">
-                <h1 id="connectionsTitle" class="font-bold text-2xl">Connections</h1>
+                <h1 class="font-bold text-2xl">Connections</h1>
                 <div>
                     <button id="toggleViewBtn"
                         class="lg:hidden hover:bg-gray-700/50 active:bg-gray-600/50 active:scale-90 text-gray-200 rounded-full p-2 transition relative">
@@ -31,7 +31,7 @@
             </div>
 
             <!-- Users List -->
-            <ul class="mt-5" id="userList">
+            <ul class="mt-5 pb-2" id="userList">
                 @forelse ($users as $user)
                     <li>
                         <livewire:connections.user-item :user="$user"
@@ -55,11 +55,11 @@
                         class="hover:bg-gray-700/50 active:bg-gray-600/50 active:scale-90 text-gray-200 rounded-full p-2 transition">
                     <x-tabler-arrow-left class="text-base-content w-6 h-6" />
                 </button>
-                <h2 id="requestsTitle" class="font-bold text-2xl">Incoming Requests</h2>
+                <h2 class="font-bold text-2xl">Incoming Requests</h2>
             </header>
 
             <!-- Requests List -->
-            <ul id="requestList">
+            <ul class="pb-2">
                 @forelse ($requests as $request)
                     <li>
                         <livewire:connections.request-item :user="$request" wire:key="user-{{ $request->id }}" />
@@ -79,9 +79,9 @@
     <!-- Requests Side Column (visible on large screens) -->
     <aside class="hidden lg:flex flex-col w-[35%] max-w-xs self-start mt-5 sticky top-5 border border-base-300 bg-base-200 shadow rounded-lg">
         <header class="px-4 pt-2 pb-5">
-            <h2 id="desktopRequestsTitle" class="font-bold text-2xl">Incoming Requests</h2>
+            <h2 class="font-bold text-2xl">Incoming Requests</h2>
         </header>
-        <ul id="requestListDesktop">
+        <ul class="">
             @forelse ($requests as $request)
                 <li>
                     <livewire:connections.request-item :user="$request" wire:key="user-{{ $request->id }}" />

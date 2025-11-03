@@ -64,17 +64,26 @@ class User extends Authenticatable
         return $this->hasMany(related: Comment::class);
     }
 
+    /**
+     * Get the user's sent connections i.e. a list of connections (accepted, pending, declined).
+     */
     public function sentConnections()
     {
         return $this->hasMany(Connection::class, 'sender_id');
     }
 
+    /**
+     * Get the user's received connections i.e. a list of connections (accepted, pending, declined).
+     */
     public function receivedConnections(): HasMany
     {
         return $this->hasMany(Connection::class, 'receiver_id');
     }
 
-    public function pendingRequests()
+    /**
+     * Get users who have sent pending connection requests to this user.
+     */
+    public function getPendingRequests()
     {
         return $this->receivedConnections()
             ->where('status', 'pending')
@@ -83,6 +92,9 @@ class User extends Authenticatable
             ->pluck('sender');
     }
 
+    /**
+     * Get the user's connections i.e. users that have accepted follow requests.
+     */
     public function getConnections()
     {
         $sent = Connection::query()
@@ -110,7 +122,7 @@ class User extends Authenticatable
         if ($this->profile_picture && \Storage::disk('public')->exists($this->profile_picture)) {
             return \Storage::url($this->profile_picture);
         }
-        
+
         // Return default avatar (using initials)
         return $this->getDefaultAvatarUrl();
     }

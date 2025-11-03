@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Connections;
 
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 
 class RequestItem extends Component
@@ -12,30 +13,37 @@ class RequestItem extends Component
 
     public $name;
 
-    public $l1;
+    public $language1;
 
-    public $l2;
+    public $language2;
 
-    public $country;
+    public $countryCode;
 
-    public $avatar_url;
+    public $avatarUrl;
+
+    public $flagUrl;
 
     public $status;
 
-    public function mount($user)
+    public function mount($user = null)
     {
-        $this->user = $user ?? '??';
-        $this->name = $this->user->name ?? '??';
-        $this->l1 = $this->user->l1 ?? '??';
-        $this->l2 = $this->user->l2 ?? '??';
-        $this->country = $this->user->country ?? null;
-        $this->avatar_url = $this->user->avatar_url ?? null;
-        $this->status = $this->user->status ?? '??';
+        $this->user = $user;
+        $this->name = $user->name ?? 'Unknown User';
+        $this->language1 = $user->language1 ?? '??';
+        $this->language2 = $user->language2 ?? '??';
+        $this->countryCode = $user->countryCode ?? null;
+        $this->status = $user->status ?? 'No status';
+        $this->avatarUrl = ($user && $user->profile_picture && Storage::disk('public')->exists($user->profile_picture))
+            ? Storage::url($user->profile_picture)
+            : null;
+        $this->flagUrl = $this->countryCode
+            ? "https://cdn.jsdelivr.net/gh/lipis/flag-icons/flags/4x3/{$this->countryCode}.svg"
+            : 'https://placehold.co/120x120?text=??';
     }
 
     public function openProfile()
     {
-        return redirect()->route('profile.show');
+        return redirect()->route('profile.user', ['user' => $this->user->id]);
     }
 
     public function render()

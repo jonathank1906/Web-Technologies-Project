@@ -28,7 +28,7 @@ class Index extends Component
             })
             ->get();
 
-        $requests = $this->localUser->pendingRequests();
+        $requests = $this->localUser->getPendingRequests();
 
         return view('livewire.connections.index', [
             'users' => $users,
