@@ -15,6 +15,22 @@ class DatabaseSeeder extends Seeder
         $this->call([
             UserSeeder::class,
             ConnectionSeeder::class
+        // Create two users for messaging tests
+        $alice = User::factory()->create([
+            'name' => 'Test1',
+            'email' => 'test1@example.com',
         ]);
+
+        $bob = User::factory()->create([
+            'name' => 'Test2',
+            'email' => 'test2@example.com',
+        ]);
+
     }
+
+    
 }
+
+
+
+
