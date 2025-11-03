@@ -45,10 +45,20 @@
             </div>
         </div>
 
-        <!-- Button for opening the user's profile -->
-        <button wire:click="openProfile"
-            class="flex flex-shrink-0 justify-center items-center bg-indigo-600 w-12 h-12 my-auto mx-4 rounded-full text-white/70 transition duration-150 ease-out hover:text-white active:scale-90 active:bg-indigo-500">
-            <x-tabler-user-up class="w-7 h-7" />
-        </button>
+        <!-- Action Buttons -->
+        <div class="flex items-center gap-2 px-4">
+            <button wire:click="acceptRequest"
+                    class="btn btn-sm btn-primary">
+                <x-tabler-check class="w-5 h-5" />
+            </button>
+            <button wire:click="declineRequest"
+                    class="btn btn-sm btn-ghost text-error">
+                <x-tabler-x class="w-5 h-5" />
+            </button>
+            <button wire:click="openProfile"
+                    class="btn btn-sm btn-ghost">
+                <x-tabler-user class="w-5 h-5" />
+            </button>
+        </div>
     </div>
 </section>

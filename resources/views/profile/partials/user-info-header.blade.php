@@ -51,13 +51,14 @@
             @else
                 <!-- Other user's profile - show follow/message buttons -->
                 <div class="flex space-x-3">
-                    <button class="btn btn-outline btn-primary">
-                        Follow
+                    <button wire:click="follow" 
+                            class="btn {{ $isFollowing ? 'btn-primary' : ($isPending ? 'btn-outline btn-secondary' : 'btn-outline btn-primary') }}">
+                        {{ $isFollowing ? 'Following' : ($isPending ? 'Pending' : 'Follow') }}
                     </button>
-                    <a href="{{ route('messages') }}" 
-                       class="btn btn-secondary">
-                        Message
-                    </a>
+                    <button wire:click="message"
+                            class="btn btn-secondary">
+                        <x-tabler-messages class="w-5 h-5 mr-2" /> Message
+                    </button>
                 </div>
             @endif
         </nav>

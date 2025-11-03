@@ -84,6 +84,24 @@ class User extends Authenticatable
     }
 
     /**
+     * Get users that this user is following (accepted connections where this user is the sender)
+     */
+    public function following(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'connections', 'sender_id', 'receiver_id')
+                    ->wherePivot('status', 'accepted');
+    }
+
+    /**
+     * Get users that are following this user (accepted connections where this user is the receiver)
+     */
+    public function followers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'connections', 'receiver_id', 'sender_id')
+                    ->wherePivot('status', 'accepted');
+    }
+
+    /**
      * Get users who have sent pending connection requests to this user.
      */
     public function getPendingRequests()

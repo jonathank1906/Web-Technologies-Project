@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Auth;
 class Index extends Component
 {
     public $query = '';
+    public $search = '';  // Add this for the search functionality
+    
+    protected $listeners = ['connection-updated' => '$refresh'];
 
     public function getUsersProperty()
     {
@@ -69,7 +72,7 @@ class Index extends Component
             })
             ->get();
 
-        $requests = $this->localUser->getPendingRequests();
+        $requests = Auth::user()->getPendingRequests();
 
         return view('livewire.connections.index', [
             'users' => $users,

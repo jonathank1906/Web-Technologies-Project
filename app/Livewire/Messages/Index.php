@@ -16,6 +16,12 @@ class Index extends Component
     public ?int $userId = null; // chatting with
     public string $body = '';
     public $attachment = null;
+    public string $search = '';  // Add search property for filtering friends
+    public ?int $selectedMessageIndex = null;
+    public ?int $editingMessageIndex = null;
+    public string $editingText = '';
+    public bool $showDeleteModal = false;
+    public string $newMessage = '';
 
 
     public function getChatPartnerProperty(): ?User
@@ -71,15 +77,58 @@ class Index extends Component
     public function getFriendsProperty()
     {
         $me = Auth::user();
+        return $me->getConnections();
+    }
 
-        return $me->friends();
+    public function getFilteredFriendsProperty()
+    {
+        return $this->friends
+            ->filter(function ($friend) {
+                return empty($this->search) || 
+                       str_contains(strtolower($friend->name), strtolower($this->search));
+            })
+            ->map(function ($friend) {
+                return $this->transformFriendData($friend);
+            });
+    }
+
+    public function getActiveFriendProperty()
+    {
+        if (!$this->userId) {
+            return null;
+        }
+        $friend = $this->friends->firstWhere('id', $this->userId);
+        return $friend ? $this->transformFriendData($friend) : null;
+    }
+
+    protected function transformFriendData($friend)
+    {
+        return [
+            'id' => $friend->id,
+            'name' => $friend->name,
+            'img' => strtoupper(substr($friend->name, 0, 1)), // First letter of name
+            'flag' => 'dk', // Default flag, adjust as needed
+            'unread' => $this->unreadCount($friend->id),
+            'lang' => 'English', // Default language
+            'messages' => $friend->id === $this->userId ? $this->messages->map(function($msg) {
+                return [
+                    'text' => $msg->body,
+                    'from_me' => $msg->sender_id === auth()->id()
+                ];
+            })->toArray() : []
+        ];
+    }
+
+    public function selectFriend(int $friendId): void
+    {
+        $this->userId = $friendId;
     }
 
     public function send(): void
     {
         \Log::info('Livewire Messages\Index::send called', ['user_id' => Auth::id(), 'chat_partner' => $this->userId]);
         $this->validate([
-            'body' => ['nullable', 'string', 'max:2000'],
+            'newMessage' => ['required', 'string', 'max:2000'],
             'attachment' => ['nullable', 'file', 'max:10240', 'mimes:png,jpg,jpeg,gif,webp,mp3,wav,ogg'],
         ]);
 
@@ -92,7 +141,7 @@ class Index extends Component
         $data = [
             'sender_id' => $me->id,
             'receiver_id' => $this->chatPartner->id,
-            'body' => $this->body,
+            'body' => $this->newMessage,
         ];
 
         if ($this->attachment) {
@@ -106,7 +155,7 @@ class Index extends Component
 
         Message::create($data);
 
-        $this->body = '';
+        $this->newMessage = '';
         $this->attachment = null;
         // Dispatch a Livewire browser event (Livewire v3 uses $this->dispatch())
         $this->dispatch('messageSent', [
@@ -131,10 +180,71 @@ class Index extends Component
             ->delete();
     }
 
+    public function selectMessage(int $index): void
+    {
+        $this->selectedMessageIndex = $index;
+    }
+
+    public function startEdit(int $index): void
+    {
+        $this->editingMessageIndex = $index;
+        $messages = $this->messages;
+        if ($messages->has($index)) {
+            $this->editingText = $messages[$index]->body;
+        }
+    }
+
+    public function saveEdit(): void
+    {
+        if ($this->editingMessageIndex === null) return;
+        
+        $messages = $this->messages;
+        if ($messages->has($this->editingMessageIndex)) {
+            $message = $messages[$this->editingMessageIndex];
+            Message::where('id', $message->id)->update(['body' => $this->editingText]);
+        }
+        
+        $this->editingMessageIndex = null;
+        $this->editingText = '';
+    }
+
+    public function cancelEdit(): void
+    {
+        $this->editingMessageIndex = null;
+        $this->editingText = '';
+    }
+
+    public function confirmDelete(int $index): void
+    {
+        $this->selectedMessageIndex = $index;
+        $this->showDeleteModal = true;
+    }
+
+    public function cancelDelete(): void
+    {
+        $this->showDeleteModal = false;
+        $this->selectedMessageIndex = null;
+    }
+
+    public function deleteMessage(): void
+    {
+        if ($this->selectedMessageIndex === null) return;
+        
+        $messages = $this->messages;
+        if ($messages->has($this->selectedMessageIndex)) {
+            $message = $messages[$this->selectedMessageIndex];
+            Message::where('id', $message->id)->delete();
+        }
+        
+        $this->showDeleteModal = false;
+        $this->selectedMessageIndex = null;
+    }
+
     public function render()
     {
-        
-
-        return view('livewire.messages.index');
+        return view('livewire.messages.index', [
+            'activeFriend' => $this->activeFriend,
+            'filteredFriends' => $this->filteredFriends
+        ]);
     }
 }

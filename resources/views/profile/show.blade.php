@@ -10,7 +10,7 @@
     <main class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             
-            @include('profile.partials.user-info-header')
+            <livewire:user.profile :user="$user" />
 
             <section x-data="{ activeTab: 'about' }" class="p-4 sm:p-8 bg-base-200 shadow sm:rounded-lg">
                 <header class="border-b border-base-300">

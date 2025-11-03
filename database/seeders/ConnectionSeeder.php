@@ -12,46 +12,7 @@ class ConnectionSeeder extends Seeder
      */
     public function run(): void
     {
-        Connection::create([
-            'sender_id' => 2,
-            'receiver_id' => 1,
-            'status' => 'pending',
-        ]);
-
-        Connection::create([
-            'sender_id' => 3,
-            'receiver_id' => 1,
-            'status' => 'pending',
-        ]);
-
-        Connection::create([
-            'sender_id' => 4,
-            'receiver_id' => 1,
-            'status' => 'pending',
-        ]);
-
-        Connection::create([
-            'sender_id' => 5,
-            'receiver_id' => 1,
-            'status' => 'pending',
-        ]);
-
-        Connection::create([
-            'sender_id' => 6,
-            'receiver_id' => 1,
-            'status' => 'pending',
-        ]);
-
-        Connection::create([
-            'sender_id' => 7,
-            'receiver_id' => 1,
-            'status' => 'accepted',
-        ]);
-
-        Connection::create([
-            'sender_id' => 8,
-            'receiver_id' => 1,
-            'status' => 'declined',
-        ]);
+        // No pre-seeded connections
+        // Connections will be created when users follow each other
     }
 }
