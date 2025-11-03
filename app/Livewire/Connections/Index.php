@@ -4,7 +4,6 @@ namespace App\Livewire\Connections;
 
 use App\Models\User;
 use Livewire\Component;
-use App\Models\User;
 use App\Models\Connection;
 use Illuminate\Support\Facades\Auth;
 
