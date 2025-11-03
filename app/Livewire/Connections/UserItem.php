@@ -2,52 +2,51 @@
 
 namespace App\Livewire\Connections;
 
+use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 
 class UserItem extends Component
 {
     protected $listeners = ['openProfile'];
 
+    public $user;
+
     public $name;
 
     public $description;
 
-    public $l1;
+    public $language1;
 
-    public $l2;
+    public $language2;
 
-    private $_tempAvailableStatuses = ['Online', 'Offline', 'Idle'];
+    public $countryCode;
+
+    public $avatarUrl;
+
+    public $flagUrl;
 
     public $status;
 
-    private $_tempAvailableEmojis = [
-        '👶', '🧒', '👦', '👧', '🧑', '👨', '👩', '🧓', '👴', '👵',
-        '👱', '👱‍♂️', '👱‍♀️', '🧑‍🦰', '🧑‍🦱', '🧑‍🦳', '🧑‍🦲',
-        '👨‍🦰', '👩‍🦰', '👨‍🦱', '👩‍🦱', '👨‍🦳', '👩‍🦳', '👨‍🦲', '👩‍🦲',
-        '🧔', '🧔‍♂️', '🧔‍♀️', '🧕', '👳', '👳‍♂️', '👳‍♀️', '👲',
-        '👮', '👮‍♂️', '👮‍♀️', '👷', '👷‍♂️', '👷‍♀️', '💂', '💂‍♂️', '💂‍♀️',
-    ];
-
-    public $_tempEmoji;
-
-    private $_tempAvailableCountries = ['lv', 'us', 'de', 'br', 'fr'];
-
-    public $country;
-
-    public function __construct($name = null, $description = null, $l1 = null, $l2 = null)
+    public function mount($user = null)
     {
-        $this->name = $name ?? fake()->name();
-        $this->description = $description ?? fake()->sentence();
-        $this->l1 = $l1 ?? strtoupper(fake()->languageCode());
-        $this->l2 = $l2 ?? strtoupper(fake()->languageCode());
-        $this->_tempEmoji = $this->_tempAvailableEmojis[array_rand($this->_tempAvailableEmojis)];
-        $this->country = $this->_tempAvailableCountries[array_rand($this->_tempAvailableCountries)];
-        $this->status = $this->_tempAvailableStatuses[array_rand($this->_tempAvailableStatuses)];
+        $this->user = $user;
+        $this->name = $user->name ?? 'Unknown User';
+        $this->description = $user->description ?? 'No description provided';
+        $this->language1 = $user->language1 ?? '??';
+        $this->language2 = $user->language2 ?? '??';
+        $this->countryCode = $user->countryCode ?? null;
+        $this->status = $user->status ?? 'No status';
+        $this->avatarUrl = ($user && $user->profile_picture && Storage::disk('public')->exists($user->profile_picture))
+            ? Storage::url($user->profile_picture)
+            : null;
+        $this->flagUrl = $this->countryCode
+            ? "https://cdn.jsdelivr.net/gh/lipis/flag-icons/flags/4x3/{$this->countryCode}.svg"
+            : 'https://placehold.co/120x120?text=??';
     }
 
     public function openProfile()
     {
-        return redirect()->route('profile.show');
+        return redirect()->route('profile.user', ['user' => $this->user->id]);
     }
 
     public function render()
