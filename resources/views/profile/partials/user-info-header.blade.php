@@ -1,10 +1,16 @@
 <header class="p-4 sm:p-8 bg-base-200 shadow sm:rounded-lg">
     <div class="p-6">
         <div class="flex items-center space-x-6">
-            <figure class="w-20 h-20 bg-primary rounded-full flex items-center justify-center">
-                <span class="text-2xl font-bold text-primary-content" aria-label="Profile avatar">
-                    {{ strtoupper(substr($user->name, 0, 1)) }}
-                </span>
+            <figure class="w-20 h-20 rounded-full overflow-hidden flex items-center justify-center">
+                @if($user->profile_picture && Storage::disk('public')->exists($user->profile_picture))
+                    <img src="{{ Storage::url($user->profile_picture) }}" alt="{{ $user->name }}'s profile" class="w-full h-full object-cover">
+                @else
+                    <div class="w-full h-full bg-primary rounded-full flex items-center justify-center">
+                        <span class="text-2xl font-bold text-primary-content" aria-label="Profile avatar">
+                            {{ strtoupper(substr($user->name, 0, 1)) }}
+                        </span>
+                    </div>
+                @endif
             </figure>
             
             <div class="flex-1">

@@ -49,6 +49,18 @@ class ProfileController extends Controller
     {
         $validated = $request->validated();
         
+        // Handle profile picture upload
+        if ($request->hasFile('profile_picture')) {
+            // Delete old profile picture if it exists
+            if ($request->user()->profile_picture) {
+                \Storage::disk('public')->delete($request->user()->profile_picture);
+            }
+            
+            // Store new profile picture
+            $path = $request->file('profile_picture')->store('profile-pictures', 'public');
+            $validated['profile_picture'] = $path;
+        }
+        
         // Convert hobbies string to array
         if (isset($validated['hobbies'])) {
             $validated['hobbies'] = array_filter(

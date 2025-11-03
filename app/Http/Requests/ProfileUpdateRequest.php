@@ -27,6 +27,7 @@ class ProfileUpdateRequest extends FormRequest
             ],
             'description' => ['nullable', 'string', 'max:1000'],
             'hobbies' => ['nullable', 'string', 'max:500'],
+            'profile_picture' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:2048'], // 2MB max
         ];
     }
 }

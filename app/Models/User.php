@@ -26,6 +26,7 @@ class User extends Authenticatable
         'password',
         'description',
         'hobbies',
+        'profile_picture',
     ];
 
     /**
@@ -58,6 +59,29 @@ class User extends Authenticatable
 
     function comments() : HasMany{
         return $this->hasMany( related: Comment::class);
+    }
+
+    /**
+     * Get the profile picture URL or default avatar
+     */
+    public function getProfilePictureUrl(): string
+    {
+        if ($this->profile_picture && \Storage::disk('public')->exists($this->profile_picture)) {
+            return \Storage::url($this->profile_picture);
+        }
+        
+        // Return default avatar (using initials)
+        return $this->getDefaultAvatarUrl();
+    }
+
+    /**
+     * Get default avatar URL (you can customize this)
+     */
+    public function getDefaultAvatarUrl(): string
+    {
+        // For now, we'll return null to keep using the current initial-based avatar
+        // You could integrate with services like Gravatar, UI Avatars, etc.
+        return '';
     }
 
     public function getRouteKeyName(): string
