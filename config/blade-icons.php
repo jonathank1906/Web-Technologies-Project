@@ -14,17 +14,19 @@ return [
     */
 
     'sets' => [
-        'default' => [
-            'path' => 'resources/svg',
-            'disk' => '',
-            'prefix' => 'icon',
-            'fallback' => '',
-            'class' => '',
-            'attributes' => [
-                'width' => 50,
-                'height' => 50,
-            ],
-        ],
+        // Commented out default set since resources/svg doesn't exist
+        // Uncomment and create the directory if you want to add local SVG icons
+        // 'default' => [
+        //     'path' => 'resources/svg',
+        //     'disk' => '',
+        //     'prefix' => 'icon',
+        //     'fallback' => '',
+        //     'class' => '',
+        //     'attributes' => [
+        //         'width' => 50,
+        //         'height' => 50,
+        //     ],
+        // ],
         
         //
         //     'path' => 'resources/svg',

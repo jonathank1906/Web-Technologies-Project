@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,6 +23,16 @@ class ProfileController extends Controller
     }
 
     /**
+     * Display any user's profile (public view).
+     */
+    public function showUser(User $user): View
+    {
+        return view('profile.show', [
+            'user' => $user,
+        ]);
+    }
+
+    /**
      * Display the user's profile form.
      */
     public function edit(Request $request): View
@@ -36,7 +47,29 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $validated = $request->validated();
+        
+        // Handle profile picture upload
+        if ($request->hasFile('profile_picture')) {
+            // Delete old profile picture if it exists
+            if ($request->user()->profile_picture) {
+                \Storage::disk('public')->delete($request->user()->profile_picture);
+            }
+            
+            // Store new profile picture
+            $path = $request->file('profile_picture')->store('profile-pictures', 'public');
+            $validated['profile_picture'] = $path;
+        }
+        
+        // Convert hobbies string to array
+        if (isset($validated['hobbies'])) {
+            $validated['hobbies'] = array_filter(
+                array_map('trim', explode(',', $validated['hobbies'] ?? '')),
+                fn($hobby) => !empty($hobby)
+            );
+        }
+        
+        $request->user()->fill($validated);
 
         if ($request->user()->isDirty('email')) {
             $request->user()->email_verified_at = null;
