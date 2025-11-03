@@ -41,54 +41,54 @@
             <!-- Tab Panels -->
             <section class="bg-base-200 p-6 rounded-lg shadow space-y-6">
 
-                <!-- Profile Tab -->
-<div x-show="tab === 'profile'" x-cloak
-     @edit-profile.window="profileView = 'edit'">
+                                <!-- Profile Tab -->
+                <div x-show="tab === 'profile'" x-cloak
+                    @edit-profile.window="profileView = 'edit'">
 
-    <template x-if="profileView === 'info'">
-        <div>
-            @include('profile.partials.user-info-header')
+                    <template x-if="profileView === 'info'">
+                        <div>
+                            @include('profile.partials.user-info-header')
 
-            <section x-data="{ activeTab: 'about' }" class="mt-6">
-                <header class="border-b border-base-300">
-                    <nav class="flex space-x-8 px-6" aria-label="Profile navigation">
-                        <button @click="activeTab = 'about'"
-                            :class="activeTab === 'about' ? 'border-primary text-primary' : 'border-transparent text-base-content/60'"
-                            class="py-4 px-1 border-b-2 font-medium text-sm">
-                            About
-                        </button>
-                        <button @click="activeTab = 'followers'"
-                            :class="activeTab === 'followers' ? 'border-primary text-primary' : 'border-transparent text-base-content/60'"
-                            class="py-4 px-1 border-b-2 font-medium text-sm">
-                            Followers
-                        </button>
-                    </nav>
-                </header>
+                            <section x-data="{ activeTab: 'about' }" class="mt-6">
+                                <header class="border-b border-base-300">
+                                    <nav class="flex space-x-8 px-6" aria-label="Profile navigation">
+                                        <button @click="activeTab = 'about'"
+                                            :class="activeTab === 'about' ? 'border-primary text-primary' : 'border-transparent text-base-content/60'"
+                                            class="py-4 px-1 border-b-2 font-medium text-sm">
+                                            About
+                                        </button>
+                                        <button @click="activeTab = 'followers'"
+                                            :class="activeTab === 'followers' ? 'border-primary text-primary' : 'border-transparent text-base-content/60'"
+                                            class="py-4 px-1 border-b-2 font-medium text-sm">
+                                            Followers
+                                        </button>
+                                    </nav>
+                                </header>
 
-                <div class="p-6">
-                    <section x-show="activeTab === 'about'">
-                        @include('profile.partials.about-tab-content')
-                    </section>
-                    <section x-show="activeTab === 'followers'">
-                        @include('profile.partials.followers-tab-content')
-                    </section>
+                                <div class="p-6">
+                                    <section x-show="activeTab === 'about'">
+                                        @include('profile.partials.about-tab-content')
+                                    </section>
+                                    <section x-show="activeTab === 'followers'">
+                                        @include('profile.partials.followers-tab-content')
+                                    </section>
+                                </div>
+                            </section>
+                        </div>
+                    </template>
+
+                    <template x-if="profileView === 'edit'">
+                        <div>
+                            <!-- Back Button -->
+                            <button @click="profileView = 'info'" class="btn btn-sm mb-4">
+                                ← Back to Profile
+                            </button>
+
+                            <!-- Profile Form -->
+                            @include('profile.partials.update-profile-information-form')
+                        </div>
+                    </template>
                 </div>
-            </section>
-        </div>
-    </template>
-
-    <template x-if="profileView === 'edit'">
-        <div>
-            <!-- Back Button -->
-            <button @click="profileView = 'info'" class="btn btn-sm mb-4">
-                ← Back to Profile
-            </button>
-
-            <!-- Profile Form -->
-            @include('profile.partials.update-profile-information-form')
-        </div>
-    </template>
-</div>
 
 
                 <!-- Settings Tab -->
