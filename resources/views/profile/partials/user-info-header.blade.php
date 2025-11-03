@@ -44,10 +44,10 @@
         <nav class="mt-4 flex justify-end" aria-label="Profile actions">
             @if(auth()->user()->id === $user->id)
                 <!-- Own profile - show edit button -->
-                <a href="{{ route('profile.edit') }}" 
-                   class="btn btn-primary">
+                <button @click="$dispatch('edit-profile')" class="btn btn-primary">
                     Edit Profile
-                </a>
+                </button>
+
             @else
                 <!-- Other user's profile - show follow/message buttons -->
                 <div class="flex space-x-3">
