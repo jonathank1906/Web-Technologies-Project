@@ -6,14 +6,23 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Connection extends Model
+class Message extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'sender_id',
         'receiver_id',
-        'status',
+        'body',
+        'read_at',
+        'attachment_path',
+        'attachment_type',
+        'attachment_meta',
+    ];
+
+    protected $casts = [
+        'attachment_meta' => 'array',
+        'read_at' => 'datetime',
     ];
 
     public function sender(): BelongsTo
@@ -26,3 +35,5 @@ class Connection extends Model
         return $this->belongsTo(User::class, 'receiver_id');
     }
 }
+
+

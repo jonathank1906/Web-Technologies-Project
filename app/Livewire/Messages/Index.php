@@ -3,171 +3,248 @@
 namespace App\Livewire\Messages;
 
 use Livewire\Component;
+use Livewire\WithFileUploads;
+use App\Models\Message;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Url;
 
 class Index extends Component
 {
-    public string $search = '';
-    public ?int $activeFriendId = null;
-    public array $activeFriend = [];
-    public string $newMessage = '';
+    use WithFileUploads;
+    #[Url]
+    public ?int $userId = null; // chatting with
+    public string $body = '';
+    public $attachment = null;
+    public string $search = '';  // Add search property for filtering friends
     public ?int $selectedMessageIndex = null;
     public ?int $editingMessageIndex = null;
     public string $editingText = '';
     public bool $showDeleteModal = false;
-    public ?int $deleteMessageIndex = null;
+    public string $newMessage = '';
 
-    public array $friends = [
-        [
-            'id' => 1, 'name' => 'Jonathan', 'flag' => 'us', 'img' => '🧔', 'lang' => 'EN <-> ES',
-            'messages' => [
-                ['text' => 'Hey! You ready to chat?', 'from_me' => false],
-                ['text' => 'Yes, I am ready!', 'from_me' => true],
-            ],
-        ],
-        [
-            'id' => 2, 'name' => 'Lukas', 'flag' => 'de', 'img' => '👨‍🦱', 'lang' => 'DE <-> FR',
-            'messages' => [['text' => 'I sent you a message yesterday.', 'from_me' => false]],
-        ],
-        [
-            'id' => 3, 'name' => 'Deivid', 'flag' => 'br', 'img' => '🧒', 'lang' => 'PT <-> EN',
-            'messages' => [['text' => 'Let’s learn together!', 'from_me' => false]],
-        ],
-        [
-            'id' => 4, 'name' => 'Benjamin', 'flag' => 'fr', 'img' => '👨‍🦰', 'lang' => 'FR <-> DE',
-            'messages' => [['text' => 'Bonjour! Ça va?', 'from_me' => false]],
-        ],
-        [
-            'id' => 5, 'name' => 'Daniils', 'flag' => 'lv', 'img' => '🧑', 'lang' => 'LV <-> EN',
-            'messages' => [
-                ['text' => 'See you later!', 'from_me' => false],
-                ['text' => 'Sure let’s do it!', 'from_me' => true],
-            ],
-        ],
-        [
-            'id' => 6, 'name' => 'Azzam', 'flag' => 'id', 'img' => '👳', 'lang' => 'ID <-> EN',
-            'messages' => [
-                ['text' => 'Apakah kamu bisa bantu saya?', 'from_me' => false],
-                ['text' => 'Tentu saja, ayo mulai.', 'from_me' => true],
-            ],
-        ],
-        [
-            'id' => 7, 'name' => 'Kryszhtof', 'flag' => 'pl', 'img' => '👨‍🔧', 'lang' => 'PL <-> EN',
-            'messages' => [
-                ['text' => 'Do you want to meet tomorrow?', 'from_me' => false],
-                ['text' => 'Yes, I’ll be ready.', 'from_me' => true],
-            ],
-        ],
-    ];
 
-    public function selectFriend($id)
+    public function getChatPartnerProperty(): ?User
     {
-        $this->activeFriendId = $id;
-        $this->activeFriend = collect($this->friends)->firstWhere('id', $id);
-        $this->reset('newMessage', 'editingText', 'editingMessageIndex', 'selectedMessageIndex', 'showDeleteModal');
-        $this->dispatch('scroll-to-bottom');
-    }
-
-    private function updateActiveFriend()
-    {
-        foreach ($this->friends as &$friend) {
-            if ($friend['id'] === $this->activeFriend['id']) {
-                $friend = $this->activeFriend;
-                break;
-            }
+        if (!$this->userId) {
+            return null;
         }
+        return User::query()->find($this->userId);
     }
 
-    public function sendMessage()
+    public function updatedUserId(): void
     {
-        if (!$this->activeFriendId || trim($this->newMessage) === '') return;
+        // when the chat partner changes, mark incoming messages as read
+        if (!$this->chatPartner) return;
 
-        $this->activeFriend['messages'][] = [
-            'text' => $this->newMessage,
-            'from_me' => true,
+        \App\Models\Message::query()
+            ->where('sender_id', $this->chatPartner->id)
+            ->where('receiver_id', Auth::id())
+            ->whereNull('read_at')
+            ->update(['read_at' => now()]);
+    }
+
+    public function unreadCount(int $userId): int
+    {
+        return \App\Models\Message::query()
+            ->where('sender_id', $userId)
+            ->where('receiver_id', Auth::id())
+            ->whereNull('read_at')
+            ->count();
+    }
+
+    public function getMessagesProperty()
+    {
+        if (!$this->chatPartner) {
+            return collect();
+        }
+
+        $me = Auth::user();
+
+        return Message::query()
+            ->where(function ($q) use ($me) {
+                $q->where('sender_id', $me->id)
+                  ->where('receiver_id', $this->chatPartner->id);
+            })
+            ->orWhere(function ($q) use ($me) {
+                $q->where('sender_id', $this->chatPartner->id)
+                  ->where('receiver_id', $me->id);
+            })
+            ->orderBy('created_at')
+            ->get();
+    }
+
+    public function getFriendsProperty()
+    {
+        $me = Auth::user();
+        return $me->getConnections();
+    }
+
+    public function getFilteredFriendsProperty()
+    {
+        return $this->friends
+            ->filter(function ($friend) {
+                return empty($this->search) || 
+                       str_contains(strtolower($friend->name), strtolower($this->search));
+            })
+            ->map(function ($friend) {
+                return $this->transformFriendData($friend);
+            });
+    }
+
+    public function getActiveFriendProperty()
+    {
+        if (!$this->userId) {
+            return null;
+        }
+        $friend = $this->friends->firstWhere('id', $this->userId);
+        return $friend ? $this->transformFriendData($friend) : null;
+    }
+
+    protected function transformFriendData($friend)
+    {
+        return [
+            'id' => $friend->id,
+            'name' => $friend->name,
+            'img' => strtoupper(substr($friend->name, 0, 1)), // First letter of name
+            'flag' => 'dk', // Default flag, adjust as needed
+            'unread' => $this->unreadCount($friend->id),
+            'lang' => 'English', // Default language
+            'messages' => $friend->id === $this->userId ? $this->messages->map(function($msg) {
+                return [
+                    'text' => $msg->body,
+                    'from_me' => $msg->sender_id === auth()->id()
+                ];
+            })->toArray() : []
+        ];
+    }
+
+    public function selectFriend(int $friendId): void
+    {
+        $this->userId = $friendId;
+    }
+
+    public function send(): void
+    {
+        \Log::info('Livewire Messages\Index::send called', ['user_id' => Auth::id(), 'chat_partner' => $this->userId]);
+        $this->validate([
+            'newMessage' => ['required', 'string', 'max:2000'],
+            'attachment' => ['nullable', 'file', 'max:10240', 'mimes:png,jpg,jpeg,gif,webp,mp3,wav,ogg'],
+        ]);
+
+        if (!$this->chatPartner) {
+            return;
+        }
+
+        $me = Auth::user();
+
+        $data = [
+            'sender_id' => $me->id,
+            'receiver_id' => $this->chatPartner->id,
+            'body' => $this->newMessage,
         ];
 
+        if ($this->attachment) {
+            $path = $this->attachment->store('messages', 'public');
+            $mime = $this->attachment->getClientMimeType();
+            $type = str_contains($mime, 'image') ? 'image' : (str_contains($mime, 'audio') ? 'audio' : 'file');
+            $data['attachment_path'] = $path;
+            $data['attachment_type'] = $type;
+            $data['attachment_meta'] = ['mime' => $mime, 'size' => $this->attachment->getSize()];
+        }
+
+        Message::create($data);
+
         $this->newMessage = '';
-        $this->updateActiveFriend();
-        $this->dispatch('scroll-to-bottom');
+        $this->attachment = null;
+        // Dispatch a Livewire browser event (Livewire v3 uses $this->dispatch())
+        $this->dispatch('messageSent', [
+            'from' => $me->id,
+            'to' => $this->chatPartner->id,
+        ]);
+    }
+    public function clearChat(): void
+    {
+        if (!$this->chatPartner) return;
+        $me = Auth::user();
+        // Delete all messages between the two users
+        Message::query()
+            ->where(function ($q) use ($me) {
+                $q->where('sender_id', $me->id)
+                  ->where('receiver_id', $this->chatPartner->id);
+            })
+            ->orWhere(function ($q) use ($me) {
+                $q->where('sender_id', $this->chatPartner->id)
+                  ->where('receiver_id', $me->id);
+            })
+            ->delete();
     }
 
-    public function selectMessage($index)
+    public function selectMessage(int $index): void
     {
         $this->selectedMessageIndex = $index;
     }
 
-    public function startEdit($index)
+    public function startEdit(int $index): void
     {
-        $msg = $this->activeFriend['messages'][$index];
-        if (!$msg['from_me']) return;
-
         $this->editingMessageIndex = $index;
-        $this->editingText = $msg['text'];
+        $messages = $this->messages;
+        if ($messages->has($index)) {
+            $this->editingText = $messages[$index]->body;
+        }
     }
 
-    public function saveEdit()
-{
-    if (is_null($this->editingMessageIndex)) return;
+    public function saveEdit(): void
+    {
+        if ($this->editingMessageIndex === null) return;
+        
+        $messages = $this->messages;
+        if ($messages->has($this->editingMessageIndex)) {
+            $message = $messages[$this->editingMessageIndex];
+            Message::where('id', $message->id)->update(['body' => $this->editingText]);
+        }
+        
+        $this->editingMessageIndex = null;
+        $this->editingText = '';
+    }
 
-    $index = $this->editingMessageIndex;
-
-    // ✅ reassign the whole message item (not nested mutation)
-    $this->activeFriend['messages'][$index] = [
-        'text' => $this->editingText,
-        'from_me' => true,
-    ];
-
-    $this->updateActiveFriend();
-    $this->cancelEdit();
-    $this->dispatch('scroll-to-bottom');
-}
-
-
-    public function cancelEdit()
+    public function cancelEdit(): void
     {
         $this->editingMessageIndex = null;
         $this->editingText = '';
     }
 
-    public function confirmDelete($index)
+    public function confirmDelete(int $index): void
     {
-        $msg = $this->activeFriend['messages'][$index];
-        if (!$msg['from_me']) return;
-
-        $this->deleteMessageIndex = $index;
+        $this->selectedMessageIndex = $index;
         $this->showDeleteModal = true;
     }
 
-    public function deleteMessage()
+    public function cancelDelete(): void
     {
-        if (is_null($this->deleteMessageIndex)) return;
-
-        unset($this->activeFriend['messages'][$this->deleteMessageIndex]);
-        $this->activeFriend['messages'] = array_values($this->activeFriend['messages']);
-        $this->cancelDelete();
-        $this->updateActiveFriend();
-        $this->dispatch('scroll-to-bottom');
-    }
-
-    public function cancelDelete()
-    {
-        $this->deleteMessageIndex = null;
         $this->showDeleteModal = false;
+        $this->selectedMessageIndex = null;
     }
 
-    public function getFilteredFriendsProperty()
+    public function deleteMessage(): void
     {
-        $search = strtolower($this->search);
-        return collect($this->friends)
-            ->filter(fn($friend) => str_contains(strtolower($friend['name']), $search))
-            ->values()
-            ->all();
+        if ($this->selectedMessageIndex === null) return;
+        
+        $messages = $this->messages;
+        if ($messages->has($this->selectedMessageIndex)) {
+            $message = $messages[$this->selectedMessageIndex];
+            Message::where('id', $message->id)->delete();
+        }
+        
+        $this->showDeleteModal = false;
+        $this->selectedMessageIndex = null;
     }
 
     public function render()
     {
-        
-
-        return view('livewire.messages.index');
+        return view('livewire.messages.index', [
+            'activeFriend' => $this->activeFriend,
+            'filteredFriends' => $this->filteredFriends
+        ]);
     }
 }

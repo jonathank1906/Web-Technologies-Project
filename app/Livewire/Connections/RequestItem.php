@@ -46,6 +46,32 @@ class RequestItem extends Component
         return redirect()->route('profile.user', ['user' => $this->user->id]);
     }
 
+    public function acceptRequest()
+    {
+        $connection = \App\Models\Connection::where('sender_id', $this->user->id)
+            ->where('receiver_id', auth()->id())
+            ->where('status', 'pending')
+            ->first();
+
+        if ($connection) {
+            $connection->update(['status' => 'accepted']);
+            $this->dispatch('connection-updated');
+        }
+    }
+
+    public function declineRequest()
+    {
+        $connection = \App\Models\Connection::where('sender_id', $this->user->id)
+            ->where('receiver_id', auth()->id())
+            ->where('status', 'pending')
+            ->first();
+
+        if ($connection) {
+            $connection->update(['status' => 'declined']);
+            $this->dispatch('connection-updated');
+        }
+    }
+
     public function render()
     {
         return view('livewire.connections.request-item');

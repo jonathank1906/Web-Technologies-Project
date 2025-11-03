@@ -8,6 +8,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Overtrue\LaravelLike\Traits\Liker;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Models\Connection;
 
 class User extends Authenticatable
 {
@@ -78,6 +81,24 @@ class User extends Authenticatable
     public function receivedConnections(): HasMany
     {
         return $this->hasMany(Connection::class, 'receiver_id');
+    }
+
+    /**
+     * Get users that this user is following (accepted connections where this user is the sender)
+     */
+    public function following(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'connections', 'sender_id', 'receiver_id')
+                    ->wherePivot('status', 'accepted');
+    }
+
+    /**
+     * Get users that are following this user (accepted connections where this user is the receiver)
+     */
+    public function followers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'connections', 'receiver_id', 'sender_id')
+                    ->wherePivot('status', 'accepted');
     }
 
     /**
