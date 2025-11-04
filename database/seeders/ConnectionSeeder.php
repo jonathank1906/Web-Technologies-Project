@@ -12,7 +12,10 @@ class ConnectionSeeder extends Seeder
      */
     public function run(): void
     {
-        // No pre-seeded connections
-        // Connections will be created when users follow each other
+         Connection::create([
+            'sender_id' => 1,
+            'receiver_id' => 2,
+            'status' => 'accepted',
+        ]);
     }
 }

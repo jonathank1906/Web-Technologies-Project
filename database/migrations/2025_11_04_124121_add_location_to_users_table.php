@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('country', 100)->nullable()->after('public_id');
+            $table->string('location', 100)->nullable()->after('public_id');
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('country');
+            $table->dropColumn('location');
         });
     }
 };

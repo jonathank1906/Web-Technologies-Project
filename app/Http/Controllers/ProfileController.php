@@ -8,6 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
@@ -20,7 +21,7 @@ class ProfileController extends Controller
         return view('profile.show', [
             'user' => $user,
             'isFollowing' => false,
-            'isPending' => false
+            'isPending' => false,
         ]);
     }
 
@@ -69,7 +70,7 @@ class ProfileController extends Controller
 
         $request->user()->save();
 
-        return Redirect::route('profile.show')->with('status', 'profile-updated');
+        return Redirect::route('profile.my')->with('status', 'profile-updated');
     }
 
     /**

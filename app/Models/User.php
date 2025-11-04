@@ -28,7 +28,7 @@ class User extends Authenticatable
         'email',
         'password',
         'description',
-        'country',
+        'location',
         'hobbies',
         'profile_picture',
     ];
@@ -138,24 +138,46 @@ class User extends Authenticatable
     /**
      * Get the profile picture URL or default avatar
      */
-    public function getProfilePictureUrl(): string
+    public function getProfilePictureUrl(): string | null
     {
         if ($this->profile_picture && \Storage::disk('public')->exists($this->profile_picture)) {
             return \Storage::url($this->profile_picture);
         }
 
-        // Return default avatar (using initials)
+        // Return default avatar
         return $this->getDefaultAvatarUrl();
     }
 
     /**
-     * Get default avatar URL (you can customize this)
+     * Get default avatar URL
      */
-    public function getDefaultAvatarUrl(): string
+    public function getDefaultAvatarUrl(): string | null
     {
-        // For now, we'll return null to keep using the current initial-based avatar
-        // You could integrate with services like Gravatar, UI Avatars, etc.
-        return '';
+        return null;
+    }
+
+
+    /**
+     * Get the flag picture URL or default flag picture
+     */
+    public function getFlagPictureUrl(): string
+    {
+        $location = $this->location ? strtolower($this->location) : null;
+
+        if ($location) {
+            return "https://cdn.jsdelivr.net/gh/lipis/flag-icons/flags/4x3/{$location}.svg";
+        }
+
+        // Return default flag
+        return $this->getDefaultFlagUrl();
+    }
+
+    /**
+     * Get default flag URL
+     */
+    public function getDefaultFlagUrl(): string
+    {
+        return "https://placehold.co/120x120?text=??";
     }
 
     protected static function booted()

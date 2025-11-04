@@ -7,17 +7,17 @@
                 <!-- Avatar -->
                 <div
                     class="relative w-16 h-16 m-4 flex flex-shrink-0 items-center justify-center text-2xl bg-primary rounded-full shadow">
-                    @if ($avatarUrl)
-                        <img src="{{ $avatarUrl }}" alt="{{ $user->name }}'s profile"
+                    @if ($user->getProfilePictureUrl())
+                        <img src="{{ $user->getProfilePictureUrl() }}" alt="{{ $user->name }}'s profile"
                             class="w-full h-full rounded-full shadow object-cover">
                     @else
                         <span class="text-2xl font-bold text-primary-content" >
-                            {{ strtoupper(substr($name, 0, 1)) }}
+                            {{ strtoupper(substr($user->name, 0, 1)) }}
                         </span>
                     @endif
 
-                    <img src="{{ $flagUrl }}" alt="flag"
-                        class="absolute bottom-0 right-0 w-5 h-5 object-cover rounded-full border border-white" />
+                    <img src="{{ $user->getFlagPictureUrl() }}" alt="flag"
+                        class="absolute bottom-0 right-0 w-5 h-5 object-cover rounded-full border border-base-100 shadow" />
                 </div>
                 
                 <!-- *Status (Not implemented) -->
@@ -33,7 +33,7 @@
             <div class="flex flex-col mt-4">
                 <div class="flex">
                     <h5 class="font-bold">
-                        {{ $name }}
+                        {{ $user->name }}
                     </h5>
                 </div>
 
