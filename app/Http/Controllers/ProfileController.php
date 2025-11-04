@@ -13,22 +13,14 @@ use Illuminate\View\View;
 class ProfileController extends Controller
 {
     /**
-     * Display the user's profile (public view).
-     */
-    public function show(Request $request): View
-    {
-        return view('profile.show', [
-            'user' => $request->user(),
-        ]);
-    }
-
-    /**
      * Display any user's profile (public view).
      */
-    public function showUser(User $user): View
+    public function show(User $user): View
     {
         return view('profile.show', [
             'user' => $user,
+            'isFollowing' => false,
+            'isPending' => false
         ]);
     }
 

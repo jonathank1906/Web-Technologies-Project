@@ -46,7 +46,7 @@ class UserItem extends Component
 
     public function openProfile()
     {
-        return redirect()->route('profile.user', ['user' => $this->user->id]);
+        return redirect()->route('profile.show', ['user' => $this->user]);
     }
 
     public function render()

@@ -4,13 +4,12 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Overtrue\LaravelLike\Traits\Liker;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use App\Models\Connection;
+use Str;
 
 class User extends Authenticatable
 {
@@ -29,6 +28,7 @@ class User extends Authenticatable
         'email',
         'password',
         'description',
+        'country',
         'hobbies',
         'profile_picture',
     ];
@@ -89,7 +89,7 @@ class User extends Authenticatable
     public function following(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'connections', 'sender_id', 'receiver_id')
-                    ->wherePivot('status', 'accepted');
+            ->wherePivot('status', 'accepted');
     }
 
     /**
@@ -98,7 +98,7 @@ class User extends Authenticatable
     public function followers(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'connections', 'receiver_id', 'sender_id')
-                    ->wherePivot('status', 'accepted');
+            ->wherePivot('status', 'accepted');
     }
 
     /**
@@ -158,8 +158,15 @@ class User extends Authenticatable
         return '';
     }
 
-    public function getRouteKeyName(): string
+    protected static function booted()
     {
-        return 'id';
+        static::creating(function ($user) {
+            $user->public_id = Str::random(12);
+        });
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'public_id';
     }
 }

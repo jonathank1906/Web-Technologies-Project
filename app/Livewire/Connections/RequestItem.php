@@ -43,12 +43,12 @@ class RequestItem extends Component
 
     public function openProfile()
     {
-        return redirect()->route('profile.user', ['user' => $this->user->id]);
+        return redirect()->route('profile.show', ['user' => $this->user]);
     }
 
     public function acceptRequest()
     {
-        $connection = \App\Models\Connection::where('sender_id', $this->user->id)
+        $connection = \App\Models\Connection::where('sender_id', $this->user)
             ->where('receiver_id', auth()->id())
             ->where('status', 'pending')
             ->first();
