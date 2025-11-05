@@ -123,13 +123,13 @@
 
                         if (event.deltaX > 20) {
                             event.target.style.transform = 'translate(' + moveOutWidth + 'px, 10px)';
-                            $dispatch('swipedright');
+                            //$dispatch('swipedright');
                         }
 
                         {{-- Swipe left --}}
                         else if (event.deltaX < -20) {
                             event.target.style.transform = 'translate(' + - moveOutWidth + 'px, 10px)';
-                            $dispatch('swipedleft');
+                            $dispatch('swipedleft'); 
                         }
                         event.target.remove();
                         $el.remove();
@@ -142,25 +142,41 @@
             <div class="h-full w-full">
 
                 <div class="pointer-events-none">
-                    <img src="https://randomuser.me/api/portraits/women/{{ rand(0, 99) }}.jpg" class="bg-center rounded-xl" draggable="false" />
-
+                    <img src="https://randomuser.me/api/portraits/women/{{ rand(0, 99) }}.jpg" class="h-full w-full bg-center rounded-xl" draggable="false" />
+                    
+                    {{-- swiper indicators --}}
                     <span
                         x-cloak
                         :class="{'invisible': !swipingRight}"
                         class="border-2 rounded-md p-1 px-2 border-red-500 text-red-500 text-4xl capitalize font-extrabold top-10 left-5 -rotate-12 absolute z-5">
-                        NOPE
+                        NEXT PLEASE
                     </span>
                     <span 
                         x-cloak
                         :class="{'invisible': !swipingLeft}"
                         class="border-2 rounded-md p-1 px-2 border-green-500 text-green-500 text-4xl capitalize font-extrabold top-10 right-5 rotate-12 absolute z-5">
-                        LIKE
+                        FOLLOW
                     </span>
                     
                 </div>
-
+                {{-- information and actions--}}
                 <section class="absolute inset-x-0 bottom-0 inset-y-1/2 py-2 bg-gradient-to-t from-black to-black/0 pointer-events-none">
                     <div class="flex flex-col h-ful gap-2.5 mt-auto p-5 text-white">
+                        {{--personal details--}}
+                        <div class="grid grid-cols-12 items-center">
+
+                            <div class="col-span-10">
+                            <h4 class="font-bold text-3xl">
+                                {{fake()->name}}
+                            </h4>
+
+                            <p class="text-lg line-clamp-3">
+                                lorem ipsum and so on yada yada
+                            </p>
+
+                            </div>
+
+                        </div>
                         <div class="items-center">
                             {{-- -Action Buttons --}}
                             <div class="grid grid-cols-5 gap-1 items-center mt-auto">
