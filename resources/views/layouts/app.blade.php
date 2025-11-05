@@ -52,8 +52,8 @@
                         <span class="sidebar-text">Profile</span>
                     </a>
                 </li>
-                <li>
-                    <a href="{{ route('post.create') }}" class="sidebar-link">
+                <li class="sidebar-item">
+                    <a href="{{ route('post.create') }}" class="sidebar-link hover:bg-base-300">
                         <x-tabler-plus class="sidebar-icon" />
                         <span class="sidebar-text">Create Post</span>
                     </a>
