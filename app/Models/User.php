@@ -4,13 +4,12 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Overtrue\LaravelLike\Traits\Liker;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use App\Models\Connection;
+use Str;
 
 class User extends Authenticatable
 {
@@ -29,6 +28,7 @@ class User extends Authenticatable
         'email',
         'password',
         'description',
+        'location',
         'hobbies',
         'profile_picture',
     ];
@@ -89,7 +89,7 @@ class User extends Authenticatable
     public function following(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'connections', 'sender_id', 'receiver_id')
-                    ->wherePivot('status', 'accepted');
+            ->wherePivot('status', 'accepted');
     }
 
     /**
@@ -98,7 +98,7 @@ class User extends Authenticatable
     public function followers(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'connections', 'receiver_id', 'sender_id')
-                    ->wherePivot('status', 'accepted');
+            ->wherePivot('status', 'accepted');
     }
 
     /**
@@ -138,28 +138,57 @@ class User extends Authenticatable
     /**
      * Get the profile picture URL or default avatar
      */
-    public function getProfilePictureUrl(): string
+    public function getProfilePictureUrl(): string | null
     {
         if ($this->profile_picture && \Storage::disk('public')->exists($this->profile_picture)) {
             return \Storage::url($this->profile_picture);
         }
 
-        // Return default avatar (using initials)
+        // Return default avatar
         return $this->getDefaultAvatarUrl();
     }
 
     /**
-     * Get default avatar URL (you can customize this)
+     * Get default avatar URL
      */
-    public function getDefaultAvatarUrl(): string
+    public function getDefaultAvatarUrl(): string | null
     {
-        // For now, we'll return null to keep using the current initial-based avatar
-        // You could integrate with services like Gravatar, UI Avatars, etc.
-        return '';
+        return null;
     }
 
-    public function getRouteKeyName(): string
+
+    /**
+     * Get the flag picture URL or default flag picture
+     */
+    public function getFlagPictureUrl(): string
     {
-        return 'id';
+        $location = $this->location ? strtolower($this->location) : null;
+
+        if ($location) {
+            return "https://cdn.jsdelivr.net/gh/lipis/flag-icons/flags/4x3/{$location}.svg";
+        }
+
+        // Return default flag
+        return $this->getDefaultFlagUrl();
+    }
+
+    /**
+     * Get default flag URL
+     */
+    public function getDefaultFlagUrl(): string
+    {
+        return "https://placehold.co/120x120?text=??";
+    }
+
+    protected static function booted()
+    {
+        static::creating(function ($user) {
+            $user->public_id = Str::random(12);
+        });
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'public_id';
     }
 }

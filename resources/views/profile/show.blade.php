@@ -1,12 +1,4 @@
 <x-app-layout>
-    <header class="sticky top-0 backdrop-blur-md bg-base-200/10 shadow">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 py-6">
-            <h2 class="font-semibold text-xl text-base-content leading-tight">
-                {{ __('Profile') }}
-            </h2>
-        </div>
-    </header>
-
     <main class="py-12" x-data="{ 
         tab: 'profile', 
         profileView: 'info',
@@ -17,22 +9,19 @@
             <!-- Top Tabs -->
             <section class="bg-base-200 p-4 rounded-lg shadow">
                 <nav class="flex space-x-6" role="tablist">
-                    <button @click="tab = 'profile'; profileView = 'info'" 
+                    <button @click="tab = 'profile'; profileView = 'info'"
                         :class="tab === 'profile' ? 'border-b-2 border-primary text-primary' : 'text-base-content/60'"
-                        class="py-2 font-semibold focus:outline-none"
-                        role="tab">
+                        class="py-2 font-semibold focus:outline-none" role="tab">
                         Profile
                     </button>
-                    <button @click="tab = 'settings'; settingsView = 'cards'" 
+                    <button @click="tab = 'settings'; settingsView = 'cards'"
                         :class="tab === 'settings' ? 'border-b-2 border-primary text-primary' : 'text-base-content/60'"
-                        class="py-2 font-semibold focus:outline-none"
-                        role="tab">
+                        class="py-2 font-semibold focus:outline-none" role="tab">
                         Settings
                     </button>
-                    <button @click="tab = 'privacy'" 
+                    <button @click="tab = 'privacy'"
                         :class="tab === 'privacy' ? 'border-b-2 border-primary text-primary' : 'text-base-content/60'"
-                        class="py-2 font-semibold focus:outline-none"
-                        role="tab">
+                        class="py-2 font-semibold focus:outline-none" role="tab">
                         Privacy
                     </button>
                 </nav>
@@ -41,16 +30,15 @@
             <!-- Tab Panels -->
             <section class="bg-base-200 p-6 rounded-lg shadow space-y-6">
 
-                                <!-- Profile Tab -->
-                <div x-show="tab === 'profile'" x-cloak
-                    @edit-profile.window="profileView = 'edit'">
+                <!-- Profile Tab -->
+                <div x-show="tab === 'profile'" x-cloak @edit-profile.window="profileView = 'edit'">
 
                     <template x-if="profileView === 'info'">
                         <div>
                             @include('profile.partials.user-info-header')
 
                             <section x-data="{ activeTab: 'about' }" class="mt-6">
-                                <header class="border-b border-base-300">
+                                <header class="border-b border-base-300 bg-base-100 rounded-t-lg">
                                     <nav class="flex space-x-8 px-6" aria-label="Profile navigation">
                                         <button @click="activeTab = 'about'"
                                             :class="activeTab === 'about' ? 'border-primary text-primary' : 'border-transparent text-base-content/60'"
@@ -65,7 +53,7 @@
                                     </nav>
                                 </header>
 
-                                <div class="p-6">
+                                <div class="p-6 bg-base-100 rounded-lg rounded-t-none">
                                     <section x-show="activeTab === 'about'">
                                         @include('profile.partials.about-tab-content')
                                     </section>

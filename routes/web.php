@@ -1,10 +1,9 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\ProfileController;
 use App\Livewire\Home;
 use Illuminate\Support\Facades\Route;
-
 
 Route::get('/', Home::class)->middleware('auth')->name('home');
 
@@ -17,9 +16,11 @@ Route::get('/posts/{post}', \App\Livewire\Post\Show::class)->middleware('auth')-
 Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('post.destroy');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::get('/profile', function () {
+        return redirect()->route('profile.show', ['user' => auth()->user()]);
+    })->middleware('auth')->name('profile.my');
+    Route::get('/profile/{user}', [ProfileController::class, 'show'])->name('profile.show');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::get('/profile/{user}', [ProfileController::class, 'showUser'])->name('profile.user');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });

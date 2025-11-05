@@ -67,7 +67,7 @@
                 <dl class="space-y-2 text-sm">
                     <div class="flex justify-between">
                         <dt class="text-base-content/60">Location:</dt>
-                        <dd class="text-base-content">Vienna, Austria</dd>
+                        <dd class="text-base-content">{{ config('countries')[$user->location] ?? 'Not provided' }}</dd>
                     </div>
                     <div class="flex justify-between">
                         <dt class="text-base-content/60">Joined:</dt>
