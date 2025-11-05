@@ -26,13 +26,11 @@ class ProfileController extends Controller
     }
 
     /**
-     * Display the user's profile form.
+     * Display the user's settings.
      */
-    public function edit(Request $request): View
+    public function edit(): RedirectResponse
     {
-        return view('profile.edit', [
-            'user' => $request->user(),
-        ]);
+        return Redirect::to(route('profile.show', ['user' => auth()->user()]) . '#settings');
     }
 
     /**

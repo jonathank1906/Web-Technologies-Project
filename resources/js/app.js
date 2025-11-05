@@ -1,8 +1,10 @@
 import "./bootstrap";
 
 import Alpine from "alpinejs";
+import profilePage from './components/profilePage.js';
 
 window.Alpine = Alpine;
+Alpine.data('profilePage', profilePage);
 
 Alpine.start();
 
