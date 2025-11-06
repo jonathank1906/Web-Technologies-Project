@@ -4,13 +4,10 @@ namespace App\Livewire\Connections;
 
 use App\Models\User;
 use Livewire\Component;
-use App\Models\Connection;
-use Illuminate\Support\Facades\Auth;
 
 class Index extends Component
 {
-    public $query = '';
-    public $search = '';  // Add this for the search functionality
+    public $search = '';
     public function render()
     {
         $users = User::query()
@@ -20,11 +17,11 @@ class Index extends Component
             })
             ->get();
 
-        $requests = collect();
+        $notifications = collect();
 
         return view('livewire.connections.index', [
             'users' => $users,
-            'requests' => $requests,
+            'notifications' => $notifications,
         ]);
     }
 }

@@ -11,7 +11,7 @@
                         class="lg:hidden hover:bg-gray-700/50 active:bg-gray-600/50 active:scale-90 text-gray-200 rounded-full p-2 transition relative">
                         <x-tabler-bell-filled class="text-base-content w-6 h-6" />
                         <span
-                            class="{{ $requests->isNotEmpty() ? 'block' : 'hidden' }} absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-red-600 border border-base-100">
+                            class="{{ $notifications->isNotEmpty() ? 'block' : 'hidden' }} absolute top-2 right-2 w-2.5 h-2.5 rounded-full bg-red-600 border border-base-100">
                         </span>
                     </button>
                 </div>
@@ -48,27 +48,27 @@
             </ul>
         </section>
 
-        <!-- Requests Section (hidden on large screens) -->
-        <section id="requestsView" class="hidden">
+        <!-- Notifications Section (hidden on large screens) -->
+        <section id="notificationsView" class="hidden">
             <header class="px-4 pt-2 pb-5 flex items-center gap-2">
                 <button id="backToConnectionsBtn"
                         class="hover:bg-gray-700/50 active:bg-gray-600/50 active:scale-90 text-gray-200 rounded-full p-2 transition">
                     <x-tabler-arrow-left class="text-base-content w-6 h-6" />
                 </button>
-                <h2 class="font-bold text-2xl">Incoming Requests</h2>
+                <h2 class="font-bold text-2xl">Notifications</h2>
             </header>
 
-            <!-- Requests List -->
+            <!-- Notifications List -->
             <ul class="pb-2">
-                @forelse ($requests as $request)
+                @forelse ($notifications as $notification)
                     <li>
-                        <livewire:connections.request-item :user="$request" wire:key="user-{{ $request->id }}" />
+                        <livewire:connections.notification-item :user="$notification" wire:key="user-{{ $notification->id }}" />
                     </li>
                 @empty
                     <li class="border-t border-base-300 w-full py-6 flex flex-col items-center justify-center text-center">
                         <x-tabler-mail class="text-base-content w-10 h-10 text-gray-500 mb-3" />
                         <p class="text-gray-600 dark:text-gray-400 font-light">
-                            No new requests at the moment.
+                            No new notifications at the moment.
                         </p>
                     </li>
                 @endforelse
@@ -76,21 +76,21 @@
         </section>
     </div>
 
-    <!-- Requests Side Column (visible on large screens) -->
+    <!-- Notifications Side Column (visible on large screens) -->
     <aside class="hidden lg:flex flex-col w-[35%] max-w-xs self-start mt-5 sticky top-5 border border-base-300 bg-base-200 shadow rounded-lg">
         <header class="px-4 pt-2 pb-5">
-            <h2 class="font-bold text-2xl">Incoming Requests</h2>
+            <h2 class="font-bold text-2xl">Notifications</h2>
         </header>
         <ul class="">
-            @forelse ($requests as $request)
+            @forelse ($notifications as $notification)
                 <li>
-                    <livewire:connections.request-item :user="$request" wire:key="user-{{ $request->id }}" />
+                    <livewire:connections.notification-item :user="$notification" wire:key="user-{{ $notification->id }}" />
                 </li>
             @empty
                 <li class="border-t border-base-300 w-full py-6 flex flex-col items-center justify-center text-center">
                     <x-tabler-mail class="text-base-content w-10 h-10 text-gray-500 mb-3" />
                     <p class="text-gray-600 dark:text-gray-400 font-light">
-                        No new requests at the moment.
+                        No new notifications at the moment.
                     </p>
                 </li>
             @endforelse
@@ -104,30 +104,30 @@
         const toggleViewBtn = document.getElementById("toggleViewBtn");
         const backBtn = document.getElementById("backToConnectionsBtn");
         const connectionsView = document.getElementById("connectionsView");
-        const requestsView = document.getElementById("requestsView");
+        const notificationsView = document.getElementById("notificationsView");
 
         let currentView = "connections";
 
         function showConnections() {
             if (currentView === "connections") return;
-            requestsView.classList.add("hidden");
+            notificationsView.classList.add("hidden");
             connectionsView.classList.remove("hidden");
             currentView = "connections";
         }
 
-        function showRequests() {
-            if (currentView === "requests") return;
+        function showNotifications() {
+            if (currentView === "notifications") return;
             connectionsView.classList.add("hidden");
-            requestsView.classList.remove("hidden");
-            currentView = "requests";
+            notificationsView.classList.remove("hidden");
+            currentView = "notifications";
         }
 
-        toggleViewBtn?.addEventListener("click", showRequests);
+        toggleViewBtn?.addEventListener("click", showNotifications);
         backBtn?.addEventListener("click", showConnections);
 
         window.addEventListener("resize", () => {
             const isDesktop = window.innerWidth >= 1024;
-            if (isDesktop && currentView === "requests") {
+            if (isDesktop && currentView === "notifications") {
                 showConnections();
             }
         });
