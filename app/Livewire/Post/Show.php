@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Livewire\Post;
 
 use App\Models\Comment;
@@ -8,21 +9,36 @@ use Livewire\Component;
 class Show extends Component
 {
     public Post $post;
-    public $body;
-    public $parent_id=null;
+    public string $body = '';
+    public $parent_id = null;
 
-    function addComment() {
-        $this->validate(rules:['body'=>'required']);
+    protected $rules = [
+        'body' => 'required|min:1|max:500'
+    ];
+
+    function addComment()
+    {
+        $this->validate();
 
         # Create comment
         Comment::create([
-            'body'=>$this->body,
-            'parent_id'=>$this->parent_id,
-            'commentable_id'=>$this->post->id,
-            'commentable_type'=>Post::class,
-            'user_id'=>auth()->id(),
+            'body' => $this->body,
+            'parent_id' => $this->parent_id,
+            'commentable_id' => $this->post->id,
+            'commentable_type' => Post::class,
+            'user_id' => auth()->id(),
         ]);
-        $this->reset('body');
+
+        $this->reset('body', 'parent_id');
+
+        // Refresh the post with relationships
+        $this->post = $this->post->fresh(['user', 'media', 'comments.user'])->loadCount('likes', 'comments');
+    }
+
+    function setParent(Comment $comment)
+    {
+        $this->parent_id = $comment->id;
+        $this->body = "@" . $comment->user->name . " ";
         $this->post = $this->post->fresh(['user', 'media', 'comments.user'])->loadCount('likes', 'comments');
     }
 
@@ -33,7 +49,20 @@ class Show extends Component
 
     public function render()
     {
-        $comments = $this->post->comments;
-        return view('livewire.post.show',data:['comments'=>$comments]);
+        $comments = $this->post->comments()
+            ->whereNull('parent_id')
+            ->with(['user', 'replies.user'])
+            ->get();
+
+        return view('livewire.post.show', ['comments' => $comments]);
+    }
+
+    function toggleCommentLike(Comment $comment)
+    {
+
+        abort_unless(auth()->check(), 401);
+
+        auth()->user()->toggleLike($comment);
+        $this->post = $this->post->fresh(['user', 'media', 'comments.user'])->loadCount('likes', 'comments');
     }
 }
