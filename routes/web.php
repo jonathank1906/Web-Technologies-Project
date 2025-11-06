@@ -18,11 +18,15 @@ Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('post.d
 Route::middleware('auth')->group(function () {
     Route::get('/profile', function () {
         return redirect()->route('profile.show', ['user' => auth()->user()]);
-    })->middleware('auth')->name('profile.my');
-    Route::get('/profile/{user}', [ProfileController::class, 'show'])->name('profile.show');
+    })->name('profile.my');
+    
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/profile/{user}', [ProfileController::class, 'show'])->name('profile.show');
+    Route::post('/profile/{user}/follow', [ProfileController::class, 'follow'])->name('profile.follow');
+    Route::delete('/profile/{user}/unfollow', [ProfileController::class, 'unfollow'])->name('profile.unfollow');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
 
 require __DIR__.'/auth.php';

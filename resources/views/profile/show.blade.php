@@ -1,9 +1,5 @@
 <x-app-layout>
-    <main class="py-12" x-data="{ 
-        tab: 'profile', 
-        profileView: 'info',
-        settingsView: 'cards' 
-    }">
+    <main class="py-12" x-data="profilePage">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
 
             <!-- Top Tabs -->
@@ -14,16 +10,18 @@
                         class="py-2 font-semibold focus:outline-none" role="tab">
                         Profile
                     </button>
-                    <button @click="tab = 'settings'; settingsView = 'cards'"
-                        :class="tab === 'settings' ? 'border-b-2 border-primary text-primary' : 'text-base-content/60'"
-                        class="py-2 font-semibold focus:outline-none" role="tab">
-                        Settings
-                    </button>
-                    <button @click="tab = 'privacy'"
-                        :class="tab === 'privacy' ? 'border-b-2 border-primary text-primary' : 'text-base-content/60'"
-                        class="py-2 font-semibold focus:outline-none" role="tab">
-                        Privacy
-                    </button>
+                    @if ($user == Auth::user())
+                        <button @click="tab = 'settings'; settingsView = 'cards'"
+                            :class="tab === 'settings' ? 'border-b-2 border-primary text-primary' : 'text-base-content/60'"
+                            class="py-2 font-semibold focus:outline-none" role="tab">
+                            Settings
+                        </button>
+                        <button @click="tab = 'privacy'"
+                            :class="tab === 'privacy' ? 'border-b-2 border-primary text-primary' : 'text-base-content/60'"
+                            class="py-2 font-semibold focus:outline-none" role="tab">
+                            Privacy
+                        </button>
+                    @endif
                 </nav>
             </section>
 
@@ -50,6 +48,11 @@
                                             class="py-4 px-1 border-b-2 font-medium text-sm">
                                             Followers
                                         </button>
+                                        <button @click="activeTab = 'following'"
+                                            :class="activeTab === 'following' ? 'border-primary text-primary' : 'border-transparent text-base-content/60'"
+                                            class="py-4 px-1 border-b-2 font-medium text-sm">
+                                            Following
+                                        </button>
                                     </nav>
                                 </header>
 
@@ -59,6 +62,9 @@
                                     </section>
                                     <section x-show="activeTab === 'followers'">
                                         @include('profile.partials.followers-tab-content')
+                                    </section>
+                                    <section x-show="activeTab === 'following'">
+                                        @include('profile.partials.following-tab-content')
                                     </section>
                                 </div>
                             </section>
@@ -84,27 +90,37 @@
 
                     <!-- Cards Grid -->
                     <div x-show="settingsView === 'cards'" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <button @click="settingsView = 'appearance'" class="card bg-base-100 p-6 text-center shadow">
+                        <button @click="settingsView = 'appearance'"
+                            class="card bg-base-100 p-6 text-center shadow rounded-lg transform transition duration-100 hover:scale-105 hover:shadow-xl active:scale-95">
                             <span class="text-3xl">🌙</span>
                             <p class="mt-2 font-semibold">Appearance</p>
                         </button>
-                        <button @click="settingsView = 'notifications'" class="card bg-base-100 p-6 text-center shadow">
+
+                        <button @click="settingsView = 'notifications'"
+                            class="card bg-base-100 p-6 text-center shadow rounded-lg transform transition duration-100 hover:scale-105 hover:shadow-xl active:scale-95">
                             <span class="text-3xl">🔔</span>
                             <p class="mt-2 font-semibold">Notifications</p>
                         </button>
-                        <button @click="settingsView = 'blocks'" class="card bg-base-100 p-6 text-center shadow">
+
+                        <button @click="settingsView = 'blocks'"
+                            class="card bg-base-100 p-6 text-center shadow rounded-lg transform transition duration-100 hover:scale-105 hover:shadow-xl active:scale-95">
                             <span class="text-3xl">🚫</span>
                             <p class="mt-2 font-semibold">Blocks</p>
                         </button>
-                        <button @click="settingsView = 'posts'" class="card bg-base-100 p-6 text-center shadow">
+
+                        <button @click="settingsView = 'posts'"
+                            class="card bg-base-100 p-6 text-center shadow rounded-lg transform transition duration-100 hover:scale-105 hover:shadow-xl active:scale-95">
                             <span class="text-3xl">📝</span>
                             <p class="mt-2 font-semibold">Posts</p>
                         </button>
-                        <button @click="settingsView = 'help'" class="card bg-base-100 p-6 text-center shadow">
+
+                        <button @click="settingsView = 'help'"
+                            class="card bg-base-100 p-6 text-center shadow rounded-lg transform transition duration-100 hover:scale-105 hover:shadow-xl active:scale-95">
                             <span class="text-3xl">❓</span>
                             <p class="mt-2 font-semibold">Help</p>
                         </button>
                     </div>
+
 
                     <!-- Sub Views -->
                     <div x-show="settingsView === 'appearance'">
