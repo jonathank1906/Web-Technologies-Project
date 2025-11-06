@@ -20,7 +20,7 @@ class ProfileController extends Controller
         return view('profile.show', [
             'user' => $user,
             'followers' => $user?->followers(),
-            'following' =>$user?->following(),
+            'following' => $user?->following(),
             'isFollowing' => $authUser?->isFollowing($user) ?? false,
             'isFollowedBy' => $authUser?->isFollowedBy($user) ?? false,
         ]);
@@ -85,7 +85,19 @@ class ProfileController extends Controller
     /** Follow another user. */
     public function follow(User $user): RedirectResponse
     {
-        auth()->user()->follow($user);
+        $authUser = auth()->user();
+        $authUser->follow($user);
+
+        if (! $user->getNotifications()
+            ->where('sender_id', $authUser->id)
+            ->where('type', 'follow')
+            ->exists()) {
+
+            $user->getNotifications()->create([
+                'sender_id' => $authUser->id,
+                'type' => 'follow',
+            ]);
+        }
 
         return back();
     }

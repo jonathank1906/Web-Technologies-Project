@@ -3,7 +3,6 @@
     <div class="flex justify-between w-full">
         <div class="flex">
             <div>
-                
                 <!-- Avatar -->
                 <div
                     class="relative w-12 h-12 m-4 flex flex-shrink-0 items-center justify-center text-2xl bg-primary rounded-full shadow">
@@ -19,7 +18,7 @@
                     <img src="{{ $user->getFlagPictureUrl() }}" alt="flag"
                         class="absolute bottom-0 right-0 w-4 h-4 object-cover rounded-full border border-base-100 shadow" />
                 </div>
-                
+
                 <!-- *Status (Not implemented) -->
                 <div class="flex items-center justify-center gap-1 my-1 -mt-3">
                     <div
@@ -28,36 +27,31 @@
                     <p class="font-normal text-xs text-gray-500 dark:text-gray-200/90">{{ $status }}</p>
                 </div>
             </div>
-            
-            <!-- User Information -->
-            <div class="flex flex-col mt-4">
-                <div class="flex">
-                    <h5 class="font-bold">
-                        {{ $user->name }}
-                    </h5>
-                </div>
 
-                <div class="flex gap-1 text-sm font-bold items-center mb-2">
-                    <span> {{ $language1 }} </span>
-                    <span> <x-tabler-transfer class="w-4 h-4 text-gray-500 dark:text-gray-200/40" /> </span>
-                    <span> {{ $language2 }} </span>
-                </div>
+            <!-- Message -->
+            <div class="flex flex-col justify-between pt-4 pb-2">
+                <h5>
+                    <span class="font-bold">{{ $user->name }}</span> followed you.
+                </h5>
+                <p>
+                    <span class="text-gray-500 text-sm">
+                        {{ $notification->created_at->diffForHumans() }}
+                    </span>
+                </p>
             </div>
         </div>
 
-        <!-- Action Buttons -->
-        <div class="flex items-center gap-2 px-4">
-            <button wire:click="acceptRequest"
-                    class="btn btn-sm btn-primary">
-                <x-tabler-check class="w-5 h-5" />
-            </button>
-            <button wire:click="declineRequest"
-                    class="btn btn-sm btn-ghost text-error">
-                <x-tabler-x class="w-5 h-5" />
-            </button>
+        <div class="flex gap-3">
+            <!-- Button for opening the user's profile -->
             <button wire:click="openProfile"
-                    class="btn btn-sm btn-ghost">
-                <x-tabler-user class="w-5 h-5" />
+                class="flex flex-shrink-0 justify-center items-center bg-indigo-600 w-12 h-12 my-auto rounded-full transition duration-150 ease-out active:scale-90 active:bg-indigo-700">
+                <x-tabler-user-up class="w-7 h-7 text-white" />
+            </button>
+
+            <!-- Button for removing the notification -->
+            <button wire:click="removeNotification"
+                class="flex flex-shrink-0 justify-center items-center bg-gray-400 dark:bg-base-300 w-12 h-12 my-auto mr-1 rounded-full transition duration-150 ease-out active:scale-90 active:bg-gray-500 dark:active:bg-base-200">
+                <x-tabler-x class="w-6 h-6 text-white" />
             </button>
         </div>
     </div>

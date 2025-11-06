@@ -62,7 +62,7 @@
             <ul class="pb-2">
                 @forelse ($notifications as $notification)
                     <li>
-                        <livewire:connections.notification-item :user="$notification" wire:key="user-{{ $notification->id }}" />
+                        <livewire:connections.notification-item :notification="$notification" wire:key="notification-{{ $notification->id }}" />
                     </li>
                 @empty
                     <li class="border-t border-base-300 w-full py-6 flex flex-col items-center justify-center text-center">
@@ -84,7 +84,7 @@
         <ul class="">
             @forelse ($notifications as $notification)
                 <li>
-                    <livewire:connections.notification-item :user="$notification" wire:key="user-{{ $notification->id }}" />
+                    <livewire:connections.notification-item :notification="$notification" wire:key="notification-{{ $notification->id }}" />
                 </li>
             @empty
                 <li class="border-t border-base-300 w-full py-6 flex flex-col items-center justify-center text-center">

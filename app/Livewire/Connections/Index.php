@@ -7,7 +7,10 @@ use Livewire\Component;
 
 class Index extends Component
 {
+    protected $listeners = ['refreshNotifications' => '$refresh'];
+
     public $search = '';
+
     public function render()
     {
         $users = User::query()
@@ -17,7 +20,11 @@ class Index extends Component
             })
             ->get();
 
-        $notifications = collect();
+        $notifications = auth()->user()
+            ->getNotifications()
+            ->with('sender')
+            ->latest()
+            ->get();
 
         return view('livewire.connections.index', [
             'users' => $users,
