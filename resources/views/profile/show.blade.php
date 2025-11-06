@@ -48,6 +48,11 @@
                                             class="py-4 px-1 border-b-2 font-medium text-sm">
                                             Followers
                                         </button>
+                                        <button @click="activeTab = 'following'"
+                                            :class="activeTab === 'following' ? 'border-primary text-primary' : 'border-transparent text-base-content/60'"
+                                            class="py-4 px-1 border-b-2 font-medium text-sm">
+                                            Following
+                                        </button>
                                     </nav>
                                 </header>
 
@@ -57,6 +62,9 @@
                                     </section>
                                     <section x-show="activeTab === 'followers'">
                                         @include('profile.partials.followers-tab-content')
+                                    </section>
+                                    <section x-show="activeTab === 'following'">
+                                        @include('profile.partials.following-tab-content')
                                     </section>
                                 </div>
                             </section>

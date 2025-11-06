@@ -67,78 +67,77 @@ class User extends Authenticatable
         return $this->hasMany(related: Comment::class);
     }
 
-    /**
-     * Get the user's sent connections i.e. a list of connections (accepted, pending, declined).
-     */
-    public function sentConnections()
+    /* Connections sent by this user (any status). */
+    public function sentConnections(): HasMany
     {
         return $this->hasMany(Connection::class, 'sender_id');
     }
 
-    /**
-     * Get the user's received connections i.e. a list of connections (accepted, pending, declined).
-     */
+    /* Connections received by this user (any status). */
     public function receivedConnections(): HasMany
     {
         return $this->hasMany(Connection::class, 'receiver_id');
     }
 
-    /**
-     * Get users that this user is following (accepted connections where this user is the sender)
-     */
+    /* Users this user is following (accepted only). */
     public function following(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'connections', 'sender_id', 'receiver_id')
             ->wherePivot('status', 'accepted');
     }
 
-    /**
-     * Get users that are following this user (accepted connections where this user is the receiver)
-     */
+    /* Users following this user (accepted only). */
     public function followers(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'connections', 'receiver_id', 'sender_id')
             ->wherePivot('status', 'accepted');
     }
 
-    /**
-     * Get users who have sent pending connection requests to this user.
-     */
-    public function getPendingRequests()
+    /* Check if this user follows the given user. */
+    public function isFollowing(User $user): bool
     {
-        return $this->receivedConnections()
-            ->where('status', 'pending')
-            ->with('sender')
-            ->get()
-            ->pluck('sender');
+        return $this->following()->where('users.id', $user->id)->exists();
     }
 
-    /**
-     * Get the user's connections i.e. users that have accepted follow requests.
-     */
-    public function getConnections()
+    /* Check if this user is followed by the given user. */
+    public function isFollowedBy(User $user): bool
     {
-        $sent = Connection::query()
-            ->where('sender_id', $this->id)
-            ->where('status', 'accepted')
-            ->pluck('receiver_id')
-            ->toArray();
+        return $this->followers()->where('users.id', $user->id)->exists();
+    }
 
-        $received = Connection::query()
-            ->where('receiver_id', $this->id)
-            ->where('status', 'accepted')
-            ->pluck('sender_id')
-            ->toArray();
+    /* Follow the given user (auto-accept for public profiles). */
+    public function follow(User $user): void
+    {
+        if ($this->id === $user->id) {
+            throw new \Exception('You cannot follow yourself.');
+        }
 
-        $ids = array_unique(array_merge($sent, $received));
+        $this->sentConnections()->updateOrCreate(
+            ['receiver_id' => $user->id],
+            ['status' => 'accepted']
+        );
+    }
 
-        return User::query()->whereIn('id', $ids)->get();
+    /* Unfollow the given user (removes any connection). */
+    public function unfollow(User $user): void
+    {
+        $this->sentConnections()->where('receiver_id', $user->id)->delete();
+    }
+
+    /* Get all connections (users this user is following + users following this user). */
+    public function getConnections(): mixed
+    {
+        $followingIds = $this->following()->pluck('users.id')->toArray();
+        $followerIds = $this->followers()->pluck('users.id')->toArray();
+        $allIds = array_unique(array_merge($followingIds, $followerIds));
+
+        return User::whereIn('id', $allIds)->get();
     }
 
     /**
      * Get the profile picture URL or default avatar
      */
-    public function getProfilePictureUrl(): string | null
+    public function getProfilePictureUrl(): ?string
     {
         if ($this->profile_picture && \Storage::disk('public')->exists($this->profile_picture)) {
             return \Storage::url($this->profile_picture);
@@ -151,11 +150,10 @@ class User extends Authenticatable
     /**
      * Get default avatar URL
      */
-    public function getDefaultAvatarUrl(): string | null
+    public function getDefaultAvatarUrl(): ?string
     {
         return null;
     }
-
 
     /**
      * Get the flag picture URL or default flag picture
@@ -177,7 +175,7 @@ class User extends Authenticatable
      */
     public function getDefaultFlagUrl(): string
     {
-        return "https://placehold.co/120x120?text=??";
+        return 'https://placehold.co/120x120?text=??';
     }
 
     protected static function booted()
