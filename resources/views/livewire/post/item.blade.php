@@ -1,7 +1,14 @@
 <div class="max-w-lg mx-auto">
     {{-- header --}}
     <header class="flex items-center gap-3 mb-2">
-        <x-avatar class="h-12 w-12" />
+        @if ($post->user->getProfilePictureUrl())
+        <img src="{{ $post->user->getProfilePictureUrl() }}" alt="{{ $post->user->name }}'s profile"
+            class="w-12 h-12 rounded-full shadow object-cover aspect-square">
+        @else
+        <span class="text-xl font-bold text-primary-content flex items-center justify-center w-12 h-12 rounded-full">
+            {{ strtoupper(substr($post->user->name, 0, 1)) }}
+        </span>
+        @endif
 
         <div class="flex justify-between items-center w-full relative">
             <h5 class="font-semibold text-sm">{{ $post->user->name }}</h5>
