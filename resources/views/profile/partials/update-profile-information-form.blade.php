@@ -125,8 +125,7 @@
             <x-input-label for="description" :value="__('Description')" />
             <textarea id="description" name="description" class="textarea textarea-bordered w-full border border-base-100 bg-base-300 rounded-lg placeholder-gray-600 dark:placeholder-gray-400
                            transition duration-150 ease-out
-                           focus:ring-indigo-600 focus:outline-none focus:ring-2" rows="4"
-                maxlength="1000"
+                           focus:ring-indigo-600 focus:outline-none focus:ring-2" rows="4" maxlength="1000"
                 placeholder="{{ __('Tell us about yourself...') }}">{{ old('description', $user->description) }}</textarea>
             <x-input-error class="mt-2" :messages="$errors->get('description')" />
             <p class="mt-1 text-sm text-base-content/60">
@@ -148,7 +147,7 @@
         <div>
             <x-input-label for="location" :value="__('Location')" />
 
-            <select id="location" name="location" class="select w-full lg:w-1/4 border border-base-100 bg-base-300 rounded-lg placeholder-gray-600 dark:placeholder-gray-400
+            <select id="location" name="location" class="select w-full lg:w-1/2 border border-base-100 bg-base-300 rounded-lg placeholder-gray-600 dark:placeholder-gray-400
                            transition duration-150 ease-out
                            focus:ring-indigo-600 focus:outline-none focus:ring-2">
                 <option value="">{{ __('-- Select your location --') }}</option>
@@ -161,6 +160,40 @@
 
             <p class="mt-1 text-sm text-base-content/60">
                 {{ __('Select the country you currently reside in.') }}
+            </p>
+        </div>
+
+        <div>
+            <x-input-label for="languages_teach" :value="__('Languages You Teach')" />
+
+            <select id="languages_teach" name="languages_teach[]"
+                class="select w-full lg:w-1/2 border border-base-100 bg-base-300 rounded-lg" multiple>
+                @foreach(config('languages') as $code => $name)
+                    <option value="{{ $code }}" @if(in_array($code, old('languages_teach', $user->languages_teach ?? [])))
+                    selected @endif>
+                        {{ $name }}
+                    </option>
+                @endforeach
+            </select>
+            <p class="mt-1 text-sm text-base-content/60">
+                {{ __('Hold Ctrl (Cmd on Mac) to select multiple languages.') }}
+            </p>
+        </div>
+
+        <div>
+            <x-input-label for="languages_learn" :value="__('Languages You Want to Learn')" />
+
+            <select id="languages_learn" name="languages_learn[]"
+                class="select w-full lg:w-1/2 border border-base-100 bg-base-300 rounded-lg" multiple>
+                @foreach(config('languages') as $code => $name)
+                    <option value="{{ $code }}" @if(in_array($code, old('languages_learn', $user->languages_learn ?? [])))
+                    selected @endif>
+                        {{ $name }}
+                    </option>
+                @endforeach
+            </select>
+            <p class="mt-1 text-sm text-base-content/60">
+                {{ __('Hold Ctrl (Cmd on Mac) to select multiple languages.') }}
             </p>
         </div>
 
