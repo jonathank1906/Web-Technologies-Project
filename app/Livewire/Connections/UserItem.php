@@ -2,7 +2,6 @@
 
 namespace App\Livewire\Connections;
 
-use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
 
 class UserItem extends Component
@@ -10,8 +9,6 @@ class UserItem extends Component
     protected $listeners = ['openProfile'];
 
     public $user;
-
-    public $name;
 
     public $description;
 

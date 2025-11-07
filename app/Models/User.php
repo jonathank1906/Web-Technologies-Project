@@ -178,6 +178,19 @@ class User extends Authenticatable
         return 'https://placehold.co/120x120?text=??';
     }
 
+
+    /**
+     *  Does what it says
+     */
+    public function getNotifications()
+    {
+        return $this->hasMany(Notification::class, 'receiver_id');
+    }
+
+
+    /**
+     * booted
+     */
     protected static function booted()
     {
         static::creating(function ($user) {
@@ -185,6 +198,10 @@ class User extends Authenticatable
         });
     }
 
+
+    /**
+     * Default id for routing
+     */
     public function getRouteKeyName()
     {
         return 'public_id';
