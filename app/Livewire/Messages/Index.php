@@ -107,7 +107,7 @@ class Index extends Component
             'id' => $friend->id,
             'name' => $friend->name,
             'img' => strtoupper(substr($friend->name, 0, 1)), // First letter of name
-            'flag' => 'dk', // Default flag, adjust as needed
+            'flag' => $friend->getFlagPictureUrl(),
             'unread' => $this->unreadCount($friend->id),
             'lang' => 'English', // Default language
             'messages' => $friend->id === $this->userId ? $this->messages->map(function($msg) {
