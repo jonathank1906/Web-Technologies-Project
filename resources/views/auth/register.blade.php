@@ -31,17 +31,36 @@
             <!-- Password -->
             <div class="mt-4">
                 <x-input-label for="password" :value="__('Password')" />
-                <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
+                <div class="relative">
+                    <x-text-input id="password" class="block mt-1 w-full pr-10" type="password" name="password" required autocomplete="new-password" />
+                    <button type="button" id="togglePassword" class="absolute inset-y-0 end-0 flex items-center pr-3 focus:outline-none">
+                        <span id="eyeOnPassword" style="display:none;">
+                            <x-monoicon-eye class="h-5 w-5 text-gray-500" />
+                        </span>
+                        <span id="eyeOffPassword">
+                            <x-monoicon-eye-off class="h-5 w-5 text-gray-500" />
+                        </span>
+                    </button>
+                </div>
                 <x-input-error :messages="$errors->get('password')" class="mt-2" />
             </div>
 
             <!-- Confirm Password -->
             <div class="mt-4">
                 <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-                <x-text-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" required autocomplete="new-password" />
+                <div class="relative">
+                    <x-text-input id="password_confirmation" class="block mt-1 w-full pr-10" type="password" name="password_confirmation" required autocomplete="new-password" />
+                    <button type="button" id="toggleConfirmPassword" class="absolute inset-y-0 end-0 flex items-center pr-3 focus:outline-none">
+                        <span id="eyeOnConfirmPassword" style="display:none;">
+                            <x-monoicon-eye class="h-5 w-5 text-gray-500" />
+                        </span>
+                        <span id="eyeOffConfirmPassword">
+                            <x-monoicon-eye-off class="h-5 w-5 text-gray-500" />
+                        </span>
+                    </button>
+                </div>
                 <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
             </div>
-
             <div class="flex items-center justify-end mt-6">
                 <button type="button" class="btn btn-primary" onclick="nextStep(1)">Next</button>
             </div>
@@ -253,6 +272,45 @@
             if (!validateStep4()) {
                 e.preventDefault();
             }
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const togglePassword = document.getElementById("togglePassword");
+            const password = document.getElementById("password");
+            const eyeOnPassword = document.getElementById("eyeOnPassword");
+            const eyeOffPassword = document.getElementById("eyeOffPassword");
+
+            const toggleConfirmPassword = document.getElementById("toggleConfirmPassword");
+            const confirmPassword = document.getElementById("password_confirmation");
+            const eyeOnConfirmPassword = document.getElementById("eyeOnConfirmPassword");
+            const eyeOffConfirmPassword = document.getElementById("eyeOffConfirmPassword");
+
+            togglePassword.addEventListener("click", function() {
+                const type = password.getAttribute("type") === "password" ? "text" : "password";
+                password.setAttribute("type", type);
+
+                if (type === "text") {
+                    eyeOnPassword.style.display = "";
+                    eyeOffPassword.style.display = "none";
+                } else {
+                    eyeOnPassword.style.display = "none";
+                    eyeOffPassword.style.display = "";
+                }
+            });
+
+            toggleConfirmPassword.addEventListener("click", function() {
+                const type = confirmPassword.getAttribute("type") === "password" ? "text" : "password";
+                confirmPassword.setAttribute("type", type);
+
+                if (type === "text") {
+                    eyeOnConfirmPassword.style.display = "";
+                    eyeOffConfirmPassword.style.display = "none";
+                } else {
+                    eyeOnConfirmPassword.style.display = "none";
+                    eyeOffConfirmPassword.style.display = "";
+                }
+            });
         });
     </script>
 </x-guest-layout>
