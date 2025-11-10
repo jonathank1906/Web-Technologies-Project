@@ -12,18 +12,25 @@ class Create extends Component
 {
     use WithFileUploads;
 
-
     public $media = [];
+    public $newMedia = [];
     public $description;
+
+    public function updatedNewMedia()
+    {
+        // Append new files to existing media array
+        $this->media = array_merge($this->media, $this->newMedia);
+        $this->reset('newMedia');
+    }
+
+    public function removeMedia($index)
+    {
+        array_splice($this->media, $index, 1);
+    }
 
     public function save()
     {
-        // dd([
-        //     $this->media,
-        //     $this->description
-        // ]);
         $this->validate([
-            // 'description' => 'required|string|max:500',
             'media.*' => 'required|file|mimes:jpg,jpeg,png,gif,mp4,avi,mov|max:100000', // Max 100MB per file
         ]);
 
@@ -48,14 +55,10 @@ class Create extends Component
                 'mediable_id' => $post->id,
                 'mediable_type' => Post::class,
             ]);
-            $this->reset();
-            $this->dispatch('post-created', $post->id);
         }
-
-        // TODO: Save the post to database using the Post model
-        // auth()->user()->posts()->create([
-        //     'description' => $this->description,
-        // ]);
+        
+        $this->reset();
+        $this->dispatch('post-created', $post->id);
 
         session()->flash('message', 'Post created successfully!');
         return redirect()->route('home');
@@ -63,12 +66,9 @@ class Create extends Component
 
     function getMime($media): string
     {
-
         if (str()->contains($media->getMimeType(), 'video')) {
-
             return 'video';
         } else {
-
             return 'image';
         }
     }
