@@ -282,3 +282,8 @@
     height: 24px;
     display: block;
 }
+
+.dots-btn:disabled {
+    cursor: default;
+    opacity: 0.6;
+}

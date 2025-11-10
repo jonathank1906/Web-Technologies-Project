@@ -59,10 +59,16 @@ class Show extends Component
 
     function toggleCommentLike(Comment $comment)
     {
-
         abort_unless(auth()->check(), 401);
 
+        // Prevent users from liking their own comments
+        if ($comment->user_id === auth()->id()) {
+            return;
+        }
+
         auth()->user()->toggleLike($comment);
+
+        // Refresh the post with updated relationships
         $this->post = $this->post->fresh(['user', 'media', 'comments.user'])->loadCount('likes', 'comments');
     }
 }

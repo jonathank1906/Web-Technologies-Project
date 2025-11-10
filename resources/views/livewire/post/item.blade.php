@@ -13,7 +13,11 @@
         <div class="flex justify-between items-center w-full relative">
             <h5 class="font-semibold text-sm">{{ $post->user->name }}</h5>
             <div class="relative">
-                <button onclick="toggleMenu({{ $post->id }})" id="dots-btn-{{ $post->id }}">
+                <button
+                    onclick="toggleMenu({{ $post->id }})"
+                    id="dots-btn-{{ $post->id }}"
+                    @if(auth()->id() !== $post->user_id) disabled @endif
+                    class="dots-btn">
                     <x-tabler-dots />
                 </button>
                 @if(auth()->id() === $post->user_id)
@@ -84,7 +88,8 @@
             <button
                 class="like-btn"
                 data-post-id="{{ $post->id }}"
-                data-liked="{{ $post->isLikedBy(auth()->user()) ? 'true' : 'false' }}">
+                data-liked="{{ $post->isLikedBy(auth()->user()) ? 'true' : 'false' }}"
+                @if(auth()->id() === $post->user_id) disabled @endif>
                 @if($post->isLikedBy(auth()->user()))
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="icon icon-tabler icons-tabler-filled icon-tabler-thumb-up">
                     <path stroke="none" d="M0 0h24v24H0z" fill="none" />

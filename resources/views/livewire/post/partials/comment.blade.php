@@ -21,8 +21,8 @@
 
         {{-- like --}}
         <div class="col-span-1 flex text-right justify-end mb-auto">
-
-            <button class="font-bold text-sm ml-auto">
+            <button class="font-bold text-sm ml-auto" 
+                @if(auth()->id() === $comment->user_id) disabled @endif>
                 {{-- svg --}}
                 @if ($comment->isLikedBy(auth()->user()))
                 <span wire:click='toggleCommentLike({{$comment->id}})'>
@@ -44,8 +44,6 @@
                 @endif
 
             </button>
-
-
         </div>
 
 
