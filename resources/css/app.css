@@ -273,6 +273,10 @@
     cursor: pointer;
 }
 
+.like-btn:disabled {
+    cursor: default;
+}
+
 .like-btn svg {
     width: 24px;
     height: 24px;
