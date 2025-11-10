@@ -47,7 +47,7 @@
 
     {{-- Description --}}
     @if($post->description)
-    <p class="mb-4 text-gray-700 dark:text-gray-300">{{ $post->description }}</p>
+    <p class="mb-4 text-gray-700 dark:text-gray-300 whitespace-pre-wrap">{{ $post->description }}</p>
     @endif
 
     {{-- Media Slider (only if more than 1 media) --}}
