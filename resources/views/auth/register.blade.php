@@ -63,8 +63,8 @@
         <!-- Step 3 (VISIBLE FIRST) -->
         <div id="step3" style="display:none;">
             <div>
-                <x-input-label for="languages_speak" :value="__('I speak (select up to 3)')" />
-                <select id="languages_speak" name="languages_speak[]" class="js-example-basic-multiple block mt-1 w-full" multiple="multiple" required>
+                <x-input-label for="languages_teach" :value="__('I speak (select up to 3)')" />
+                <select id="languages_teach" name="languages_teach[]" class="js-example-basic-multiple block mt-1 w-full" multiple="multiple" required>
                     <option value="English">English</option>
                     <option value="Spanish">Spanish</option>
                     <option value="French">French</option>
@@ -76,7 +76,7 @@
                     <option value="Portuguese">Portuguese</option>
                     <option value="Hindi">Hindi</option>
                 </select>
-                <x-input-error :messages="$errors->get('languages_speak')" class="mt-2" />
+                <x-input-error :messages="$errors->get('languages_teach')" class="mt-2" />
             </div>
             <div class="flex items-center justify-between mt-6">
                 <button type="button" class="btn btn-secondary" onclick="prevStep(3)">Back</button>
@@ -121,8 +121,9 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
+
     <style>
-        <style>.select2-container--default .select2-selection--multiple {
+        .select2-container--default .select2-selection--multiple {
             min-height: 45px;
             height: 45px;
             box-sizing: border-box;
@@ -161,7 +162,6 @@
             });
         });
 
-        // ✅ Highlight Step 3 by default
         window.onload = function() {
             updateStepIndicator(1);
         };
@@ -205,7 +205,7 @@
         }
 
         function validateStep3() {
-            const selectedLanguages = $('#languages_speak').val();
+            const selectedLanguages = $('#languages_teach').val();
             if (!selectedLanguages || selectedLanguages.length === 0) {
                 alert('Please select at least one language you speak');
                 return false;
