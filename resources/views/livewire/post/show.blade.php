@@ -1,11 +1,11 @@
-<div class="w-full h-screen flex flex-col">
+<div class="fixed inset-0 flex flex-col overflow-hidden">
     {{-- Scrollable content --}}
-    <main class="flex-1 overflow-y-auto px-4 py-6">
+    <main class="flex-1 overflow-y-auto px-4 py-6 pb-20">
         <div class="max-w-2xl mx-auto">
             @include('livewire.post.item', ['post' => $post])
             <section class="mt-8">
                 {{-- Leave a comment --}}
-                <form wire:submit.prevent="addComment" class="grid grid-cols-12 items-center w-full">
+                <form wire:submit.prevent="addComment" class="grid grid-cols-12 items-start w-full gap-2">
                     @csrf
 
                     <div class="col-span-10">
@@ -18,11 +18,13 @@
                             name="body"
                             :value="old('body')"
                             autocomplete="off" />
-                        <x-input-error :messages="$errors->get('body')" class="mt-2" />
+                        <div class="h-6 mt-2">
+                            <x-input-error :messages="$errors->get('body')" />
+                        </div>
                     </div>
-                    <div class="col-span-2 flex justify-end items-end mt-6">
+                    <div class="col-span-2 flex justify-end">
                         <button type="submit"
-                            class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                            class="btn btn-sm btn-primary mt-7">
                             Post
                         </button>
                     </div>
