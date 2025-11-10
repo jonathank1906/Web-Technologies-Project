@@ -1,7 +1,10 @@
 <div class="flex justify-center gap-4">
     <!-- Main Column -->
     <div class="flex flex-col max-w-2xl min-h-screen border-x border-base-300 bg-base-200 shadow flex-auto">
-        
+        @guest
+            @include('components.guest-banner')
+        @endguest
+
         <!-- Connections Section -->
         <section id="connectionsView">
             <header class="px-4 py-2 flex justify-between items-center">
@@ -48,6 +51,7 @@
             </ul>
         </section>
 
+        @auth
         <!-- Notifications Section (hidden on large screens) -->
         <section id="notificationsView" class="hidden">
             <header class="px-4 pt-2 pb-5 flex items-center gap-2">
@@ -74,9 +78,11 @@
                 @endforelse
             </ul>
         </section>
+        @endauth
     </div>
 
     <!-- Notifications Side Column (visible on large screens) -->
+     @auth
     <aside class="hidden lg:flex flex-col w-[35%] max-w-xs self-start mt-5 sticky top-5 border border-base-300 bg-base-200 shadow rounded-lg">
         <header class="px-4 pt-2 pb-5">
             <h2 class="font-bold text-2xl">Notifications</h2>
@@ -96,6 +102,7 @@
             @endforelse
         </ul>
     </aside>
+    @endauth
 </div>
 
 

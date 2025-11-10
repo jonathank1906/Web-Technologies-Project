@@ -16,7 +16,6 @@
                     class="absolute bottom-0.5 right-0.5 w-7 h-7 object-cover rounded-full border border-base-100 shadow" />
             </div>
 
-
             <div class="flex-1">
                 <h1 class="text-2xl font-bold text-base-content">
                     {{ $user->name }}
@@ -46,33 +45,40 @@
         </div>
 
         <nav class="mt-4 flex justify-end" aria-label="Profile actions">
-            @if(auth()->user()->id === $user->id)
-                <!-- Own profile - show edit button -->
-                <button @click="$dispatch('edit-profile')" class="btn btn-primary">
-                    Edit Profile
-                </button>
+            @auth
+                @if (auth()->id() === $user->id)
+                    <!-- Own profile - show edit button -->
+                    <button @click="$dispatch('edit-profile')" class="btn btn-primary">
+                        Edit Profile
+                    </button>
+                @else
+                    <!-- Other user's profile - show follow/unfollow + message -->
+                    <div class="flex space-x-3">
+                        <form action="{{ $isFollowing ? route('profile.unfollow', $user) : route('profile.follow', $user) }}"
+                            method="POST">
+                            @csrf
+                            @if($isFollowing)
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-primary">Following</button>
+                            @else
+                                <button type="submit" class="btn btn-outline btn-primary">Follow</button>
+                            @endif
+                        </form>
 
-            @else
-                <!-- Other user's profile - show follow/following+message buttons -->
-                <div class="flex space-x-3">
-                    <form action="{{ $isFollowing ? route('profile.unfollow', $user) : route('profile.follow', $user) }}"
-                        method="POST">
-                        @csrf
-                        @if($isFollowing)
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-primary">Following</button>
-                        @else
-                            <button type="submit" class="btn btn-outline btn-primary">Follow</button>
+                        @if ($isFollowing || $isFollowedBy)
+                            <a href="{{ route('messages') }}" class="btn btn-secondary">
+                                <x-tabler-messages class="w-5 h-5 mr-2" />
+                                Message
+                            </a>
                         @endif
-                    </form>
-                    @if ($isFollowing || $isFollowedBy)
-                        <a href="/messages" class="btn btn-secondary">
-                            <x-tabler-messages class="w-5 h-5 mr-2" />
-                            Message
-                        </a>
-                    @endif
-                </div>
-            @endif
+                    </div>
+                @endif
+            @endauth
+
+            @guest
+                <!-- No actions for guests -->
+                <!-- You can put an optional login button here later -->
+            @endguest
         </nav>
     </div>
 </header>
