@@ -1,5 +1,8 @@
 <div class="w-full">
  
+    @guest
+        @include('components.guest-banner')
+    @endguest
 
     {{-- main --}}
     <section class="mt-5 space-y-4 p-2">
