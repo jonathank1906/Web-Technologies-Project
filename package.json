@@ -21,6 +21,7 @@
     },
     "dependencies": {
         "hammerjs": "^2.0.8",
-        "keen-slider": "^6.8.6"
+        "keen-slider": "^6.8.6",
+        "select2": "^4.1.0-rc.0"
     }
 }
