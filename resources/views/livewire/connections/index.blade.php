@@ -1,7 +1,10 @@
 <div class="flex justify-center gap-4">
     <!-- Main Column -->
     <div class="flex flex-col max-w-2xl min-h-screen border-x border-base-300 bg-base-200 shadow flex-auto">
-        
+        @guest
+            @include('components.guest-banner')
+        @endguest
+
         <!-- Connections Section -->
         <section id="connectionsView">
             <header class="px-4 py-2 flex justify-between items-center">

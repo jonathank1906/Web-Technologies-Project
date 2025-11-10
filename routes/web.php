@@ -6,22 +6,21 @@ use App\Livewire\Home;
 use Illuminate\Support\Facades\Route;
 
 /*
-|--------------------------------------------------------------------------
-| Public (Guest) Routes
-|--------------------------------------------------------------------------
-| Guests can browse posts, see connections, and view public profiles.
-| These routes do NOT require authentication.
+--------------------------------------------------------------------------
+ Public (Guest) Routes
+--------------------------------------------------------------------------
+ Guests can browse posts, see connections, and view public profiles.
 */
 Route::get('/', Home::class)->name('home');
 Route::get('/connections', \App\Livewire\Connections\Index::class)->name('connections');
 Route::get('/profile/{user}', [ProfileController::class, 'show'])->name('profile.show');
 
 /*
-|--------------------------------------------------------------------------
-| Authenticated Routes
-|--------------------------------------------------------------------------
-| Routes below are only accessible to logged-in users.
-| Trying to access these while unauthenticated redirects to /login.
+--------------------------------------------------------------------------
+ Authenticated Routes
+--------------------------------------------------------------------------
+ Routes below are only accessible to logged-in users.
+ Trying to access these while unauthenticated redirects to /login.
 */
 Route::middleware('auth')->group(function () {
     Route::get('/messages', \App\Livewire\Messages\Index::class)->name('messages');
