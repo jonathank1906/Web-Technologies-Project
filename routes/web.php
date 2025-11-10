@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Route;
 */
 Route::get('/', Home::class)->name('home');
 Route::get('/connections', \App\Livewire\Connections\Index::class)->name('connections');
+Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
 Route::get('/profile/{user}', [ProfileController::class, 'show'])->name('profile.show');
 
 /*
@@ -35,7 +36,6 @@ Route::middleware('auth')->group(function () {
         return redirect()->route('profile.show', ['user' => auth()->user()]);
     })->name('profile.my');
 
-    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::post('/profile/{user}/follow', [ProfileController::class, 'follow'])->name('profile.follow');
     Route::delete('/profile/{user}/unfollow', [ProfileController::class, 'unfollow'])->name('profile.unfollow');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
