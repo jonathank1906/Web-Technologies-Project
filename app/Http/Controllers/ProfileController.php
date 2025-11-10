@@ -53,6 +53,9 @@ class ProfileController extends Controller
             );
         }
 
+        $validated['languages_teach'] = $request->input('languages_teach', []);
+        $validated['languages_learn'] = $request->input('languages_learn', []);
+
         $request->user()->fill($validated);
 
         if ($request->user()->isDirty('email')) {

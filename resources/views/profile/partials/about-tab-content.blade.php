@@ -3,35 +3,45 @@
         <section class="space-y-6">
             <div>
                 <h3 class="font-medium text-base-content mb-3">Teaches in:</h3>
-                <ul class="flex flex-wrap gap-2" role="list">
-                    <li class="px-3 py-2 bg-success/20 text-success text-sm font-medium rounded flex items-center">
-                        <span aria-hidden="true">🇺🇸</span> English
-                    </li>
-                    <li class="px-3 py-2 bg-success/20 text-success text-sm font-medium rounded flex items-center">
-                        <span aria-hidden="true">🇩🇪</span> German
-                    </li>
-                    <li class="px-3 py-2 bg-success/20 text-success text-sm font-medium rounded flex items-center">
-                        <span aria-hidden="true">🇪🇸</span> Spanish
-                    </li>
-                </ul>
+                @if(!empty($user->languages_teach))
+                    <ul class="flex flex-wrap gap-2">
+                        @foreach($user->languages_teach as $code)
+                            <li
+                                class="px-3 py-2 text-blue-600 bg-blue-100 dark:bg-blue-900/30 text-sm font-medium rounded-full flex items-center">
+                                {{ config('languages')[$code] }}
+                            </li>
+                        @endforeach
+                    </ul>
+                @else
+                    <p class="text-base-content/50 text-sm italic">
+                        No languages listed yet.
+                    </p>
+                @endif
             </div>
             <div>
                 <h3 class="font-medium text-base-content mb-3">Learning:</h3>
-                <ul class="flex flex-wrap gap-2" role="list">
-                    <li class="px-3 py-2 bg-info/20 text-info text-sm font-medium rounded flex items-center">
-                        <span aria-hidden="true">🇫🇷</span> French
-                    </li>
-                    <li class="px-3 py-2 bg-info/20 text-info text-sm font-medium rounded flex items-center">
-                        <span aria-hidden="true">🇯🇵</span> Japanese
-                    </li>
-                </ul>
+                @if(!empty($user->languages_learn))
+                    <ul class="flex flex-wrap gap-2">
+                        @foreach($user->languages_learn as $code)
+                            <li
+                                class="px-3 py-2 text-amber-600 bg-amber-100 dark:bg-amber-900/30 text-sm font-medium rounded-full flex items-center">
+                                {{ config('languages')[$code] }}
+                            </li>
+                        @endforeach
+                    </ul>
+                @else
+                    <p class="text-base-content/50 text-sm italic">
+                        No languages listed yet.
+                    </p>
+                @endif
             </div>
         </section>
+
         <section class="space-y-6">
             <div>
                 <h3 class="font-medium text-base-content mb-3">Personal Description</h3>
                 @if($user->description)
-                    <p class="text-base-content/70 text-sm">
+                    <p class="text-base-content/80 text-sm">
                         {{ $user->description }}
                     </p>
                 @else
@@ -46,7 +56,8 @@
                 @if($user->hobbies && count($user->hobbies) > 0)
                     <div class="flex flex-wrap gap-2">
                         @foreach($user->hobbies as $hobby)
-                            <span class="px-3 py-1 bg-primary/20 text-primary text-sm font-medium rounded-full">
+                            <span
+                                class="px-3 py-1 text-teal-600 bg-teal-100 dark:bg-teal-900/30 text-sm font-medium rounded-full">
                                 {{ $hobby }}
                             </span>
                         @endforeach

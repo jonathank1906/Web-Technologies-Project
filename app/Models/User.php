@@ -31,6 +31,8 @@ class User extends Authenticatable
         'location',
         'hobbies',
         'profile_picture',
+        'languages_teach',
+        'languages_learn',
     ];
 
     /**
@@ -54,6 +56,8 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'hobbies' => 'array',
+            'languages_teach' => 'array',
+            'languages_learn' => 'array',
         ];
     }
 
@@ -178,7 +182,6 @@ class User extends Authenticatable
         return 'https://placehold.co/120x120?text=??';
     }
 
-
     /**
      *  Does what it says
      */
@@ -186,7 +189,6 @@ class User extends Authenticatable
     {
         return $this->hasMany(Notification::class, 'receiver_id');
     }
-
 
     /**
      * booted
@@ -197,7 +199,6 @@ class User extends Authenticatable
             $user->public_id = Str::random(12);
         });
     }
-
 
     /**
      * Default id for routing

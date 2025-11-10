@@ -38,9 +38,29 @@
                 </div>
 
                 <div class="flex gap-1 text-sm font-bold items-center mb-2">
-                    <span> {{ $language1 }} </span>
+                    <ul class="flex gap-1">
+                        @forelse($languages_teach as $code)
+                            <li>
+                                {{ Str::upper($code) }}
+                            </li>
+                        @empty
+                            <li>
+                                ??
+                            </li>
+                        @endforelse
+                    </ul>
                     <span> <x-tabler-transfer class="w-4 h-4 text-gray-500 dark:text-gray-200/40" /> </span>
-                    <span> {{ $language2 }} </span>
+                    <ul class="flex gap-1">
+                        @forelse($languages_learn as $code)
+                            <li>
+                                {{ Str::upper($code) }}
+                            </li>
+                        @empty
+                            <li>
+                                ??
+                            </li>
+                        @endforelse
+                    </ul>
                 </div>
 
                 <p class="text-gray-700 dark:text-gray-100/60 font-light">
