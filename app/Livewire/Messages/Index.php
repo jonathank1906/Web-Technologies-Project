@@ -203,9 +203,9 @@ class Index extends Component
             $message = $messages[$this->editingMessageIndex];
             Message::where('id', $message->id)->update(['body' => $this->editingText]);
         }
-        
-        $this->editingMessageIndex = null;
-        $this->editingText = '';
+    
+        $this->reset(['editingMessageIndex', 'editingText']);
+        $this->dispatch('$refresh'); // triggers re-render only
     }
 
     public function cancelEdit(): void
@@ -234,10 +234,16 @@ class Index extends Component
         if ($messages->has($this->selectedMessageIndex)) {
             $message = $messages[$this->selectedMessageIndex];
             Message::where('id', $message->id)->delete();
+    
+            // Remove from UI instantly
+            $messages->forget($this->selectedMessageIndex);
         }
-        
+    
         $this->showDeleteModal = false;
         $this->selectedMessageIndex = null;
+    
+        // Trigger Livewire re-render to update $activeFriend
+        $this->dispatch('$refresh');
     }
 
     public function render()
