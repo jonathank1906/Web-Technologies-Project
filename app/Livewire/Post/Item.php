@@ -7,13 +7,15 @@ use Livewire\Component;
 
 class Item extends Component
 {
-
     public Post $post;
 
-    function togglePostLike()
+    public function togglePostLike()
     {
         abort_unless(auth()->check(), 401);
         auth()->user()->toggleLike($this->post);
+        
+        // Refresh the post with updated counts
+        $this->post->loadCount('likes', 'comments');
     }
 
     public function mount(Post $post)

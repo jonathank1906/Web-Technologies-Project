@@ -2,7 +2,7 @@
     {{-- Scrollable content --}}
     <main class="flex-1 overflow-y-auto px-4 py-6 pb-20">
         <div class="max-w-2xl mx-auto">
-            @include('livewire.post.item', ['post' => $post])
+            <livewire:post.item :post="$post" :key="$post->id" />
             <section class="mt-8">
                 {{-- Leave a comment --}}
                 <form wire:submit.prevent="addComment" class="grid grid-cols-12 items-start w-full gap-2">
