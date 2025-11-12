@@ -1,8 +1,8 @@
 <div class="flex h-screen bg-base-200 text-base-content font-sans relative items-stretch overflow-hidden">
     <!-- Friend List -->
-    <div class="w-1/3 bg-base-100 border-r border-base-300 flex flex-col h-full min-h-0">
+    <div class="w-1/3 bg-base-100 border-r border-base-300 flex flex-col h-full">
         <!-- Search Bar -->
-        <div class="p-4 border-b border-base-300">
+        <div class="p-4">
             <div class="relative">
                 <x-tabler-search
                         class="text-gray-600 dark:text-gray-400 absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 pointer-events-none" />
@@ -19,8 +19,8 @@
                 <div wire:key="friend-{{ $friend['id'] }}"
                     wire:click="selectFriend({{ $friend['id'] }})"
                     wire:loading.class="opacity-50"
-                    class="flex items-start gap-3 p-3 bg-base-100 rounded-lg cursor-pointer transition shadow-sm">
-                    <div class="relative w-12 h-12 flex items-center justify-center text-2xl bg-base-100 rounded-full shadow">
+                    class="flex items-start gap-3 p-3 bg-base-100 rounded-lg cursor-pointer shadow-sm transition duration-150 ease-out hover:bg-gray-500/10">
+                    <div class="relative w-12 h-12 flex items-center justify-center text-2xl bg-indigo-600 rounded-full shadow">
                         <span>{{ $friend['img'] }}</span>
                         <img src="{{ $friend['flag'] }}"
                         class="absolute bottom-0 right-0 w-4 h-4 object-cover rounded-full border border-base-100 shadow" />
@@ -50,10 +50,10 @@
             <!-- Header -->
             <div class="flex items-center justify-between px-6 py-4 border-b border-base-300 bg-base-100 shadow-sm">
                 <div class="flex items-center gap-3">
-                    <div class="relative w-10 h-10 flex items-center justify-center text-xl bg-base-100 rounded-full shadow">
+                    <div class="relative w-10 h-10 flex items-center justify-center text-xl bg-indigo-600 rounded-full shadow">
                         <span>{{ $activeFriend['img'] }}</span>
                         <img src="{{ $friend['flag'] }}"
-                             class="absolute bottom-0 right-0 w-4 h-4 rounded-full border border-white" />
+                             class="absolute bottom-0 right-0 w-4 h-4 rounded-full border border-base-100" />
                     </div>
                     <div>
                         <h2 class="text-sm font-bold text-base-content">{{ $activeFriend['name'] }}</h2>
@@ -62,7 +62,6 @@
                 </div>
 
                 <div class="flex items-center gap-4 text-base-content">
-                    <x-tabler-phone class="w-5 h-5 hover:text-primary transition" />
                     <x-tabler-dots-vertical class="w-5 h-5 hover:text-base-content transition" />
                 </div>
             </div>
@@ -74,7 +73,7 @@
                          wire:click="selectMessage({{ $i }})"
                          class="{{ $msg['from_me'] ? 'bg-indigo-600 text-white self-end ml-auto' : 'bg-gray-200' }}
                                 {{ $selectedMessageIndex === $i ? 'scale-105' : '' }}
-                                p-3 rounded max-w-sm transition transform cursor-pointer relative">
+                                p-3 rounded max-w-[80%] break-words whitespace-pre-wrap transition transform cursor-pointer relative">
                         {{ $msg['text'] }}
 
                         @if ($msg['from_me'] && $selectedMessageIndex === $i)
@@ -138,4 +137,7 @@
         }, 50);
     });
 </script>
+
+
+
 @endpush
