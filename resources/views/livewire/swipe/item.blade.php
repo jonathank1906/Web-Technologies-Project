@@ -13,6 +13,7 @@
                     $el.style.opacity = 0;
                     setTimeout(() => $el.remove(), 150);
                     $dispatch('swipedright');
+                    @this.call('follow', {{ $user->id }});
                 },
 
                 swipeLeft() {

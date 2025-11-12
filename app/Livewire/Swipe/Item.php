@@ -7,9 +7,29 @@ use Livewire\Component;
 
 class Item extends Component
 {
+    public $users;
+
+    public function mount()
+    {
+        $authUser = auth()->user();
+        // Exclude users already followed
+        $alreadyFollowingIds = $authUser->following()->pluck('users.id')->toArray();
+        $this->users = \App\Models\User::where('id', '<>', $authUser->id)
+            ->whereNotIn('id', $alreadyFollowingIds)
+            ->get();
+    }
+
+    public function follow($userId)
+    {
+        $authUser = auth()->user();
+        $user = \App\Models\User::findOrFail($userId);
+        $authUser->follow($user);
+        // Remove user from swipe list
+        $this->users = $this->users->filter(fn($u) => $u->id !== $userId);
+    }
+
     public function render()
     {
-        $users = User::where('id', '<>', auth()->id())->get();
-        return view('livewire.swipe.item', compact('users'));
+        return view('livewire.swipe.item', ['users' => $this->users]);
     }
 }
