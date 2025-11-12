@@ -35,9 +35,9 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'languages_teach' => ['required', 'array', 'max:3'],
+            'languages_teach' => ['required', 'array'], 
             'languages_teach.*' => ['string', 'distinct', 'in:' . implode(',', array_values($languagesConfig))],
-            'languages_learn' => ['required', 'array', 'max:3'],
+            'languages_learn' => ['required', 'array'],
             'languages_learn.*' => ['string', 'distinct', 'in:' . implode(',', array_values($languagesConfig))],
         ]);
 
@@ -48,7 +48,7 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'languages_teach' => $languagesTeach, 
+            'languages_teach' => $languagesTeach,
             'languages_learn' => $languagesLearn,
         ]);
 

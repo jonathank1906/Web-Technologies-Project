@@ -1,7 +1,7 @@
 <x-guest-layout>
     <!-- DaisyUI Steps -->
     <div class="flex justify-center">
-        <ul class="steps steps-vertical lg:steps-horizontal mb-8 w-full max-w-2xl">
+        <ul class="steps steps-horizontal mb-8 w-full max-w-2xl">
             <li class="step step-primary text-base-content" id="step1-indicator"></li>
             <li class="step text-base-content" id="step2-indicator"></li>
             <li class="step text-base-content" id="step3-indicator"></li>
@@ -11,7 +11,6 @@
 
     <form method="POST" action="{{ route('register') }}" id="registerForm">
         @csrf
-
         <!-- Step 1 -->
         <div id="step1" style="display:block;">
             <!-- Name -->
@@ -79,21 +78,14 @@
             </div>
         </div>
 
-        <!-- Step 3 (VISIBLE FIRST) -->
+        <!-- Step 3 -->
         <div id="step3" style="display:none;">
             <div>
-                <x-input-label for="languages_teach" :value="__('I speak (select up to 3)')" />
+                <x-input-label for="languages_teach" :value="__('I speak (select any)')" />
                 <select id="languages_teach" name="languages_teach[]" class="js-example-basic-multiple block mt-1 w-full" multiple="multiple" required>
-                    <option value="English">English</option>
-                    <option value="Spanish">Spanish</option>
-                    <option value="French">French</option>
-                    <option value="German">German</option>
-                    <option value="Chinese">Chinese</option>
-                    <option value="Japanese">Japanese</option>
-                    <option value="Arabic">Arabic</option>
-                    <option value="Russian">Russian</option>
-                    <option value="Portuguese">Portuguese</option>
-                    <option value="Hindi">Hindi</option>
+                    @foreach(config('languages') as $code => $language)
+                    <option value="{{ $language }}">{{ $language }}</option>
+                    @endforeach
                 </select>
                 <x-input-error :messages="$errors->get('languages_teach')" class="mt-2" />
             </div>
@@ -106,18 +98,11 @@
         <!-- Step 4 -->
         <div id="step4" style="display:none;">
             <div>
-                <x-input-label for="languages_learn" :value="__('I want to learn (select up to 3)')" />
+                <x-input-label for="languages_learn" :value="__('I want to learn (select any)')" />
                 <select id="languages_learn" name="languages_learn[]" class="js-example-basic-multiple block mt-1 w-full" multiple="multiple" required>
-                    <option value="English">English</option>
-                    <option value="Spanish">Spanish</option>
-                    <option value="French">French</option>
-                    <option value="German">German</option>
-                    <option value="Chinese">Chinese</option>
-                    <option value="Japanese">Japanese</option>
-                    <option value="Arabic">Arabic</option>
-                    <option value="Russian">Russian</option>
-                    <option value="Portuguese">Portuguese</option>
-                    <option value="Hindi">Hindi</option>
+                    @foreach(config('languages') as $code => $language)
+                    <option value="{{ $language }}">{{ $language }}</option>
+                    @endforeach
                 </select>
                 <x-input-error :messages="$errors->get('languages_learn')" class="mt-2" />
             </div>
@@ -140,14 +125,18 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-
     <style>
         .select2-container--default .select2-selection--multiple {
             min-height: 45px;
-            height: 45px;
+            /* Remove: height: 45px; */
             box-sizing: border-box;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
+            /* Allow vertical expansion */
+            flex-wrap: wrap;
+            /* Allow tags to wrap */
+            padding-top: 6px;
+            padding-bottom: 6px;
         }
 
         .select2-container--default .select2-selection--multiple .select2-search__field {
@@ -161,12 +150,10 @@
             width: 100% !important;
         }
 
-        /* Prevent unwanted scrollbars on the body */
         body {
             overflow-x: hidden;
         }
 
-        /* Ensure Select2 dropdown doesn't overflow horizontally */
         .select2-dropdown {
             max-width: 100vw !important;
             box-sizing: border-box;
@@ -176,8 +163,7 @@
     <script>
         $(document).ready(function() {
             $(".js-example-basic-multiple").select2({
-                placeholder: "Select languages",
-                maximumSelectionLength: 3
+                placeholder: "Select languages"
             });
         });
 
