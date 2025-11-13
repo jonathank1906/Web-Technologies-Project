@@ -1,5 +1,5 @@
 <x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
+    <div class="mb-4 text-sm text-base-content opacity-70">
         {{ __('This is a secure area of the application. Please confirm your password before continuing.') }}
     </div>
 
@@ -19,9 +19,9 @@
         </div>
 
         <div class="flex justify-end mt-4">
-            <x-primary-button>
+            <button type="submit" class="btn btn-primary">
                 {{ __('Confirm') }}
-            </x-primary-button>
+            </button>
         </div>
     </form>
 </x-guest-layout>
