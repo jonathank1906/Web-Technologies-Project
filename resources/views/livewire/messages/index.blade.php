@@ -71,7 +71,7 @@
                 @foreach ($activeFriend['messages'] as $i => $msg)
                     <div wire:key="msg-{{ $activeFriend['id'] }}-{{ $i }}"
                          wire:click="selectMessage({{ $i }})"
-                          class="{{ $msg['from_me'] ? 'bg-indigo-600 text-white self-end ml-auto' : 'bg-gray-200' }}
+                          class="{{ $msg['from_me'] ? 'bg-indigo-600 text-white self-end ml-auto' : 'bg-gray-500' }}
                             {{ $selectedMessageIndex === $i ? 'scale-105' : '' }}
                             p-3 rounded max-w-[70%] break-words whitespace-normal transition transform cursor-pointer relative text-sm leading-snug">
                         {{ $msg['text'] }}
