@@ -65,7 +65,7 @@
             :class="{'cursor-grab': !isSwiping, 'cursor-grabbing': isSwiping}"
             class="absolute inset-0 m-auto transform z-50"
             style="backface-visibility: hidden; transform-style: preserve-3d;">
-            <div class="h-full w-full relative bg-blue-700 rounded-xl overflow-hidden">
+            <div class="h-full w-full relative bg-[linear-gradient(to_bottom,_#7e22ce_0%,_#7e22ce_50%,_#12003D_83%,_#12003D_100%)] from-purple-600 to-black border border-base-200 shadow-md rounded-xl overflow-hidden">
                 <!-- Top section: Profile, Name, Languages -->
                 <div class="absolute top-0 left-0 w-full p-5 z-10">
                     <div class="flex items-center gap-4">
@@ -89,7 +89,7 @@
                         </div>
                     </div>
                     <!-- Languages below name/avatar row -->
-                    <div class="mt-4 flex flex-wrap gap-2">
+                    <div class="mt-8 flex flex-wrap gap-2 bg-indigo-600/70 rounded-xl px-4 py-5">
                         <span class="font-semibold">Teaches:</span>
                         @forelse($user->languages_teach ?? [] as $code)
                         <span class="px-2 py-1 bg-blue-900 rounded text-xs">{{ config('languages')[$code] ?? $code }}</span>
@@ -97,7 +97,7 @@
                         <span class="italic text-xs">None listed</span>
                         @endforelse
                     </div>
-                    <div class="mt-1 flex flex-wrap gap-2">
+                    <div class="mt-6 flex flex-wrap gap-2 bg-indigo-600/70 rounded-xl px-4 py-5">
                         <span class="font-semibold">Learning:</span>
                         @forelse($user->languages_learn ?? [] as $code)
                         <span class="px-2 py-1 bg-yellow-900 rounded text-xs">{{ config('languages')[$code] ?? $code }}</span>
