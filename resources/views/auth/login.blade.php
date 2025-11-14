@@ -17,7 +17,7 @@
             <div class="flex items-center justify-between">
                 <x-input-label for="password" :value="__('Password')" />
                 @if (Route::has('password.request'))
-                <a class="text-sm text-gray-600 dark:text-gray-400 hover:underline hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
+                <a class="text-sm text-base-content opacity-70 hover:underline hover:opacity-100 hover:text-primary rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
                     href="{{ route('password.request') }}">
                     {{ __('Forgot your password?') }}
                 </a>
@@ -30,10 +30,10 @@
                     required autocomplete="current-password" />
                 <button type="button" id="togglePassword" class="absolute inset-y-0 end-0 flex items-center pr-3 focus:outline-none">
                     <span id="eyeOn" style="display:none;">
-                        <x-monoicon-eye class="h-5 w-5 text-gray-500" />
+                        <x-monoicon-eye class="h-5 w-5 text-base-content opacity-60" />
                     </span>
                     <span id="eyeOff">
-                        <x-monoicon-eye-off class="h-5 w-5 text-gray-500" />
+                        <x-monoicon-eye-off class="h-5 w-5 text-base-content opacity-60" />
                     </span>
                 </button>
             </div>
@@ -43,25 +43,25 @@
         <!-- Remember Me -->
         <div class="block mt-4">
             <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800" name="remember">
-                <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Remember me') }}</span>
+                <input id="remember_me" type="checkbox" class="rounded border-base-300 text-primary shadow-sm focus:ring-primary" name="remember">
+                <span class="ms-2 text-sm text-base-content opacity-70">{{ __('Remember me') }}</span>
             </label>
         </div>
 
         <div class="flex items-center justify-center mt-4">
-            <x-primary-button class="w-full max-w-md flex justify-center items-center">
+            <button type="submit" class="btn btn-primary w-full max-w-md flex justify-center items-center">
                 {{ __('Log in') }}
-            </x-primary-button>
+            </button>
         </div>
 
         <!-- Register link -->
         <div class="flex flex-col items-center justify-center mt-4">
-            <span class="text-sm text-gray-600 dark:text-gray-400 mb-2">
+            <span class="text-sm text-base-content opacity-70 mb-2">
                 Don't have an account?
                 @if (Route::has('register'))
                 <a
                     href="{{ route('register') }}"
-                    class="text-sm text-gray-600 dark:text-gray-400 hover:underline hover:text-indigo-800 dark:hover:text-indigo-200 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800 ml-1">
+                    class="text-sm text-base-content opacity-70 hover:underline hover:opacity-100 hover:text-primary rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary ml-1">
                     Register
                 </a>
                 @endif

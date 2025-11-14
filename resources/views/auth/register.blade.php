@@ -12,18 +12,20 @@
     <form method="POST" action="{{ route('register') }}" id="registerForm">
         @csrf
         <!-- Step 1 -->
-        <div id="step1" style="display:block;">
+        <div id="step1" class="relative overflow-visible" style="display:block;">
             <!-- Name -->
             <div>
                 <x-input-label for="name" :value="__('Name')" />
-                <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
+                <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required
+                    autofocus autocomplete="name" />
                 <x-input-error :messages="$errors->get('name')" class="mt-2" />
             </div>
 
             <!-- Email -->
             <div class="mt-4">
                 <x-input-label for="email" :value="__('Email')" />
-                <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
+                <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')"
+                    required autocomplete="username" />
                 <x-input-error :messages="$errors->get('email')" class="mt-2" />
             </div>
 
@@ -31,13 +33,15 @@
             <div class="mt-4">
                 <x-input-label for="password" :value="__('Password')" />
                 <div class="relative">
-                    <x-text-input id="password" class="block mt-1 w-full pr-10" type="password" name="password" required autocomplete="new-password" />
-                    <button type="button" id="togglePassword" class="absolute inset-y-0 end-0 flex items-center pr-3 focus:outline-none">
+                    <x-text-input id="password" class="block mt-1 w-full pr-10" type="password" name="password" required
+                        autocomplete="new-password" />
+                    <button type="button" id="togglePassword"
+                        class="absolute inset-y-0 end-0 flex items-center pr-3 focus:outline-none hover:opacity-70 transition">
                         <span id="eyeOnPassword" style="display:none;">
-                            <x-monoicon-eye class="h-5 w-5 text-gray-500" />
+                            <x-monoicon-eye class="h-5 w-5 text-base-content opacity-60" />
                         </span>
                         <span id="eyeOffPassword">
-                            <x-monoicon-eye-off class="h-5 w-5 text-gray-500" />
+                            <x-monoicon-eye-off class="h-5 w-5 text-base-content opacity-60" />
                         </span>
                     </button>
                 </div>
@@ -48,20 +52,22 @@
             <div class="mt-4">
                 <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
                 <div class="relative">
-                    <x-text-input id="password_confirmation" class="block mt-1 w-full pr-10" type="password" name="password_confirmation" required autocomplete="new-password" />
-                    <button type="button" id="toggleConfirmPassword" class="absolute inset-y-0 end-0 flex items-center pr-3 focus:outline-none">
+                    <x-text-input id="password_confirmation" class="block mt-1 w-full pr-10" type="password"
+                        name="password_confirmation" required autocomplete="new-password" />
+                    <button type="button" id="toggleConfirmPassword"
+                        class="absolute inset-y-0 end-0 flex items-center pr-3 focus:outline-none hover:opacity-70 transition">
                         <span id="eyeOnConfirmPassword" style="display:none;">
-                            <x-monoicon-eye class="h-5 w-5 text-gray-500" />
+                            <x-monoicon-eye class="h-5 w-5 text-base-content opacity-60" />
                         </span>
                         <span id="eyeOffConfirmPassword">
-                            <x-monoicon-eye-off class="h-5 w-5 text-gray-500" />
+                            <x-monoicon-eye-off class="h-5 w-5 text-base-content opacity-60" />
                         </span>
                     </button>
                 </div>
                 <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
             </div>
             <div class="flex items-center justify-end mt-6">
-                <button type="button" class="btn btn-primary" onclick="nextStep(1)">Next</button>
+                <button type="button" class="btn btn-primary w-full" onclick="nextStep(1)">Next</button>
             </div>
         </div>
 
@@ -69,106 +75,73 @@
         <div id="step2" style="display:none;">
             <div>
                 <x-input-label for="birthday" :value="__('When is your birthday?')" />
-                <x-text-input id="birthday" class="block mt-1 w-full" type="date" name="birthday" :value="old('birthday')" required />
+                <x-text-input id="birthday" class="block mt-1 w-full" type="date" name="birthday"
+                    :value="old('birthday')" required />
                 <x-input-error :messages="$errors->get('birthday')" class="mt-2" />
             </div>
-            <div class="flex items-center justify-between mt-6">
-                <button type="button" class="btn btn-secondary" onclick="prevStep(2)">Back</button>
-                <button type="button" class="btn btn-primary" onclick="nextStep(2)">Next</button>
+            <div class="flex items-center justify-between mt-6 gap-4">
+                <button type="button" class="btn btn-outline btn-secondary flex-1" onclick="prevStep(2)">Back</button>
+                <button type="button" class="btn btn-primary flex-1" onclick="nextStep(2)">Next</button>
             </div>
         </div>
 
         <!-- Step 3 -->
-        <div id="step3" style="display:none;">
+        <div id="step3" class="relative overflow-visible" style="display:none;">
             <div>
                 <x-input-label for="languages_teach" :value="__('I speak (select any)')" />
-                <select id="languages_teach" name="languages_teach[]" class="js-example-basic-multiple block mt-1 w-full" multiple="multiple" required>
+                <select id="languages_teach" name="languages_teach[]" class="absolute" multiple required>
                     @foreach(config('languages') as $code => $language)
-                    <option value="{{ $language }}">{{ $language }}</option>
+                        <option value="{{ $language }}">{{ $language }}</option>
                     @endforeach
                 </select>
                 <x-input-error :messages="$errors->get('languages_teach')" class="mt-2" />
             </div>
-            <div class="flex items-center justify-between mt-6">
-                <button type="button" class="btn btn-secondary" onclick="prevStep(3)">Back</button>
-                <button type="button" class="btn btn-primary" onclick="nextStep(3)">Next</button>
+            <div class="flex items-center justify-between mt-6 gap-4">
+                <button type="button" class="btn btn-outline btn-secondary flex-1" onclick="prevStep(3)">Back</button>
+                <button type="button" class="btn btn-primary flex-1" onclick="nextStep(3)">Next</button>
             </div>
         </div>
 
         <!-- Step 4 -->
-        <div id="step4" style="display:none;">
+        <div id="step4" class="relative overflow-visible" style="display:none;">
             <div>
                 <x-input-label for="languages_learn" :value="__('I want to learn (select any)')" />
-                <select id="languages_learn" name="languages_learn[]" class="js-example-basic-multiple block mt-1 w-full" multiple="multiple" required>
+                <select id="languages_learn" name="languages_learn[]" multiple="multiple" required>
                     @foreach(config('languages') as $code => $language)
-                    <option value="{{ $language }}">{{ $language }}</option>
+                        <option value="{{ $language }}">{{ $language }}</option>
                     @endforeach
                 </select>
                 <x-input-error :messages="$errors->get('languages_learn')" class="mt-2" />
             </div>
-            <div class="flex items-center justify-between mt-6">
-                <button type="button" class="btn btn-secondary" onclick="prevStep(4)">Back</button>
-                <button type="submit" class="btn btn-primary">Register</button>
+            <div class="flex items-center justify-between mt-6 gap-4">
+                <button type="button" class="btn btn-outline btn-secondary flex-1" onclick="prevStep(4)">Back</button>
+                <button type="submit" class="btn btn-primary flex-1">Register</button>
             </div>
         </div>
 
         <div class="flex items-center justify-center mt-4">
-            <a class="text-sm text-gray-600 dark:text-gray-400 hover:underline hover:text-gray-900 dark:hover:text-gray-100"
+            <a class="text-sm text-base-content opacity-70 hover:underline hover:opacity-100 hover:text-primary transition"
                 href="{{ route('login') }}">
                 {{ __('Already registered?') }}
             </a>
         </div>
     </form>
 
-    <!-- Select2 -->
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-
-    <style>
-        .select2-container--default .select2-selection--multiple {
-            min-height: 45px;
-            /* Remove: height: 45px; */
-            box-sizing: border-box;
-            display: flex;
-            align-items: flex-start;
-            /* Allow vertical expansion */
-            flex-wrap: wrap;
-            /* Allow tags to wrap */
-            padding-top: 6px;
-            padding-bottom: 6px;
-        }
-
-        .select2-container--default .select2-selection--multiple .select2-search__field {
-            height: 32px !important;
-            margin-top: 0 !important;
-            margin-bottom: 0 !important;
-            align-self: center;
-        }
-
-        .select2-container {
-            width: 100% !important;
-        }
-
-        body {
-            overflow-x: hidden;
-        }
-
-        .select2-dropdown {
-            max-width: 100vw !important;
-            box-sizing: border-box;
-        }
-    </style>
 
     <script>
-        $(document).ready(function() {
-            $(".js-example-basic-multiple").select2({
-                placeholder: "Select languages"
-            });
-        });
+        const options = {
+            plugins: ['remove_button'],
+            closeAfterSelect: true,
+        };
 
-        window.onload = function() {
+        function initTomSelect() {
+            new TomSelect('#languages_teach', options);
+            new TomSelect('#languages_learn', options);
+        };
+
+        window.onload = function () {
             updateStepIndicator(1);
+            initTomSelect();
         };
 
         function validateStep1() {
@@ -210,8 +183,10 @@
         }
 
         function validateStep3() {
-            const selectedLanguages = $('#languages_teach').val();
-            if (!selectedLanguages || selectedLanguages.length === 0) {
+            const languageSelect = document.getElementById('languages_teach');
+            const selectedLanguages = Array.from(languageSelect.selectedOptions).map(option => option.value);
+
+            if (selectedLanguages.length === 0) {
                 alert('Please select at least one language you speak');
                 return false;
             }
@@ -219,11 +194,14 @@
         }
 
         function validateStep4() {
-            const selectedLanguages = $('#languages_learn').val();
-            if (!selectedLanguages || selectedLanguages.length === 0) {
+            const languageSelect = document.getElementById('languages_learn');
+            const selectedLanguages = Array.from(languageSelect.selectedOptions).map(option => option.value);
+
+            if (selectedLanguages.length === 0) {
                 alert('Please select at least one language you want to learn');
                 return false;
             }
+
             return true;
         }
 
@@ -235,7 +213,6 @@
             if (current === 3) isValid = validateStep3();
 
             if (!isValid) return;
-
             document.getElementById('step' + current).style.display = 'none';
             document.getElementById('step' + (current + 1)).style.display = 'block';
             updateStepIndicator(current + 1);
@@ -254,14 +231,14 @@
             }
         }
 
-        document.getElementById('registerForm').addEventListener('submit', function(e) {
+        document.getElementById('registerForm').addEventListener('submit', function (e) {
             if (!validateStep4()) {
                 e.preventDefault();
             }
         });
     </script>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener("DOMContentLoaded", function () {
             const togglePassword = document.getElementById("togglePassword");
             const password = document.getElementById("password");
             const eyeOnPassword = document.getElementById("eyeOnPassword");
@@ -272,7 +249,7 @@
             const eyeOnConfirmPassword = document.getElementById("eyeOnConfirmPassword");
             const eyeOffConfirmPassword = document.getElementById("eyeOffConfirmPassword");
 
-            togglePassword.addEventListener("click", function() {
+            togglePassword.addEventListener("click", function () {
                 const type = password.getAttribute("type") === "password" ? "text" : "password";
                 password.setAttribute("type", type);
 
@@ -285,7 +262,7 @@
                 }
             });
 
-            toggleConfirmPassword.addEventListener("click", function() {
+            toggleConfirmPassword.addEventListener("click", function () {
                 const type = confirmPassword.getAttribute("type") === "password" ? "text" : "password";
                 confirmPassword.setAttribute("type", type);
 

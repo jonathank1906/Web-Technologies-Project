@@ -10,57 +10,76 @@
 See the [prerequisites](prerequisites.md) page for detailed instructions.
 
 ## Steps
-
 #### Clone the repository
-```sh
+
+```bash
 git clone https://github.com/jonathank1906/Web-Technologies-Project.git
+```
+```bash
 cd Web-Technologies-Project
 ```
 
 #### Install PHP dependencies
-```sh
+
+```bash
 composer install
 ```
 
 #### Copy and configure environment file
-```sh
+
+```bash
 cp .env.example .env
 ```
-Copy and paste from [here](env.md).
+!!! note "Note:"
+    Copy and paste from [here](env.md).
 
 #### Install Node.js dependencies
-```sh
+
+```bash
 npm install
 ```
 
 #### Build frontend assets
-```sh
+
+```bash
 npm run build
 ```
 
 #### Create the PostgreSQL database
-```sh
+
+```bash
 psql -U postgres
 ```
+!!! note "Note:"
+    Username and Password may vary depending on your installation.
+
 Then, in the PostgreSQL prompt, run:
+
 ```sql
 CREATE DATABASE laravel;
 ```
-Type \q to exit.
+
+Type `\q` to exit.
 
 #### Run database migrations
-Apply migrations:
-```sh
+
+```bash
 php artisan migrate
 ```
 
 #### Running the project
+
 Start the Vite development server (in one terminal):
-```sh
+
+```bash
 npm run dev
 ```
+
 Start the Laravel server (in another terminal):
-```sh
+
+```bash
 php artisan serve
 ```
-Access the app by visiting [http://localhost:8000](http://localhost:8000) in your browser.
+
+!!! info "Information:"
+    Access the app by visiting [http://localhost:8000](http://localhost:8000) in your browser.

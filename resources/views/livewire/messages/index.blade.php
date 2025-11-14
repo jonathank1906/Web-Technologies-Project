@@ -67,13 +67,13 @@
             </div>
 
             <!-- Messages -->
-            <div x-chat-scroll class="flex-1 overflow-y-auto px-6 py-4 space-y-3 bg-base-100">
+            <div x-chat-scroll class="flex-1 overflow-y-auto px-6 py-8 pt-8 space-y-3 bg-base-100 relative">
                 @foreach ($activeFriend['messages'] as $i => $msg)
                     <div wire:key="msg-{{ $activeFriend['id'] }}-{{ $i }}"
                          wire:click="selectMessage({{ $i }})"
-                         class="{{ $msg['from_me'] ? 'bg-indigo-600 text-white self-end ml-auto' : 'bg-gray-200' }}
-                                {{ $selectedMessageIndex === $i ? 'scale-105' : '' }}
-                                p-3 rounded max-w-[80%] break-words whitespace-pre-wrap transition transform cursor-pointer relative">
+                          class="{{ $msg['from_me'] ? 'bg-indigo-600 text-white self-end ml-auto' : 'bg-gray-500' }}
+                            {{ $selectedMessageIndex === $i ? 'scale-105' : '' }}
+                            p-3 rounded max-w-[70%] break-words whitespace-normal transition transform cursor-pointer relative text-sm leading-snug">
                         {{ $msg['text'] }}
 
                         @if ($msg['from_me'] && $selectedMessageIndex === $i)

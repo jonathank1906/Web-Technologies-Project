@@ -2,15 +2,19 @@ import "./bootstrap";
 
 import Alpine from "alpinejs";
 import profilePage from './components/profilePage.js';
-
-window.Alpine = Alpine;
-Alpine.data('profilePage', profilePage);
-
-Alpine.start();
-
 import "keen-slider/keen-slider.min.css";
 import KeenSlider from "keen-slider";
 import "hammerjs";
+import TomSelect from "tom-select";
+import 'tom-select/dist/css/tom-select.default.css';
+import '../css/tom-select.css';
+
+
+window.TomSelect = TomSelect
+window.Alpine = Alpine;
+Alpine.data('profilePage', profilePage);
+Alpine.start();
+
 
 function navigation(slider) {
     let wrapper, dots, arrowLeft, arrowRight;
