@@ -35,9 +35,9 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'languages_teach' => ['required', 'array'], 
+            'languages_teach' => ['required', 'array', 'min:1', 'max:8'], 
             'languages_teach.*' => ['string', 'distinct', 'in:' . implode(',', array_values($languagesConfig))],
-            'languages_learn' => ['required', 'array'],
+            'languages_learn' => ['required', 'array', 'min:1', 'max:8'],
             'languages_learn.*' => ['string', 'distinct', 'in:' . implode(',', array_values($languagesConfig))],
         ]);
 

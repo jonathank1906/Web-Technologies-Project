@@ -15,6 +15,8 @@ class ProfileUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
+        $languagesConfig = config('languages');
+
         return [
             'name' => ['required', 'string', 'max:255'],
             'email' => [
@@ -29,6 +31,10 @@ class ProfileUpdateRequest extends FormRequest
             'hobbies' => ['nullable', 'string', 'max:500'],
             'profile_picture' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:2048'], // 2MB max
             'location' => 'nullable|string|in:' . implode(',', array_keys(config('countries'))),
+            'languages_teach' => ['nullable', 'array', 'max:8'],
+            'languages_teach.*' => ['string', 'distinct', 'in:' . implode(',', array_keys($languagesConfig))],
+            'languages_learn' => ['nullable', 'array', 'max:8'],
+            'languages_learn.*' => ['string', 'distinct', 'in:' . implode(',', array_keys($languagesConfig))],
         ];
     }
 }

@@ -202,8 +202,8 @@
     <script>
         const options = {
             plugins: ['remove_button'],
-            closeAfterSelect: true
-
+            closeAfterSelect: true,
+            maxItems: 8,
         };
 
         function initTomSelect() {

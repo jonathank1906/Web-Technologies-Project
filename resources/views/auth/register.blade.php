@@ -132,6 +132,7 @@
         const options = {
             plugins: ['remove_button'],
             closeAfterSelect: true,
+            maxItems: 8,
         };
 
         function initTomSelect() {
@@ -190,6 +191,10 @@
                 alert('Please select at least one language you speak');
                 return false;
             }
+            if (selectedLanguages.length > 8) {
+                alert('You can select a maximum of 8 languages you speak');
+                return false;
+            }
             return true;
         }
 
@@ -199,6 +204,10 @@
 
             if (selectedLanguages.length === 0) {
                 alert('Please select at least one language you want to learn');
+                return false;
+            }
+            if (selectedLanguages.length > 8) {
+                alert('You can select a maximum of 8 languages you want to learn');
                 return false;
             }
 

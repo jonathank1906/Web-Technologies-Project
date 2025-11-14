@@ -51,3 +51,7 @@
 .ts-wrapper.multi .ts-control > div {
   @apply p-1
 }
+
+.ts-wrapper.full .ts-control {
+  @apply bg-base-300 !important;
+}
