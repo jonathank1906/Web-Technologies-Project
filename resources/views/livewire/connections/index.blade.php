@@ -34,8 +34,18 @@
                     </div>
                 </div>
 
+                <!-- Suggested Heading (only when search is empty) -->
+                @if(empty($search))
+                    <div class="px-4 py-3 mt-3">
+                        <div class="flex items-center gap-2">
+                            <x-tabler-sparkles class="w-5 h-5 text-primary" />
+                            <h2 class="text-base font-bold text-base-content">Suggested for you</h2>
+                        </div>
+                    </div>
+                @endif
+
                 <!-- Users List -->
-                <ul class="mt-5 pb-2" id="userList">
+                <ul class="pb-2" id="userList">
                     @forelse ($users as $user)
                         <li>
                             <livewire:connections.user-item :user="$user"
