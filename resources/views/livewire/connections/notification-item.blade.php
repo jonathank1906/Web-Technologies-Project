@@ -20,7 +20,7 @@
                 </div>
 
                 <!-- *Status (Not implemented) -->
-                <div class="flex items-center justify-center gap-1 my-1 -mt-3">
+                <div class="hidden flex items-center justify-center gap-1 my-1 -mt-3">
                     <div
                         class="h-1.5 w-1.5 rounded-full {{ $status == 'Online' ? 'bg-green-600' : ($status == 'Idle' ? 'bg-yellow-500' : 'bg-gray-500') }}">
                     </div>

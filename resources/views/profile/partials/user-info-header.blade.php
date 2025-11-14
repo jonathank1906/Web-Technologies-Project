@@ -59,7 +59,7 @@
                             @csrf
                             @if($isFollowing)
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-primary">Following</button>
+                                <button type="submit" class="btn btn-outline btn-primary">Unfollow</button>
                             @else
                                 <button type="submit" class="btn btn-outline btn-primary">Follow</button>
                             @endif
