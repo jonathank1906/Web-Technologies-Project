@@ -12,17 +12,21 @@ use Livewire\Attributes\Url;
 class Index extends Component
 {
     use WithFileUploads;
+
     #[Url]
     public ?int $userId = null; // chatting with
+
     public string $body = '';
     public $attachment = null;
-    public string $search = '';  // Add search property for filtering friends
-    public ?int $selectedMessageIndex = null;
-    public ?int $editingMessageIndex = null;
+    public string $search = '';
+    
+    // CHANGED: Using IDs instead of indexes for stability
+    public ?int $selectedMessageId = null;
+    public ?int $editingMessageId = null;
+    
     public string $editingText = '';
     public bool $showDeleteModal = false;
     public string $newMessage = '';
-
 
     public function getChatPartnerProperty(): ?User
     {
@@ -34,19 +38,23 @@ class Index extends Component
 
     public function updatedUserId(): void
     {
-        // when the chat partner changes, mark incoming messages as read
         if (!$this->chatPartner) return;
 
-        \App\Models\Message::query()
+        // Mark messages as read when switching users
+        Message::query()
             ->where('sender_id', $this->chatPartner->id)
             ->where('receiver_id', Auth::id())
             ->whereNull('read_at')
             ->update(['read_at' => now()]);
+            
+        // Reset selection states
+        $this->cancelEdit();
+        $this->cancelDelete();
     }
 
     public function unreadCount(int $userId): int
     {
-        return \App\Models\Message::query()
+        return Message::query()
             ->where('sender_id', $userId)
             ->where('receiver_id', Auth::id())
             ->whereNull('read_at')
@@ -77,6 +85,7 @@ class Index extends Component
     public function getFriendsProperty()
     {
         $me = Auth::user();
+        // Assuming getConnections() is a custom method on your User model
         return $me->getConnections();
     }
 
@@ -106,12 +115,13 @@ class Index extends Component
         return [
             'id' => $friend->id,
             'name' => $friend->name,
-            'img' => strtoupper(substr($friend->name, 0, 1)), // First letter of name
+            'img' => strtoupper(substr($friend->name, 0, 1)),
             'flag' => $friend->getFlagPictureUrl(),
             'unread' => $this->unreadCount($friend->id),
-            'lang' => 'English', // Default language
+            'lang' => 'English',
             'messages' => $friend->id === $this->userId ? $this->messages->map(function($msg) {
                 return [
+                    'id' => $msg->id, // Added ID here
                     'text' => $msg->body,
                     'from_me' => $msg->sender_id === auth()->id()
                 ];
@@ -124,23 +134,27 @@ class Index extends Component
         $this->userId = $friendId;
     }
 
+    // NEW: Unified handler prevents form confusion
+    public function handleSubmit(): void
+    {
+        if ($this->editingMessageId) {
+            $this->saveEdit();
+        } else {
+            $this->send();
+        }
+    }
+
     public function send(): void
     {
-        \Log::info('Livewire Messages\Index::send called', ['user_id' => Auth::id(), 'chat_partner' => $this->userId]);
-        
         $this->validate([
             'newMessage' => ['required', 'string', 'max:2000'],
             'attachment' => ['nullable', 'file', 'max:10240', 'mimes:png,jpg,jpeg,gif,webp,mp3,wav,ogg'],
         ]);
 
-        if (!$this->chatPartner) {
-            return;
-        }
-
-        $me = Auth::user();
+        if (!$this->chatPartner) return;
 
         $data = [
-            'sender_id' => $me->id,
+            'sender_id' => Auth::id(),
             'receiver_id' => $this->chatPartner->id,
             'body' => $this->newMessage,
         ];
@@ -156,101 +170,76 @@ class Index extends Component
 
         Message::create($data);
 
-        // Clear the message
         $this->newMessage = '';
         $this->attachment = null;
         
-        // Dispatch Alpine.js event to clear the input
         $this->js("window.dispatchEvent(new Event('message-sent'))");
     }
 
-
-    public function clearChat(): void
+    public function selectMessage(int $messageId): void
     {
-        if (!$this->chatPartner) return;
-        $me = Auth::user();
-        // Delete all messages between the two users
-        Message::query()
-            ->where(function ($q) use ($me) {
-                $q->where('sender_id', $me->id)
-                  ->where('receiver_id', $this->chatPartner->id);
-            })
-            ->orWhere(function ($q) use ($me) {
-                $q->where('sender_id', $this->chatPartner->id)
-                  ->where('receiver_id', $me->id);
-            })
-            ->delete();
+        $this->selectedMessageId = $messageId;
     }
 
-    public function selectMessage(int $index): void
+    public function startEdit(int $messageId): void
     {
-        $this->selectedMessageIndex = $index;
-    }
-
-    public function startEdit(int $index): void
-    {
-        $this->editingMessageIndex = $index;
-        $messages = $this->messages;
-        if ($messages->has($index)) {
-            $this->editingText = $messages[$index]->body;
+        $this->editingMessageId = $messageId;
+        
+        $message = Message::find($messageId);
+        
+        // Security: Ensure user owns the message
+        if ($message && $message->sender_id === Auth::id()) {
+            $this->editingText = $message->body;
         }
     }
 
     public function saveEdit(): void
     {
-        if ($this->editingMessageIndex === null) return;
+        if (!$this->editingMessageId) return;
         
-        $messages = $this->messages;
-        if ($messages->has($this->editingMessageIndex)) {
-            $message = $messages[$this->editingMessageIndex];
-            Message::where('id', $message->id)->update(['body' => $this->editingText]);
+        $message = Message::find($this->editingMessageId);
+        
+        if ($message && $message->sender_id === Auth::id()) {
+            $message->update(['body' => $this->editingText]);
         }
         
-        // Clear editing state
-        $this->editingText = '';
-        $this->editingMessageIndex = null;
-        $this->selectedMessageIndex = null;
+        $this->cancelEdit();
     }
-
 
     public function cancelEdit(): void
     {
-        $this->editingMessageIndex = null;
+        $this->editingMessageId = null;
         $this->editingText = '';
+        $this->selectedMessageId = null;
     }
+
     public function refreshMessages(): void
     {
-        // Just trigger Livewire to re-render messages
         $this->dispatch('$refresh');
     }
 
-    public function confirmDelete(int $index): void
+    public function confirmDelete(int $messageId): void
     {
-        $this->selectedMessageIndex = $index;
+        $this->selectedMessageId = $messageId;
         $this->showDeleteModal = true;
     }
 
     public function cancelDelete(): void
     {
         $this->showDeleteModal = false;
-        $this->selectedMessageIndex = null;
+        $this->selectedMessageId = null;
     }
 
     public function deleteMessage(): void
     {
-        if ($this->selectedMessageIndex === null) return;
+        if (!$this->selectedMessageId) return;
         
-        $messages = $this->messages;
-        if ($messages->has($this->selectedMessageIndex)) {
-            $message = $messages[$this->selectedMessageIndex];
-            Message::where('id', $message->id)->delete();
-    
-            // Remove from UI instantly
-            $messages->forget($this->selectedMessageIndex);
-        }
+        Message::where('id', $this->selectedMessageId)
+            ->where('sender_id', Auth::id()) // Security check
+            ->delete();
     
         $this->showDeleteModal = false;
-        $this->selectedMessageIndex = null;
+        $this->selectedMessageId = null;
     }
 
     public function render()
@@ -261,5 +250,3 @@ class Index extends Component
         ]);
     }
 }
-
-
