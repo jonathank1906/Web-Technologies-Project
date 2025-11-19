@@ -41,10 +41,6 @@
     </div> 
     <!-- Chat Column -->
     <div class="w-2/3 flex flex-col relative h-full min-h-0">
-        <!-- Spinner -->
-        <div wire:loading.target="selectFriend,send" wire:loading.flex class="absolute inset-0 bg-opacity-50 justify-center items-center z-50">
-            <x-tabler-loader-2 class="animate-spin w-6 h-6 text-base-content" />
-        </div>
 
         @if ($activeFriend)
             <!-- Header -->
@@ -67,49 +63,81 @@
             </div>
 
             <!-- Messages -->
+<<<<<<< HEAD
             <div x-chat-scroll class="flex-1 overflow-y-auto px-6 py-8 pt-8 space-y-3 bg-base-100 relative">
                 @foreach ($activeFriend['messages'] as $i => $msg)
                     <div wire:key="msg-{{ $activeFriend['id'] }}-{{ $i }}"
                          wire:click="selectMessage({{ $i }})"
                           class="{{ $msg['from_me'] ? 'bg-indigo-600 text-white self-end ml-auto' : 'bg-gray-500' }}
+=======
+            <div wire:poll.1s="refreshMessages" 
+                x-chat-scroll class="flex-1 overflow-y-auto px-6 py-4 bg-base-100">
+                <div class="flex flex-col gap-3 content-start">
+                    @foreach ($activeFriend['messages'] as $i => $msg)
+                        <div wire:key="msg-{{ $activeFriend['id'] }}-{{ $i }}"
+                            wire:click="selectMessage({{ $i }})"
+                            class="{{ $msg['from_me'] ? 'bg-indigo-600 text-white self-end' : 'bg-blue-500 text-white self-start' }}
+>>>>>>> aefbe77 (fixes)
                             {{ $selectedMessageIndex === $i ? 'scale-105' : '' }}
-                            p-3 rounded max-w-[70%] break-words whitespace-normal transition transform cursor-pointer relative text-sm leading-snug">
-                        {{ $msg['text'] }}
+                            p-3 rounded max-w-[80%] break-words transition transform cursor-pointer relative">
+                            {{ $msg['text'] }}
 
-                        @if ($msg['from_me'] && $selectedMessageIndex === $i)
-                            <div class="flex gap-3 absolute right-0 -top-6 text-xs text-base-content">
-                                <button wire:click.stop="startEdit({{ $i }})"><x-tabler-edit class="w-4 h-4" /></button>
-                                <button wire:click.stop="confirmDelete({{ $i }})"><x-tabler-trash class="w-4 h-4" /></button>
-                            </div>
-                        @endif
-                    </div>
-                @endforeach
+                            @if ($msg['from_me'] && $selectedMessageIndex === $i)
+                                <div class="flex gap-3 absolute right-0 -top-6 text-xs text-base-content">
+                                    <button wire:click.stop="startEdit({{ $i }})"><x-tabler-edit class="w-4 h-4" /></button>
+                                    <button wire:click.stop="confirmDelete({{ $i }})"><x-tabler-trash class="w-4 h-4" /></button>
+                                </div>
+                            @endif
+                        </div>
+                    @endforeach
+                </div>
             </div>
 
             <!-- Message Input -->
             <form wire:submit.prevent="{{ $editingMessageIndex !== null ? 'saveEdit' : 'send' }}"
-                  class="px-6 py-4 border-t border-base-300 bg-base-100 flex items-center gap-3">
+                class="px-6 py-4 border-t border-base-300 bg-base-100 flex items-center gap-3">
+                <!-- Icons -->
                 <x-tabler-mood-smile class="w-5 h-5 text-base-content hover:text-yellow-500" />
                 <x-tabler-microphone class="w-5 h-5 text-base-content hover:text-red-500" />
                 <x-tabler-paperclip class="w-5 h-5 text-base-content hover:text-blue-500" />
-
-                <input type="text"
-                       wire:model="{{ $editingMessageIndex !== null ? 'editingText' : 'newMessage' }}"
-                       class="flex-1 px-4 py-2 border border-gray-500 rounded-lg focus:border-indigo-600 bg-base-100"
-                       placeholder="{{ $editingMessageIndex !== null ? 'Edit your message...' : 'Type a message...' }}" />
-
+                
                 @if ($editingMessageIndex !== null)
-                    <button type="button" wire:click="cancelEdit" class="bg-base-300 text-base-content px-3 py-2 rounded hover:bg-base-400">Cancel</button>
-                    <button type="submit" class="bg-indigo-600 text-white px-3 py-2 rounded hover:bg-indigo-600">Save</button>
+                    <!-- Editing Mode -->
+                    <input type="text"
+                        wire:model="editingText"
+                        class="flex-1 px-4 py-2 border border-gray-500 rounded-lg focus:border-indigo-600 bg-base-100"
+                        placeholder="Edit your message..." />
+                    <button type="button" wire:click="cancelEdit"
+                            class="bg-base-300 text-base-content px-3 py-2 rounded hover:bg-base-400">
+                        Cancel
+                    </button>
+                    <button type="submit"
+                            class="bg-indigo-600 text-white px-3 py-2 rounded hover:bg-indigo-600">
+                        Save
+                    </button>
                 @else
-                    <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-600">Send</button>
+                    <!-- Sending Mode -->
+                    <input type="text"
+                        wire:model="newMessage"
+                        value="{{ $newMessage }}"
+                        class="flex-1 px-4 py-2 border border-gray-500 rounded-lg focus:border-indigo-600 bg-base-100"
+                        placeholder="Type a message..."
+                        x-data
+                        x-ref="messageInput"
+                        @message-sent.window="$refs.messageInput.value = ''" />
+                    <button type="submit"
+                            class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-600">
+                        Send
+                    </button>
                 @endif
             </form>
+            
         @else
             <div class="flex-1 flex items-center justify-center text-base-content">
                 <p>Select a friend to start chatting.</p>
             </div>
         @endif
+
 
         <!-- Delete Modal -->
         @if ($showDeleteModal)
@@ -136,6 +164,7 @@
             }
         }, 50);
     });
+    
 </script>
 
 

@@ -127,6 +127,7 @@ class Index extends Component
     public function send(): void
     {
         \Log::info('Livewire Messages\Index::send called', ['user_id' => Auth::id(), 'chat_partner' => $this->userId]);
+        
         $this->validate([
             'newMessage' => ['required', 'string', 'max:2000'],
             'attachment' => ['nullable', 'file', 'max:10240', 'mimes:png,jpg,jpeg,gif,webp,mp3,wav,ogg'],
@@ -155,14 +156,15 @@ class Index extends Component
 
         Message::create($data);
 
+        // Clear the message
         $this->newMessage = '';
         $this->attachment = null;
-        // Dispatch a Livewire browser event (Livewire v3 uses $this->dispatch())
-        $this->dispatch('messageSent', [
-            'from' => $me->id,
-            'to' => $this->chatPartner->id,
-        ]);
+        
+        // Dispatch Alpine.js event to clear the input
+        $this->js("window.dispatchEvent(new Event('message-sent'))");
     }
+
+
     public function clearChat(): void
     {
         if (!$this->chatPartner) return;
@@ -203,15 +205,23 @@ class Index extends Component
             $message = $messages[$this->editingMessageIndex];
             Message::where('id', $message->id)->update(['body' => $this->editingText]);
         }
-    
-        $this->reset(['editingMessageIndex', 'editingText']);
-        $this->dispatch('$refresh'); // triggers re-render only
+        
+        // Clear editing state
+        $this->editingText = '';
+        $this->editingMessageIndex = null;
+        $this->selectedMessageIndex = null;
     }
+
 
     public function cancelEdit(): void
     {
         $this->editingMessageIndex = null;
         $this->editingText = '';
+    }
+    public function refreshMessages(): void
+    {
+        // Just trigger Livewire to re-render messages
+        $this->dispatch('$refresh');
     }
 
     public function confirmDelete(int $index): void
@@ -241,9 +251,6 @@ class Index extends Component
     
         $this->showDeleteModal = false;
         $this->selectedMessageIndex = null;
-    
-        // Trigger Livewire re-render to update $activeFriend
-        $this->dispatch('$refresh');
     }
 
     public function render()
@@ -254,3 +261,5 @@ class Index extends Component
         ]);
     }
 }
+
+
