@@ -92,34 +92,36 @@
                     <div x-show="settingsView === 'cards'" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         <button @click="settingsView = 'appearance'"
                             class="card bg-base-100 p-6 text-center shadow rounded-lg transform transition duration-100 hover:scale-105 hover:shadow-xl active:scale-95">
-                            <span class="text-3xl">🌙</span>
+                            <x-tabler-moon class="w-7 h-7 mx-auto text-primary" />
                             <p class="mt-2 font-semibold">Appearance</p>
                         </button>
 
                         <button @click="settingsView = 'notifications'"
                             class="card bg-base-100 p-6 text-center shadow rounded-lg transform transition duration-100 hover:scale-105 hover:shadow-xl active:scale-95">
-                            <span class="text-3xl">🔔</span>
+                            <x-tabler-bell class="w-7 h-7 mx-auto text-primary" />
                             <p class="mt-2 font-semibold">Notifications</p>
                         </button>
 
                         <button @click="settingsView = 'blocks'"
                             class="card bg-base-100 p-6 text-center shadow rounded-lg transform transition duration-100 hover:scale-105 hover:shadow-xl active:scale-95">
-                            <span class="text-3xl">🚫</span>
-                            <p class="mt-2 font-semibold">Blocks</p>
+                            <x-tabler-circle-minus class="w-7 h-7 mx-auto text-red-600" />
+                            <p class="mt-2 font-semibold">Blocking</p>
                         </button>
 
                         <button @click="settingsView = 'posts'"
                             class="card bg-base-100 p-6 text-center shadow rounded-lg transform transition duration-100 hover:scale-105 hover:shadow-xl active:scale-95">
-                            <span class="text-3xl">📝</span>
+                            <x-tabler-pencil class="w-7 h-7 mx-auto text-primary" />
                             <p class="mt-2 font-semibold">Posts</p>
                         </button>
 
                         <button @click="settingsView = 'help'"
                             class="card bg-base-100 p-6 text-center shadow rounded-lg transform transition duration-100 hover:scale-105 hover:shadow-xl active:scale-95">
-                            <span class="text-3xl">❓</span>
+                            <x-tabler-question-mark class="w-7 h-7 mx-auto text-primary" />
                             <p class="mt-2 font-semibold">Help</p>
                         </button>
                     </div>
+
+
 
 
                     <!-- Sub Views -->
