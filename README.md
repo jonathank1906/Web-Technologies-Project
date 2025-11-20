@@ -1,4 +1,4 @@
-<h1 align="center">[Unnamed]</h1>
+<h1 align="center">Linguistigram</h1>
 
 <p align="center">
     <a href="https://www.php.net/"><img src="https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white"/></a>
@@ -20,9 +20,9 @@
     <a href="https://www.postgresql.org/"><img src="https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white"/></a>
 </p>
 
-## What is [Unnamed]?
+## What is Linguistigram?
 
-[Unnamed] is a language learning social platform that connects people from around the world to help each other learn new languages.
+Linguistigram is a language learning social platform that connects people from around the world to help each other learn new languages.
 
 ## Getting Started
 
