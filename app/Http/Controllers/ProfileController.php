@@ -91,17 +91,6 @@ class ProfileController extends Controller
         $authUser = auth()->user();
         $authUser->follow($user);
 
-        if (! $user->getNotifications()
-            ->where('sender_id', $authUser->id)
-            ->where('type', 'follow')
-            ->exists()) {
-
-            $user->getNotifications()->create([
-                'sender_id' => $authUser->id,
-                'type' => 'follow',
-            ]);
-        }
-
         return back();
     }
 

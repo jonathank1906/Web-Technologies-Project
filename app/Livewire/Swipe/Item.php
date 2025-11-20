@@ -14,7 +14,7 @@ class Item extends Component
         $authUser = auth()->user();
         // Exclude users already followed
         $alreadyFollowingIds = $authUser->following()->pluck('users.id')->toArray();
-        $this->users = \App\Models\User::where('id', '<>', $authUser->id)
+        $this->users = User::where('id', '<>', $authUser->id)
             ->whereNotIn('id', $alreadyFollowingIds)
             ->get();
     }
@@ -22,7 +22,7 @@ class Item extends Component
     public function follow($userId)
     {
         $authUser = auth()->user();
-        $user = \App\Models\User::findOrFail($userId);
+        $user = User::findOrFail($userId);
         $authUser->follow($user);
         // Remove user from swipe list
         $this->users = $this->users->filter(fn($u) => $u->id !== $userId);

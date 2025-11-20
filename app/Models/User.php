@@ -120,6 +120,18 @@ class User extends Authenticatable
             ['receiver_id' => $user->id],
             ['status' => 'accepted']
         );
+
+        // Create follow notification
+        if (! $user->getNotifications()
+            ->where('sender_id', $this->id)
+            ->where('type', 'follow')
+            ->exists()) {
+
+            $user->getNotifications()->create([
+                'sender_id' => $this->id,
+                'type' => 'follow',
+            ]);
+        }
     }
 
     /* Unfollow the given user (removes any connection). */
