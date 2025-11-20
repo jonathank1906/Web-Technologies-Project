@@ -12,25 +12,32 @@ class Index extends Component
     public $search = '';
 
     public function render()
-    {
-        // ✅ Get users (everyone except the current user if logged in)
+    {   
+        if (auth()->user()) {
         $users = User::query()
-            ->when(auth()->check(), fn($q) => $q->where('id', '<>', auth()->id()))
+            ->where('id', '<>', auth()->id())
+            ->when($this->search, function ($q) {
+                $q->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($this->search) . '%']);
+                 })
+            ->get();
+        
+        $notifications = auth()->user()
+            ->getNotifications()
+            ->with('sender')
+            ->latest()
+            ->get();
+        }
+        else {
+            $users = User::query()
             ->when($this->search, function ($q) {
                 $q->whereRaw('LOWER(name) LIKE ?', ['%' . strtolower($this->search) . '%']);
             })
             ->get();
 
-        // ✅ Handle notifications safely for guests
-        $notifications = collect(); // empty collection by default
-
-        if (auth()->check()) {
-            $notifications = auth()->user()
-                ->getNotifications()
-                ->with('sender')
-                ->latest()
-                ->get();
+            $notifications = collect();
         }
+        
+
 
         return view('livewire.connections.index', [
             'users' => $users,
