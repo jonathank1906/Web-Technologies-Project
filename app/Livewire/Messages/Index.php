@@ -14,13 +14,12 @@ class Index extends Component
     use WithFileUploads;
 
     #[Url]
-    public ?int $userId = null; // chatting with
-
+    public ?int $userId = null; 
     public string $body = '';
     public $attachment = null;
     public string $search = '';
     
-    // CHANGED: Using IDs instead of indexes for stability
+
     public ?int $selectedMessageId = null;
     public ?int $editingMessageId = null;
     
@@ -40,14 +39,14 @@ class Index extends Component
     {
         if (!$this->chatPartner) return;
 
-        // Mark messages as read when switching users
+
         Message::query()
             ->where('sender_id', $this->chatPartner->id)
             ->where('receiver_id', Auth::id())
             ->whereNull('read_at')
             ->update(['read_at' => now()]);
             
-        // Reset selection states
+
         $this->cancelEdit();
         $this->cancelDelete();
     }
@@ -85,7 +84,6 @@ class Index extends Component
     public function getFriendsProperty()
     {
         $me = Auth::user();
-        // Assuming getConnections() is a custom method on your User model
         return $me->getConnections();
     }
 
@@ -121,7 +119,7 @@ class Index extends Component
             'lang' => 'English',
             'messages' => $friend->id === $this->userId ? $this->messages->map(function($msg) {
                 return [
-                    'id' => $msg->id, // Added ID here
+                    'id' => $msg->id,
                     'text' => $msg->body,
                     'from_me' => $msg->sender_id === auth()->id()
                 ];
@@ -134,7 +132,6 @@ class Index extends Component
         $this->userId = $friendId;
     }
 
-    // NEW: Unified handler prevents form confusion
     public function handleSubmit(): void
     {
         if ($this->editingMessageId) {
@@ -187,7 +184,6 @@ class Index extends Component
         
         $message = Message::find($messageId);
         
-        // Security: Ensure user owns the message
         if ($message && $message->sender_id === Auth::id()) {
             $this->editingText = $message->body;
         }
@@ -235,7 +231,7 @@ class Index extends Component
         if (!$this->selectedMessageId) return;
         
         Message::where('id', $this->selectedMessageId)
-            ->where('sender_id', Auth::id()) // Security check
+            ->where('sender_id', Auth::id()) 
             ->delete();
     
         $this->showDeleteModal = false;
