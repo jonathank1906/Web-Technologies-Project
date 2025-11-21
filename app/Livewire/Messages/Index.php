@@ -117,35 +117,76 @@ class Index extends Component
             'flag' => $friend->getFlagPictureUrl(),
             'unread' => $this->unreadCount($friend->id),
             'lang' => 'English',
-            'messages' => $friend->id === $this->userId ? $this->messages->map(function($msg) {
-                return [
-                    'id' => $msg->id,
-                    'text' => $msg->body,
-                    'from_me' => $msg->sender_id === auth()->id()
-                ];
-            })->toArray() : []
+            'messages' => $friend->id === $this->userId 
+                ? $this->messages->map(function($msg) {
+                    return [
+                        'id' => $msg->id,
+                        'body' => $msg->body,
+                        'sender_id' => $msg->sender_id,
+                        'attachment_path' => $msg->attachment_path,
+                        'attachment_type' => $msg->attachment_type,
+                        'attachment_meta' => $msg->attachment_meta,
+                        'from_me' => $msg->sender_id === auth()->id(),
+                    ];
+                })->toArray() 
+                : []
         ];
     }
+
 
     public function selectFriend(int $friendId): void
     {
         $this->userId = $friendId;
     }
 
-    public function handleSubmit(): void
+    public function handleSubmit()
     {
-        if ($this->editingMessageId) {
-            $this->saveEdit();
-        } else {
-            $this->send();
+        // prevent sending nothing
+        if (empty($this->newMessage) && empty($this->attachment)) {
+            return;
         }
-    }
 
+        $type = 'text';
+        $path = null;
+        $mime = null;
+
+        // if attachment exists
+        if ($this->attachment) {
+            $mime = $this->attachment->getMimeType();
+
+            $type = str_contains($mime, 'image') ? 'image'
+                : (str_contains($mime, 'audio') ? 'audio'
+                : (str_contains($mime, 'video') ? 'video'
+                : (str_contains($mime, 'pdf') || str_contains($mime, 'text') || str_contains($mime, 'msword') || str_contains($mime, 'officedocument') ? 'document'
+                : 'file')));
+
+            $path = $this->attachment->store('attachments', 'public');
+        }
+
+        // Save message
+        Message::create([
+            'sender_id' => Auth::id(),
+            'receiver_id' => $this->activeFriend['id'],
+            'body' => $this->newMessage, 
+            'attachment_type' => $type,
+            'attachment_path' => $path,
+            'attachment_meta' => [
+                'mime' => $mime,
+                'size' => $this->attachment ? $this->attachment->getSize() : null,
+            ],
+        ]);
+
+        // Reset inputs
+        $this->newMessage = '';
+        $this->attachment = null;
+
+        $this->dispatch('message-sent');
+    }
     public function send(): void
     {
         $this->validate([
             'newMessage' => ['required', 'string', 'max:2000'],
-            'attachment' => ['nullable', 'file', 'max:10240', 'mimes:png,jpg,jpeg,gif,webp,mp3,wav,ogg'],
+            'attachment' => ['nullable', 'file', 'max:200000', 'mimes:png,jpg,jpeg,gif,pdf,txt,mp3,wav,ogg,mp4,avi,mov'],
         ]);
 
         if (!$this->chatPartner) return;
@@ -159,7 +200,13 @@ class Index extends Component
         if ($this->attachment) {
             $path = $this->attachment->store('messages', 'public');
             $mime = $this->attachment->getClientMimeType();
-            $type = str_contains($mime, 'image') ? 'image' : (str_contains($mime, 'audio') ? 'audio' : 'file');
+            $type = str_contains($mime, 'image') ? 'image'
+                    : (str_contains($mime, 'audio') ? 'audio'
+                    : (str_contains($mime, 'pdf') ? 'document'
+                    : (str_contains($mime, 'msword') ? 'document'
+                    : (str_contains($mime, 'text') ? 'document'
+                    : (str_contains($mime, 'video') ? 'video'
+                    : 'file')))));
             $data['attachment_path'] = $path;
             $data['attachment_type'] = $type;
             $data['attachment_meta'] = ['mime' => $mime, 'size' => $this->attachment->getSize()];
