@@ -72,18 +72,26 @@
 
                                 @if($type === 'image')
                                     <img src="{{ asset('storage/' . $msg['attachment_path']) }}" class="w-128 h-128 object-cover rounded mt-2" />
-                                @elseif($type === 'audio')
-                                    <audio controls class="w-40 mt-2"><source src="{{ asset('storage/' . $msg['attachment_path']) }}"></audio>
+                            @elseif($type === 'audio')
+                                <div wire:ignore class="mt-2 w-72">
+                                    <audio controls preload="metadata" class="w-72">
+                                        <source 
+                                            src="{{ route('stream.attachment', ['path' => $msg['attachment_path']]) }}" 
+                                            type="audio/mp3"  {{-- Use audio/mp3 for wide Chrome compatibility --}}
+                                        />
+                                        Your browser does not support the audio element.
+                                    </audio>
+                                </div>
                                 @elseif($type === 'document')
                                     <a href="{{ asset('storage/' . $msg['attachment_path']) }}" target="_blank" class="mt-2 inline-flex items-center gap-2">
                                         <x-tabler-file-text class="w-4 h-4" /> Download
                                     </a>
                                 @elseif($type === 'video')
-                                    <div wire:ignore class="mt-2 max-w-[400px]">
+                                    <div wire:ignore class="mt-2 w-128 h-128">
                                         <video controls 
                                             preload="metadata" 
                                             class="w-full rounded-lg bg-black"
-                                            style="max-height: 400px;">
+        
                                             <source src="{{ route('stream.attachment', ['path' => $msg['attachment_path']]) }}" type="video/mp4">
                                             Your browser does not support the video tag.
                                         </video>
