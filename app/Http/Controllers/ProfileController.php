@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,6 +24,7 @@ class ProfileController extends Controller
             'following' => $user?->following(),
             'isFollowing' => $authUser?->isFollowing($user) ?? false,
             'isFollowedBy' => $authUser?->isFollowedBy($user) ?? false,
+            'blockedUsers' => $authUser?->getBlockedUsers() ?? collect(),
         ]);
     }
 
@@ -100,5 +102,41 @@ class ProfileController extends Controller
         auth()->user()->unfollow($user);
 
         return back();
+    }
+
+    /** Block a user. */
+    public function block(User $user): JsonResponse
+    {
+        try {
+            auth()->user()->block($user);
+
+            return response()->json([
+                'message' => 'User blocked successfully',
+                'blocked' => true,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to block user',
+                'error' => $e->getMessage(),
+            ], 400);
+        }
+    }
+
+    /** Unblock a user. */
+    public function unblock(User $user): JsonResponse
+    {
+        try {
+            auth()->user()->unblock($user);
+
+            return response()->json([
+                'message' => 'User unblocked successfully',
+                'blocked' => false,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Failed to unblock user',
+                'error' => $e->getMessage(),
+            ], 400);
+        }
     }
 }

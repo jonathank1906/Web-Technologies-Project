@@ -213,6 +213,83 @@ class User extends Authenticatable
     }
 
     /**
+     * Get blocked users relationship
+     */
+    public function blockedUsers(): HasMany
+    {
+        return $this->hasMany(Block::class, 'blocker_id');
+    }
+
+    /**
+     * Get users who blocked this user
+     */
+    public function blockedByUsers(): HasMany
+    {
+        return $this->hasMany(Block::class, 'blocked_id');
+    }
+
+    /**
+     * Block a user
+     */
+    public function block(User $user): void
+    {
+        if ($this->id === $user->id) {
+            throw new \Exception('You cannot block yourself.');
+        }
+
+        Block::updateOrCreate(
+            [
+                'blocker_id' => $this->id,
+                'blocked_id' => $user->id,
+            ]
+        );
+
+        // Remove any connections when blocking
+        $this->unfollow($user);
+        $user->unfollow($this);
+    }
+
+    /**
+     * Unblock a user
+     */
+    public function unblock(User $user): void
+    {
+        Block::where('blocker_id', $this->id)
+            ->where('blocked_id', $user->id)
+            ->delete();
+    }
+
+    /**
+     * Check if this user has blocked another user
+     */
+    public function hasBlocked(User $user): bool
+    {
+        return Block::where('blocker_id', $this->id)
+            ->where('blocked_id', $user->id)
+            ->exists();
+    }
+
+    /**
+     * Check if this user is blocked by another user
+     */
+    public function isBlockedBy(User $user): bool
+    {
+        return Block::where('blocker_id', $user->id)
+            ->where('blocked_id', $this->id)
+            ->exists();
+    }
+
+    /**
+     * Get users this user has blocked
+     */
+    public function getBlockedUsers()
+    {
+        return User::whereIn('id', 
+            $this->blockedUsers()->pluck('blocked_id')
+        )->get();
+    }
+
+    /**
      * Default id for routing
      */
     public function getRouteKeyName()

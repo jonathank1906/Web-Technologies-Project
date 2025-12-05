@@ -66,6 +66,12 @@
                 <p class="text-gray-700 dark:text-gray-100/60 font-light">
                     {{ $description }}
                 </p>
+
+                @if(auth()->check() && auth()->user()->hasBlocked($user))
+                    <div class="alert alert-info alert-sm mt-2 py-1">
+                        <p class="text-xs">You have blocked this user</p>
+                    </div>
+                @endif
             </div>
         </div>
 

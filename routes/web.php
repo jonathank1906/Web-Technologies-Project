@@ -38,6 +38,8 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/profile/{user}/follow', [ProfileController::class, 'follow'])->name('profile.follow');
     Route::delete('/profile/{user}/unfollow', [ProfileController::class, 'unfollow'])->name('profile.unfollow');
+    Route::post('/profile/{user}/block', [ProfileController::class, 'block'])->name('profile.block');
+    Route::delete('/profile/{user}/unblock', [ProfileController::class, 'unblock'])->name('profile.unblock');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });

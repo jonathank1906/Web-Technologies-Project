@@ -63,26 +63,43 @@
                                 Edit Profile
                             </button>
                         @else
-                            <div class="flex space-x-3">
-                                <form
-                                    action="{{ $isFollowing ? route('profile.unfollow', $user) : route('profile.follow', $user) }}"
-                                    method="POST">
-                                    @csrf
-                                    @if($isFollowing)
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-outline btn-primary">Unfollow</button>
-                                    @else
-                                        <button type="submit" class="btn btn-outline btn-primary">Follow</button>
-                                    @endif
-                                </form>
+                            @php
+                                $isBlocked = auth()->user()->hasBlocked($user);
+                            @endphp
 
-                                @if ($isFollowing || $isFollowedBy)
-                                    <a href="{{ route('messages') }}" class="btn btn-secondary">
-                                        <x-tabler-messages class="w-5 h-5 mr-2" />
-                                        Message
-                                    </a>
-                                @endif
-                            </div>
+                            @if (!$isBlocked)
+                                <div class="flex space-x-3">
+                                    <form
+                                        action="{{ $isFollowing ? route('profile.unfollow', $user) : route('profile.follow', $user) }}"
+                                        method="POST">
+                                        @csrf
+                                        @if($isFollowing)
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-outline btn-primary">Unfollow</button>
+                                        @else
+                                            <button type="submit" class="btn btn-outline btn-primary">Follow</button>
+                                        @endif
+                                    </form>
+
+                                    @if ($isFollowing || $isFollowedBy)
+                                        <a href="{{ route('messages') }}" class="btn btn-secondary">
+                                            <x-tabler-messages class="w-5 h-5 mr-2" />
+                                            Message
+                                        </a>
+                                    @endif
+
+                                    <button @click="blockUser('{{ $user->public_id }}')" class="btn btn-outline btn-error">
+                                        Block
+                                    </button>
+                                </div>
+                            @else
+                                <div class="alert alert-warning w-full text-sm">
+                                    <p>You have blocked this user.</p>
+                                    <button @click="unblockUser('{{ $user->public_id }}')" class="btn btn-xs btn-warning mt-2">
+                                        Unblock
+                                    </button>
+                                </div>
+                            @endif
                         @endif
                     </div>
                 @endauth
