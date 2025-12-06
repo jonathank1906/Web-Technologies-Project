@@ -31,10 +31,15 @@
 
             <!-- User Information -->
             <div class="flex flex-col mt-4">
-                <div class="flex">
+                <div class="flex items-center gap-2">
                     <h5 class="font-bold">
                         {{ $user->name }}
                     </h5>
+                    @if(auth()->check() && auth()->user()->hasBlocked($user))
+                        <span class="px-2 rounded text-xs font-semibold bg-gradient-to-r from-orange-400 to-yellow-400 text-gray-900">
+                            You blocked this user
+                        </span>
+                    @endif
                 </div>
 
                 <div class="flex gap-1 text-sm font-bold items-center mb-2">
@@ -66,12 +71,6 @@
                 <p class="text-gray-700 dark:text-gray-100/60 font-light">
                     {{ $description }}
                 </p>
-
-                @if(auth()->check() && auth()->user()->hasBlocked($user))
-                    <div class="alert alert-info alert-sm mt-2 py-1">
-                        <p class="text-xs">You have blocked this user</p>
-                    </div>
-                @endif
             </div>
         </div>
 

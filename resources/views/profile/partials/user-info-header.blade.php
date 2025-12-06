@@ -93,9 +93,8 @@
                                     </button>
                                 </div>
                             @else
-                                <div class="alert alert-warning w-full text-sm">
-                                    <p>You have blocked this user.</p>
-                                    <button @click="unblockUser('{{ $user->public_id }}')" class="btn btn-xs btn-warning mt-2">
+                                <div class="p-2 rounded-lg text-white shadow-md w-full">
+                                    <button @click="unblockUser('{{ $user->public_id }}')" class="btn btn-sm bg-red-600 hover:bg-red-700 text-white border-0">
                                         Unblock
                                     </button>
                                 </div>
