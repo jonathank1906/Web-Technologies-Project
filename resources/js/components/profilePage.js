@@ -12,6 +12,12 @@ export default function profilePage() {
         },
 
         async blockUser(userId) {
+            // Show confirmation dialog
+            const confirmed = confirm("Are you sure you want to block this user? You won't be able to interact with them or see each others posts.");
+            if (!confirmed) {
+                return; // User cancelled the action
+            }
+
             try {
                 const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
                 if (!csrfToken) {
@@ -44,6 +50,12 @@ export default function profilePage() {
         },
 
         async unblockUser(userId) {
+            // Show confirmation dialog
+            const confirmed = confirm("Are you sure you want to unblock this user? You will be able to interact with them and both of you can see each others posts.");
+            if (!confirmed) {
+                return; // User cancelled the action
+            }
+
             try {
                 const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
                 if (!csrfToken) {

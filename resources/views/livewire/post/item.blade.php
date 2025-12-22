@@ -97,7 +97,7 @@
                 <x-tabler-thumb-up />
             </button>
             @endauth
-            <span>{{ $post->likes_count ?? 0 }}</span>
+            <span>{{ $likesCount }}</span>
         </div>
 
         <div class="flex items-center gap-1">
@@ -110,7 +110,7 @@
                 <x-tabler-message-circle-2 />
             </button>
             @endauth
-            <span class="ml-2">{{ $post->comments_count ?? 0 }}</span>
+            <span class="ml-2">{{ $commentsCount }}</span>
         </div>
     </div>
 </footer>
