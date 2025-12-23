@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Swipe;
 use App\Models\User;
+use App\Models\Block;
 
 use Livewire\Component;
 
@@ -14,8 +15,22 @@ class Item extends Component
         $authUser = auth()->user();
         // Exclude users already followed
         $alreadyFollowingIds = $authUser->following()->pluck('users.id')->toArray();
+        
+        // Exclude users that current user has blocked
+        $blockedUserIds = Block::where('blocker_id', $authUser->id)
+            ->pluck('blocked_id')
+            ->toArray();
+        
+        // Exclude users who have blocked current user
+        $usersWhoBlockedMe = Block::where('blocked_id', $authUser->id)
+            ->pluck('blocker_id')
+            ->toArray();
+        
+        // Combine all excluded user IDs
+        $excludedIds = array_unique(array_merge($alreadyFollowingIds, $blockedUserIds, $usersWhoBlockedMe));
+        
         $this->users = User::where('id', '<>', $authUser->id)
-            ->whereNotIn('id', $alreadyFollowingIds)
+            ->whereNotIn('id', $excludedIds)
             ->get();
     }
 

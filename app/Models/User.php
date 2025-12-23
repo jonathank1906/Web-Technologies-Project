@@ -199,7 +199,13 @@ class User extends Authenticatable
      */
     public function getNotifications()
     {
-        return $this->hasMany(Notification::class, 'receiver_id');
+        // Get blocked user IDs
+        $blockedIds = $this->blockedUsers()->pluck('blocked_id');
+        $blockerIds = Block::where('blocked_id', $this->id)->pluck('blocker_id');
+        $excludedIds = $blockedIds->merge($blockerIds);
+        
+        return $this->hasMany(Notification::class, 'receiver_id')
+            ->whereNotIn('sender_id', $excludedIds);
     }
 
     /**

@@ -6,6 +6,7 @@ use Livewire\Component;
 use Livewire\WithFileUploads;
 use App\Models\Message;
 use App\Models\User;
+use App\Models\Block;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Url;
 
@@ -149,6 +150,14 @@ class Index extends Component
         ]);
 
         if (!$this->chatPartner) return;
+
+        // Check if user has blocked the chat partner or is blocked by them
+        if (Auth::user()->hasBlocked($this->chatPartner) || Auth::user()->isBlockedBy($this->chatPartner)) {
+            // Silently fail - don't send the message
+            $this->newMessage = '';
+            $this->attachment = null;
+            return;
+        }
 
         $data = [
             'sender_id' => Auth::id(),

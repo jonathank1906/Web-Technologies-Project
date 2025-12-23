@@ -107,6 +107,11 @@ class Show extends Component
             return;
         }
 
+        // Prevent liking comments from blocked users
+        if (auth()->user()->hasBlocked($comment->user) || auth()->user()->isBlockedBy($comment->user)) {
+            return;
+        }
+
         auth()->user()->toggleLike($comment);
 
         // Refresh the post with updated relationships
