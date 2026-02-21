@@ -18,14 +18,16 @@
                     <img src="{{ $user->getFlagPictureUrl() }}" alt="flag"
                         class="absolute bottom-0 right-0 w-4 h-4 object-cover rounded-full border border-base-100 shadow" />
                 </div>
-
-                <!-- *Status (Not implemented) -->
-                <div class="hidden items-center justify-center gap-1 my-1 -mt-3">
+                
+                @auth
+                <!-- Status -->
+                <div class="flex items-center justify-center gap-1 my-1 -mt-3">
                     <div
-                        class="h-1.5 w-1.5 rounded-full {{ $status == 'Online' ? 'bg-green-600' : ($status == 'Idle' ? 'bg-yellow-500' : 'bg-gray-500') }}">
+                        class="h-1.5 w-1.5 rounded-full {{ $status == 'Online' ? 'bg-green-600' : 'bg-gray-500' }}">
                     </div>
                     <p class="font-normal text-xs text-gray-500 dark:text-gray-200/90">{{ $status }}</p>
                 </div>
+                @endauth
             </div>
 
             <!-- Message -->
@@ -56,3 +58,8 @@
         </div>
     </div>
 </section>
+<script>
+    window.addEventListener('status-updated', (event) => {
+        @this.call('updateStatus', event.detail)
+    });
+</script>

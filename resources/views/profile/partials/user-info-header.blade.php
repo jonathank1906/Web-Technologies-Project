@@ -20,9 +20,19 @@
             <!-- User Info -->
             <div class="flex-1 space-y-4">
                 <div>
-                    <h1 class="text-3xl font-bold text-base-content">
-                        {{ $user->name }}
-                    </h1>
+                    <div class="flex items-center gap-3">
+                        <h1 class="text-3xl font-bold text-base-content">
+                            {{ $user->name }}
+                        </h1>
+
+                        @auth
+                        <!-- Status -->
+                        <div id="user-status-{{ $user->id }}" class="flex items-center gap-1">
+                            <div class="h-2 w-2 rounded-full bg-gray-500 status-dot"></div>
+                            <span class="text-sm text-gray-500 dark:text-gray-200/90 status-text">Offline</span>
+                        </div>
+                        @endauth
+                    </div>
                     <div class="flex items-center gap-2 mt-2 text-base-content/70">
                         <x-tabler-mail class="w-4 h-4" />
                         <p>{{ $user->email }}</p>
@@ -88,4 +98,30 @@
                 @endauth
             </div>
 
+ <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const userId = @js($user->id);
+            const statusElement = document.getElementById(`user-status-${userId}`);
+            const statusDot = statusElement?.querySelector('.status-dot');
+            const statusText = statusElement?.querySelector('.status-text');
+
+            function updateStatus(status) {
+                if (!statusDot || !statusText) return;
+
+                statusText.textContent = status;
+                statusDot.className = 'h-2 w-2 rounded-full status-dot ' + (
+                    status === 'Online' ? 'bg-green-600' : 'bg-gray-500'
+                );
+            }
+
+            if (window.UserStatus?.users?.[userId]) {
+                updateStatus(window.UserStatus.users[userId]);
+            }
+
+            window.addEventListener('status-updated', (event) => {
+                const status = event.detail[userId] || 'Offline';
+                updateStatus(status);
+            });
+        });
+    </script>
 </header>

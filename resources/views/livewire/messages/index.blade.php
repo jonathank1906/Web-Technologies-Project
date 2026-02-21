@@ -24,7 +24,10 @@
                     </div>
 
                     <div class="flex flex-col text-sm">
-                        <span class="font-semibold text-base-content text-base">{{ $friend['name'] }}</span>
+                        <div class="flex items-center gap-2">
+                            <span class="font-semibold text-base-content text-base">{{ $friend['name'] }}</span>
+                            <span class="text-xs text-gray-500 dark:text-gray-200/90">{{ $friend['status'] }}</span>
+                        </div>
                         <span class="text-xs text-base-content italic">{{ $friend['lang'] }}</span>
                         <span class="text-xs text-base-content mt-1 truncate">
                             {{ \Illuminate\Support\Str::limit(last($friend['messages'])['text'] ?? '', 13, '...') }}
@@ -48,7 +51,10 @@
                              class="absolute bottom-0 right-0 w-4 h-4 rounded-full border border-base-100" />
                     </div>
                     <div>
-                        <h2 class="text-sm font-bold text-base-content">{{ $activeFriend['name'] }}</h2>
+                        <div class="flex items-center gap-2">
+                            <h2 class="text-sm font-bold text-base-content">{{ $activeFriend['name'] }}</h2>
+                            <span class="text-xs text-gray-500 dark:text-gray-200/90">{{ $activeFriend['status'] }}</span>
+                        </div>
                         <p class="text-xs text-base-content">{{ $activeFriend['lang'] }}</p>
                     </div>
                 </div>
@@ -140,9 +146,7 @@
     </div>
 </div>
 
-@push('scripts')
 <script>
-    // Scrolls to bottom when new content is added or friend selected
     window.addEventListener('scroll-to-bottom', () => {
         setTimeout(() => {
             const chatWindow = document.querySelector('[x-chat-scroll]');
@@ -151,5 +155,14 @@
             }
         }, 50);
     });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        window.addEventListener('status-updated', (event) => {
+            @this.call('updateStatus', event.detail);
+        });
+        
+        if (window.UserStatus?.users) {
+            @this.call('updateStatus', window.UserStatus.users);
+        }
+    });
 </script>
-@endpush

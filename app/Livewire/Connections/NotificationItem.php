@@ -7,17 +7,16 @@ use Livewire\Component;
 
 class NotificationItem extends Component
 {
-    protected $listeners = ['openProfile', 'removeNotification'];
+    protected $listeners = ['openProfile', 'removeNotification', 'updateStatus'];
 
     public $notification;
     public $user;
-    public $status;
+    public $status = 'Offline';
 
     public function mount($notification = null)
     {
         $this->notification = $notification;
         $this->user = $notification->sender;
-        $this->status = $user->status ?? 'No status';
     }
 
     public function openProfile()
@@ -31,6 +30,11 @@ class NotificationItem extends Component
         ->delete();
 
         $this->dispatch('refreshNotifications');
+    }
+
+    public function updateStatus($data)
+    {
+        $this->status = $data[$this->user->id] ?? 'Offline';
     }
 
     public function render()

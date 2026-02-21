@@ -3,6 +3,7 @@
 <p align="center">
     <a href="https://www.php.net/"><img src="https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white"/></a>
     <a href="https://laravel.com/"><img src="https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white"/></a>
+    <a href="https://laravel.com/docs/broadcasting"><img src="https://img.shields.io/badge/Broadcasting-FF2D20?style=for-the-badge&logo=laravel&logoColor=white"/></a>
     <a href="https://livewire.laravel.com/"><img src="https://img.shields.io/badge/Livewire-4E56A6?style=for-the-badge&logo=laravel&logoColor=white"/></a>
     <a href="https://laravel.com/docs/blade"><img src="https://img.shields.io/badge/Blade-000000?style=for-the-badge&logo=laravel&logoColor=white"/></a>
     <a href="https://laravel.com/docs/starter-kits#laravel-breeze"><img src="https://img.shields.io/badge/Breeze-FF2D20?style=for-the-badge&logo=laravel&logoColor=white"/></a>
@@ -14,6 +15,8 @@
     <a href="https://alpinejs.dev/"><img src="https://img.shields.io/badge/Alpine.js-77C1D2?style=for-the-badge&logo=alpinedotjs&logoColor=white"/></a>
     <a href="https://nodejs.org/"><img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white"/></a>
     <a href="https://vitejs.dev/"><img src="https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white"/></a>
+    <a href="https://github.com/laravel/echo"><img src="https://img.shields.io/badge/Laravel_Echo-FF2D20?style=for-the-badge&logo=laravel&logoColor=white"/></a>
+    <a href="https://pusher.com/"><img src="https://img.shields.io/badge/Pusher-300D4F?style=for-the-badge&logo=pusher&logoColor=white"/></a>
 </p>
 
 <p align="center">

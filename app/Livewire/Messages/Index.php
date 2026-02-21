@@ -2,50 +2,60 @@
 
 namespace App\Livewire\Messages;
 
-use Livewire\Component;
-use Livewire\WithFileUploads;
 use App\Models\Message;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Url;
+use Livewire\Component;
+use Livewire\WithFileUploads;
 
 class Index extends Component
 {
     use WithFileUploads;
 
+    protected $listeners = ['updateStatus'];
+
     #[Url]
-    public ?int $userId = null; 
+    public ?int $userId = null;
+
     public string $body = '';
+
     public $attachment = null;
+
     public string $search = '';
-    
 
     public ?int $selectedMessageId = null;
+
     public ?int $editingMessageId = null;
-    
+
     public string $editingText = '';
+
     public bool $showDeleteModal = false;
+
     public string $newMessage = '';
+
+    public array $friendStatuses = [];
 
     public function getChatPartnerProperty(): ?User
     {
-        if (!$this->userId) {
+        if (! $this->userId) {
             return null;
         }
+
         return User::query()->find($this->userId);
     }
 
     public function updatedUserId(): void
     {
-        if (!$this->chatPartner) return;
-
+        if (! $this->chatPartner) {
+            return;
+        }
 
         Message::query()
             ->where('sender_id', $this->chatPartner->id)
             ->where('receiver_id', Auth::id())
             ->whereNull('read_at')
             ->update(['read_at' => now()]);
-            
 
         $this->cancelEdit();
         $this->cancelDelete();
@@ -62,7 +72,7 @@ class Index extends Component
 
     public function getMessagesProperty()
     {
-        if (!$this->chatPartner) {
+        if (! $this->chatPartner) {
             return collect();
         }
 
@@ -71,11 +81,11 @@ class Index extends Component
         return Message::query()
             ->where(function ($q) use ($me) {
                 $q->where('sender_id', $me->id)
-                  ->where('receiver_id', $this->chatPartner->id);
+                    ->where('receiver_id', $this->chatPartner->id);
             })
             ->orWhere(function ($q) use ($me) {
                 $q->where('sender_id', $this->chatPartner->id)
-                  ->where('receiver_id', $me->id);
+                    ->where('receiver_id', $me->id);
             })
             ->orderBy('created_at')
             ->get();
@@ -84,6 +94,7 @@ class Index extends Component
     public function getFriendsProperty()
     {
         $me = Auth::user();
+
         return $me->getConnections();
     }
 
@@ -91,7 +102,7 @@ class Index extends Component
     {
         return $this->friends
             ->filter(function ($friend) {
-                return empty($this->search) || 
+                return empty($this->search) ||
                        str_contains(strtolower($friend->name), strtolower($this->search));
             })
             ->map(function ($friend) {
@@ -101,10 +112,11 @@ class Index extends Component
 
     public function getActiveFriendProperty()
     {
-        if (!$this->userId) {
+        if (! $this->userId) {
             return null;
         }
         $friend = $this->friends->firstWhere('id', $this->userId);
+
         return $friend ? $this->transformFriendData($friend) : null;
     }
 
@@ -117,13 +129,14 @@ class Index extends Component
             'flag' => $friend->getFlagPictureUrl(),
             'unread' => $this->unreadCount($friend->id),
             'lang' => 'English',
-            'messages' => $friend->id === $this->userId ? $this->messages->map(function($msg) {
+            'status' => $this->friendStatuses[$friend->id] ?? 'Offline',
+            'messages' => $friend->id === $this->userId ? $this->messages->map(function ($msg) {
                 return [
                     'id' => $msg->id,
                     'text' => $msg->body,
-                    'from_me' => $msg->sender_id === auth()->id()
+                    'from_me' => $msg->sender_id === auth()->id(),
                 ];
-            })->toArray() : []
+            })->toArray() : [],
         ];
     }
 
@@ -148,7 +161,9 @@ class Index extends Component
             'attachment' => ['nullable', 'file', 'max:10240', 'mimes:png,jpg,jpeg,gif,webp,mp3,wav,ogg'],
         ]);
 
-        if (!$this->chatPartner) return;
+        if (! $this->chatPartner) {
+            return;
+        }
 
         $data = [
             'sender_id' => Auth::id(),
@@ -169,7 +184,7 @@ class Index extends Component
 
         $this->newMessage = '';
         $this->attachment = null;
-        
+
         $this->js("window.dispatchEvent(new Event('message-sent'))");
     }
 
@@ -181,9 +196,9 @@ class Index extends Component
     public function startEdit(int $messageId): void
     {
         $this->editingMessageId = $messageId;
-        
+
         $message = Message::find($messageId);
-        
+
         if ($message && $message->sender_id === Auth::id()) {
             $this->editingText = $message->body;
         }
@@ -191,14 +206,16 @@ class Index extends Component
 
     public function saveEdit(): void
     {
-        if (!$this->editingMessageId) return;
-        
+        if (! $this->editingMessageId) {
+            return;
+        }
+
         $message = Message::find($this->editingMessageId);
-        
+
         if ($message && $message->sender_id === Auth::id()) {
             $message->update(['body' => $this->editingText]);
         }
-        
+
         $this->cancelEdit();
     }
 
@@ -228,14 +245,23 @@ class Index extends Component
 
     public function deleteMessage(): void
     {
-        if (!$this->selectedMessageId) return;
-        
+        if (! $this->selectedMessageId) {
+            return;
+        }
+
         Message::where('id', $this->selectedMessageId)
-            ->where('sender_id', Auth::id()) 
+            ->where('sender_id', Auth::id())
             ->delete();
-    
+
         $this->showDeleteModal = false;
         $this->selectedMessageId = null;
+    }
+
+    public function updateStatus($data)
+    {
+        foreach ($data as $userId => $status) {
+            $this->friendStatuses[$userId] = $status;
+        }
     }
 
     public function render()
